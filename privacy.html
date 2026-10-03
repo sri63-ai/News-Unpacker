@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy & Zero-Data Architecture – News Unpacker</title>
+  <meta name="description" content="Official Privacy Policy and Zero-Data Retention policy of News Unpacker under Sriram Groups.">
+  <link rel="stylesheet" href="style.css">
+  
+  <style>
+    /* Privacy Dedicated Cyber-Lock Background */
+    .privacy-hero {
+      position: relative;
+      text-align: center;
+      padding: 70px 20px 60px;
+      color: #ffffff;
+      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.88), #030712),
+                  url('https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=1600&q=80');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-bottom: 2px solid rgba(56, 189, 248, 0.3);
+      overflow: hidden;
+    }
+
+    .privacy-lock-icon {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      background: rgba(14, 165, 233, 0.1);
+      border: 2px solid #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.6), inset 0 0 15px rgba(56, 189, 248, 0.4);
+      animation: lockGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes lockGlow {
+      from { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+      to { box-shadow: 0 0 35px rgba(56, 189, 248, 0.9); }
+    }
+
+    .privacy-lock-icon svg {
+      width: 38px;
+      height: 38px;
+      color: #38bdf8;
+    }
+
+    .privacy-badge {
+      display: inline-block;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 1.8px;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 15px;
+    }
+
+    .privacy-hero h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin: 0 0 12px;
+      color: #ffffff;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+    }
+
+    .privacy-hero p {
+      font-size: 1.08rem;
+      color: #94a3b8;
+      max-width: 720px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Privacy Content Wrapper */
+    .privacy-wrapper {
+      max-width: 900px;
+      margin: 40px auto 80px;
+      padding: 0 20px;
+    }
+
+    .privacy-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 40px 45px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+      margin-bottom: 30px;
+    }
+
+    .security-highlight-banner {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-left: 6px solid #2563eb;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 35px;
+    }
+
+    .security-highlight-banner h3 {
+      font-size: 1.15rem;
+      color: #1e3a8a;
+      margin: 0 0 8px;
+    }
+
+    .security-highlight-banner p {
+      font-size: 0.96rem;
+      color: #1e40af;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .policy-clause {
+      margin-bottom: 32px;
+    }
+
+    .policy-clause h2 {
+      font-size: 1.35rem;
+      color: #0f172a;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .policy-clause p {
+      font-size: 1rem;
+      color: #475569;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .policy-clause ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 10px 0;
+    }
+
+    .policy-clause li {
+      position: relative;
+      padding-left: 24px;
+      font-size: 0.96rem;
+      color: #334155;
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+
+    .policy-clause li::before {
+      content: "🔒";
+      position: absolute;
+      left: 0;
+      font-size: 0.88rem;
+      top: 1px;
+    }
+
+    .back-home-btn {
+      display: inline-block;
+      background: #f1f5f9;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      margin-bottom: 25px;
+      transition: all 0.2s ease;
+    }
+
+    .back-home-btn:hover {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+
+    @media (max-width: 600px) {
+      .privacy-card {
+        padding: 26px 20px;
+      }
+      .privacy-hero h1 {
+        font-size: 1.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="main-header">
+    <nav class="top-nav">
+      <div class="nav-item">
+        <a href="index.html" class="nav-link nav-btn-home">Home</a>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Company ▾</button>
+        <div class="dropdown-content">
+          <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a>
+          <a href="index.html#about">About Us</a>
+          <a href="websites.html">Other Websites</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Connect ▾</button>
+        <div class="dropdown-content">
+          <a href="mailto:sriramgroups.help@gmail.com">Help Line</a>
+          <a href="index.html#social">Social Media</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn active">Terms & Policies ▾</button>
+        <div class="dropdown-content">
+          <a href="terms.html">Terms & Conditions</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="index.html#policies">Other Policies</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Category ▾</button>
+        <div class="dropdown-content">
+          <a href="index.html">Politics</a>
+          <a href="index.html">Business & Economy</a>
+          <a href="index.html">Technology</a>
+          <a href="index.html">Kids & Students</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Blogs ▾</button>
+        <div class="dropdown-content">
+          <a href="blogs.html">All Insights (15 Articles)</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Lock & Key Cyber Background Banner -->
+  <section class="privacy-hero">
+    <div class="privacy-lock-icon">
+      <!-- Neon SVG Lock Key Icon -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        <circle cx="12" cy="16" r="1.5"></circle>
+        <path d="M12 17.5v2"></path>
+      </svg>
+    </div>
+    <span class="privacy-badge">STRICT ZERO-DATA RETENTION ARCHITECTURE</span>
+    <h1>News Unpacker Privacy & Safety Policy</h1>
+    <p>Your inputs, news paste data, and analysis workflows are cryptographically isolated. We hold a strict zero-retention guarantee.</p>
+  </section>
+
+  <!-- Privacy Content -->
+  <main class="privacy-wrapper">
+    <a href="index.html" class="back-home-btn">← Back to Dashboard</a>
+
+    <div class="privacy-card">
+      
+      <!-- Safe System Banner -->
+      <div class="security-highlight-banner">
+        <h3>🛡️ Absolute Zero-Sharing & Safe System Guarantee</h3>
+        <p>News Unpacker does not sell, lease, monetize, or transfer your input data to any third party, ad broker, or external AI model trainer. Your submitted text exists exclusively in RAM runtime memory and is deleted instantly once synthesis finishes.</p>
+      </div>
+
+      <div class="policy-clause">
+        <h2>1. Non-Retention of Submitted News Data</h2>
+        <p>
+          When you paste text into our summarization, bias-detection, translation, or speech tools:
+        </p>
+        <ul>
+          <li><strong>No Hard Disk Archiving:</strong> The submitted text is held ephemerally in active memory only for the seconds required to compute the analysis.</li>
+          <li><strong>Instant Destruction:</strong> As soon as the bulleted summary or audio stream is returned to your browser, all memory traces are automatically garbage-collected and permanently destroyed.</li>
+          <li><strong>No Search Logging:</strong> We do not log what topics, politicians, companies, or articles you choose to analyze.</li>
+        </ul>
+      </div>
+
+      <div class="policy-clause">
+        <h2>2. Zero Third-Party Sharing Rules</h2>
+        <p>
+          Unlike conventional media outlets and platforms:
+        </p>
+        <ul>
+          <li>We do <strong>NOT</strong> partner with data brokers or corporate trackers.</li>
+          <li>We do <strong>NOT</strong> feed your personal reading snippets into public model training datasets.</li>
+          <li>We do <strong>NOT</strong> build behavioral profiling cookies to track your movements across other internet portals.</li>
+        </ul>
+      </div>
+
+      <div class="policy-clause">
+        <h2>3. Local Storage & Client-Side Execution</h2>
+        <p>
+          Settings like audio playback speed (1.5x, 2x) or dark mode preferences are stored locally in your own browser's <code>localStorage</code>. This data never touches our remote servers.
+        </p>
+      </div>
+
+      <div class="policy-clause">
+        <h2>4. Institutional Ownership & Legal Contact</h2>
+        <p>
+          News Unpacker operates as an official digital asset of <strong>Sriram Groups</strong>. For any legal inquiries, data privacy verification audits, or technical questions, contact our security desk directly:
+        </p>
+        <p>
+          <strong>Official Company Desk:</strong> <a href="mailto:sriramgroupsofficial@gmail.com" style="color: #2563eb; font-weight:700;">sriramgroupsofficial@gmail.com</a><br>
+          <strong>Corporate Portal:</strong> <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" style="color: #059669; font-weight:700;">sriramgroupsofficial.com ↗</a>
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Professional 6-Column Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4 class="title-home">Home</h4>
+          <ul>
+            <li><a href="index.html">Main Dashboard</a></li>
+            <li><a href="index.html#about">Leadership & Bio</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="title-company">Company</h4>
+          <ul>
+            <li><a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a></li>
+            <li><a href="index.html#about">About Us</a></li>
+            <li><a href="websites.html">Other Websites</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="title-news">News Unpacker</h4>
+          <ul>
+            <li><a href="index.html">AI Decoder Engine</a></li>
+            <li><a href="index.html">Bias Analysis</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="title-terms">Terms & Policies</h4>
+          <ul>
+            <li><a href="terms.html">Terms & Conditions</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="title-connect">Connect</h4>
+          <ul>
+            <li><a href="mailto:sriramgroups.help@gmail.com">Help Line</a></li>
+            <li><a href="index.html#social">Social Media</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="title-blogs">Blogs</h4>
+          <ul>
+            <li><a href="blogs.html">All Insights (15)</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>
+          <span class="copyright-symbol">©</span> 2026 News Unpacker. All rights reserved. Powered by 
+          <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups</a>.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
