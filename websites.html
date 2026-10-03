@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ecosystem Portals & Ventures – Sriram Groups</title>
+  <meta name="description" content="Explore active live platforms and upcoming digital ventures powered by Sriram Groups.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .websites-page-wrapper {
+      max-width: 1200px;
+      margin: 40px auto 80px;
+      padding: 0 20px;
+    }
+
+    .ecosystem-header {
+      text-align: center;
+      margin-bottom: 50px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 30px;
+    }
+
+    .eco-badge {
+      display: inline-block;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #059669;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .ecosystem-header h1 {
+      font-size: 2.3rem;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+
+    .ecosystem-header p {
+      color: #64748b;
+      font-size: 1.05rem;
+      max-width: 750px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      color: #0f172a;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .status-live {
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+    }
+
+    .status-dev {
+      background: #f59e0b;
+      box-shadow: 0 0 10px #f59e0b;
+    }
+
+    .ventures-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+      margin-bottom: 50px;
+    }
+
+    .venture-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .venture-card:hover {
+      transform: translateY(-4px);
+      border-color: #2563eb;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.08);
+    }
+
+    .venture-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .venture-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .tag-live {
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+
+    .tag-pending {
+      background: #fffbeb;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+
+    .tag-game {
+      background: #faf5ff;
+      color: #7e22ce;
+      border: 1px solid #e9d5ff;
+    }
+
+    .venture-card h3 {
+      font-size: 1.25rem;
+      color: #0f172a;
+      margin: 0 0 8px;
+    }
+
+    .venture-card p {
+      font-size: 0.9rem;
+      color: #475569;
+      line-height: 1.6;
+      margin-bottom: 18px;
+      flex-grow: 1;
+    }
+
+    .venture-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: #2563eb;
+    }
+
+    .venture-link-btn:hover {
+      text-decoration: underline;
+    }
+
+    .pending-action-pill {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    /* ==================== INNOVATION & CO-CREATION AURORA BANNER ==================== */
+    .collab-banner-wrapper {
+      margin: 70px 0 30px;
+      perspective: 1200px;
+    }
+
+    .collab-banner-card {
+      position: relative;
+      background: linear-gradient(135deg, rgba(239, 246, 255, 0.95) 0%, rgba(236, 253, 245, 0.9) 50%, rgba(254, 243, 199, 0.85) 100%);
+      border: 2px solid transparent;
+      border-image: linear-gradient(135deg, #2563eb, #10b981, #f59e0b) 1;
+      border-radius: 20px;
+      padding: 45px 36px;
+      box-shadow: 0 16px 40px rgba(16, 185, 129, 0.08), 0 6px 18px rgba(37, 99, 235, 0.06);
+      overflow: hidden;
+      /* Swing across and sudden lock animation */
+      animation: swingAndLock 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes swingAndLock {
+      0% {
+        opacity: 0;
+        transform: translateX(-90px) rotate(-3deg) scale(0.96);
+      }
+      45% {
+        opacity: 1;
+        transform: translateX(40px) rotate(2deg) scale(1.02);
+      }
+      70% {
+        transform: translateX(-15px) rotate(-1deg) scale(0.99);
+      }
+      88% {
+        transform: translateX(6px) rotate(0.4deg) scale(1.005);
+      }
+      100% {
+        transform: translateX(0) rotate(0deg) scale(1);
+      }
+    }
+
+    .collab-glow-pill {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #0f172a;
+      background: linear-gradient(90deg, #dbeafe, #d1fae5, #fef3c7);
+      border: 1px solid #cbd5e1;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .collab-banner-card h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #0f172a;
+      margin-bottom: 14px;
+      line-height: 1.3;
+    }
+
+    .collab-banner-card p {
+      font-size: 1.02rem;
+      color: #334155;
+      line-height: 1.75;
+      max-width: 900px;
+      margin-bottom: 24px;
+    }
+
+    .collab-actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .btn-collab-primary {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      padding: 13px 26px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-collab-primary:hover {
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-collab-secondary {
+      background: #ffffff;
+      color: #065f46;
+      border: 1.5px solid #a7f3d0;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .btn-collab-secondary:hover {
+      background: #ecfdf5;
+      border-color: #34d399;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 900px) {
+      .ventures-grid {
+        grid-template-columns: 1fr;
+      }
+      .collab-banner-card {
+        padding: 30px 22px;
+      }
+      .collab-banner-card h2 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <nav class="top-nav">
+      <div class="nav-item">
+        <a href="index.html" class="nav-link nav-btn-home">Home</a>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn active">Company ▾</button>
+        <div class="dropdown-content">
+          <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a>
+          <a href="index.html#about">About Us</a>
+          <a href="websites.html">Other Websites</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Connect ▾</button>
+        <div class="dropdown-content">
+          <a href="mailto:sriramgroups.help@gmail.com">Help Line</a>
+          <a href="index.html#social">Social Media</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Terms & Policies ▾</button>
+        <div class="dropdown-content">
+          <a href="terms.html">Terms & Conditions</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="index.html#policies">Other Policies</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Category ▾</button>
+        <div class="dropdown-content">
+          <a href="index.html">Politics</a>
+          <a href="index.html">Business & Economy</a>
+          <a href="index.html">Technology</a>
+          <a href="index.html">Kids & Students</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Blogs ▾</button>
+        <div class="dropdown-content">
+          <a href="blogs.html">All Insights (10)</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="websites-page-wrapper">
+    
+    <div class="ecosystem-header">
+      <span class="eco-badge">SRIRAM GROUPS ECOSYSTEM</span>
+      <h1>Official Network Portals & Digital Platforms</h1>
+      <p>A central index of fully deployed live web utilities, real-estate gateways, production software, and upcoming enterprise ecosystems under active development.</p>
+    </div>
+
+    <!-- 1. LIVE PLATFORMS SECTION -->
+    <h2 class="section-title">
+      <span class="status-indicator status-live"></span> 
+      Live Platforms (Active & Running)
+    </h2>
+    <div class="ventures-grid">
+      
+      <!-- Live 1: Sriram Groups Official -->
+      <div class="venture-card">
+        <div class="venture-card-header">
+          <span class="venture-tag tag-live">● PRODUCTION LIVE</span>
+        </div>
+        <h3>Sriram Groups Official Hub</h3>
+        <p>The central parent corporate platform hosting cross-venture directory, verified company notices, organizational architecture, and official support desks.</p>
+        <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" class="venture-link-btn">
+          Visit Platform ↗
+        </a>
+      </div>
+
+      <!-- Live 2: S-PlotsToLets.com (Real Estate Portal) -->
+      <div class="venture-card">
+        <div class="venture-card-header">
+          <span class="venture-tag tag-live">● PRODUCTION LIVE</span>
+        </div>
+        <h3>S-PlotsToLets.com</h3>
+        <p>A dedicated real-estate trading and listing platform featuring rapid 7-day verified property expiry, flexible broker networks, and property listing part-time income systems powered by Sriram Groups.</p>
+        <a href="https://s-plotstolets.com" target="_blank" rel="noopener noreferrer" class="venture-link-btn">
+          Explore Properties ↗
+        </a>
+      </div>
+
+      <!-- Live 3: SVideoEditor.com (AI Video Editor) -->
+      <div class="venture-card">
+        <div class="venture-card-header">
+          <span class="venture-tag tag-live">● PRODUCTION LIVE</span>
+        </div>
+        <h3>SVideoEditor.com</h3>
+        <p>High-performance web media production platform offering 99% free video processing, AI subtitle generators, multi-track audio synching, and lightweight cinematic export tools by Sriram Groups.</p>
+        <a href="https://svideoeditor.com" target="_blank" rel="noopener noreferrer" class="venture-link-btn">
+          Open Video Editor ↗
+        </a>
+      </div>
+
+      <!-- Live 4: News Unpacker -->
+      <div class="venture-card">
+        <div class="venture-card-header">
+          <span class="venture-tag tag-live">● PRODUCTION LIVE</span>
+        </div>
+        <h3>News Unpacker</h3>
+        <p>AI-driven intelligence summarizer designed to convert high-volume journalistic articles and viral claims into clean, unbiased factual briefs and rapid acoustic briefings.</p>
+        <a href="index.html" class="venture-link-btn">
+          Access Engine ↗
+        </a>
+      </div>
+
+    </div>
+
+    <!-- 2. UPCOMING PLATFORMS SECTION -->
+    <h2 class="section-title">
+      <span class="status-indicator status-dev"></span> 
+      Upcoming Platforms (In Pipeline & Pre-Launch)
+    </h2>
+    <div class="ventures-grid">
+      
+      <!-- Upcoming 1: Project X (Mind-Blowing Gaming Project) -->
+      <div class="venture-card">
+        <div class="venture-card-header">
+          <span class="venture-tag tag-game">HIGHLY ANTICIPATED</span>
+        </div>
+        <h3>Project X (Mind-Blowing Game)</h3>
+        <p>An innovative, high-octane gaming environment designed with interactive sandbox physics, next-gen gameplay mechanics, and community competitive play. Development updates dropping soon.</p>
+        <span class="pending-action-pill">Stay Tuned on Official Web</span>
+      </div>
+
+      <!-- Upcoming 2: Freelance & IT Services -->
+      <div class="venture-card">
+        <div class="venture-card-header">
+          <span class="venture-tag tag-pending">IN DEVELOPMENT</span>
+        </div>
+        <h3>Sriram Groups Freelance & IT Services</h3>
+        <p>A specialized enterprise portal offering custom full-stack web architectures, AI workflow automations, cloud deployments, and specialized media production services.</p>
+        <span class="pending-action-pill">Launch Scheduled: Q4 2026</span>
+      </div>
+
+      <!-- Upcoming 3: Esports Hub -->
+      <div class="venture-card">
+        <div class="venture-card-header">
+          <span class="venture-tag tag-pending">PROTOTYPING</span>
+        </div>
+        <h3>Esports & Gaming Interactive Hub</h3>
+        <p>Community esports network hosting automated tournament brackets, player statistics, game developer logs, and creator collaboration hubs.</p>
+        <span class="pending-action-pill">Pre-Alpha Phase</span>
+      </div>
+
+      <!-- Upcoming 4: Unified Digital Headquarters 2027 -->
+      <div class="venture-card">
+        <div class="venture-card-header">
+          <span class="venture-tag tag-pending">PRE-LAUNCH</span>
+        </div>
+        <h3>Unified Digital Headquarters (2027)</h3>
+        <p>Next-generation single-sign-on (SSO) architecture unifying all Sriram Groups cloud utilities, real-estate listings, and developer tools under one master identity.</p>
+        <span class="pending-action-pill">Grand Reveal: Jan 1, 2027</span>
+      </div>
+
+    </div>
+
+    <!-- ==================== 3. INNOVATION & CO-CREATION COMMUNITY HUB ==================== -->
+    <div class="collab-banner-wrapper">
+      <div class="collab-banner-card">
+        <span class="collab-glow-pill">Co-Creation & Founder Collaboration Hub</span>
+        <h2>Have an Idea or Vision? Build the Next Generation with Sriram Groups</h2>
+        <p>
+          Do you have a breakthrough concept, custom software requirements, or an innovative platform idea that you want to bring to life? Whether you want to collaborate directly with our engineering sector or need us to architect, build, and deploy the entire project for you from scratch—we are here to empower your ambition. Connect with our technical leadership desk to discuss roadmaps, partnership opportunities, and custom development lifecycles.
+        </p>
+        <div class="collab-actions-row">
+          <a href="mailto:sriramgroupsofficial@gmail.com" class="btn-collab-primary">
+            Pitch an Idea / Email Desk ↗
+          </a>
+          <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" class="btn-collab-secondary">
+            Visit Sriram Groups Portal ↗
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 Sriram Groups. All rights reserved. Powered by <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
