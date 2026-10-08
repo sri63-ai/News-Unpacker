@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Portal - Sriram Groups</title>
+  <title>Admin Master Control Desk - Sriram Groups</title>
   <link rel="stylesheet" href="style.css">
   <style>
     :root {
@@ -15,21 +15,17 @@
       --text-muted: #64748b;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       background-color: #f8fafc;
       color: var(--primary-dark);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       margin: 0;
       padding: 0;
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     /* Auth Wrapper */
     .auth-container {
@@ -52,90 +48,31 @@
       box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
     }
 
-    .auth-card h2 {
-      margin: 0 0 8px;
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--primary-dark);
-    }
+    .auth-card h2 { margin: 0 0 8px; font-size: 1.6rem; font-weight: 800; color: var(--primary-dark); }
+    .auth-card p.subtitle { margin: 0 0 24px; font-size: 0.9rem; color: var(--text-muted); }
 
-    .auth-card p.subtitle {
-      margin: 0 0 24px;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
+    .input-field-group { margin-bottom: 18px; text-align: left; }
+    .input-field-group label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: #334155; }
 
-    .input-field-group {
-      margin-bottom: 18px;
-      text-align: left;
-    }
-
-    .input-field-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: #334155;
-    }
-
-    .input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .input-wrapper input,
-    .input-wrapper select {
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    .input-wrapper input, .input-wrapper select {
       width: 100%;
-      padding: 11px 40px 11px 14px;
+      padding: 11px 14px;
       border: 1.5px solid var(--border-gray);
       border-radius: 8px;
       font-size: 0.94rem;
       outline: none;
       background: #ffffff;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color 0.2s ease;
     }
 
-    .input-wrapper input:focus,
-    .input-wrapper select:focus {
+    .input-wrapper input:focus, .input-wrapper select:focus {
       border-color: var(--primary-red);
       box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
     }
 
-    .toggle-pass-btn {
-      position: absolute;
-      right: 10px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-    }
-
-    .auth-actions-row {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: -6px;
-      margin-bottom: 20px;
-    }
-
-    .auth-link-top {
-      color: var(--primary-red);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.82rem;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 0;
-    }
-
-    .auth-link-top:hover {
-      text-decoration: underline;
-    }
+    .auth-actions-row { display: flex; justify-content: flex-end; margin-top: -6px; margin-bottom: 20px; }
+    .auth-link-top { color: var(--primary-red); text-decoration: none; font-weight: 600; font-size: 0.82rem; cursor: pointer; background: none; border: none; }
 
     .auth-submit-btn {
       width: 100%;
@@ -148,21 +85,8 @@
       border-radius: 8px;
       cursor: pointer;
       box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
-      transition: background 0.2s ease;
     }
-
-    .auth-submit-btn:hover {
-      background: #b91c1c;
-    }
-
-    .auth-footer {
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border-gray);
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
+    .auth-submit-btn:hover { background: #b91c1c; }
 
     /* Modals */
     .modal-backdrop {
@@ -186,376 +110,63 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     }
 
-    .modal-box h3 {
-      margin: 0 0 8px;
-      font-size: 1.3rem;
-    }
+    .modal-box h3 { margin: 0 0 8px; font-size: 1.3rem; }
+    .modal-box p { margin: 0 0 18px; font-size: 0.88rem; color: var(--text-muted); }
+    .modal-btn-row { display: flex; gap: 10px; margin-top: 18px; }
 
-    .modal-box p {
-      margin: 0 0 18px;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-    }
-
-    .modal-btn-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .btn-secondary {
-      flex: 1;
-      padding: 11px;
-      background: #f1f5f9;
-      border: 1px solid var(--border-gray);
-      color: #334155;
-      font-weight: 600;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      flex: 1;
-      padding: 11px;
-      background: var(--primary-red);
-      border: none;
-      color: #ffffff;
-      font-weight: 700;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+    .btn-secondary { flex: 1; padding: 11px; background: #f1f5f9; border: 1px solid var(--border-gray); color: #334155; font-weight: 600; border-radius: 8px; cursor: pointer; }
+    .btn-primary { flex: 1; padding: 11px; background: var(--primary-red); border: none; color: #ffffff; font-weight: 700; border-radius: 8px; cursor: pointer; }
 
     /* Dashboard Layout */
-    .dashboard-layout {
-      display: flex;
-      min-height: 100vh;
-    }
+    .dashboard-layout { display: flex; min-height: 100vh; }
+    .sidebar { width: 270px; background: var(--sidebar-bg); color: #ffffff; display: flex; flex-direction: column; flex-shrink: 0; }
+    .sidebar-header { padding: 24px 20px; border-bottom: 1px solid #334155; }
+    .sidebar-header h2 { margin: 0; font-size: 1.15rem; font-weight: 800; color: #f8fafc; }
+    .sidebar-header span { font-size: 0.78rem; color: #94a3b8; }
 
-    .sidebar {
-      width: 260px;
-      background: var(--sidebar-bg);
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-    }
-
-    .sidebar-header {
-      padding: 24px 20px;
-      border-bottom: 1px solid #334155;
-    }
-
-    .sidebar-header h2 {
-      margin: 0;
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #f8fafc;
-    }
-
-    .sidebar-header span {
-      font-size: 0.78rem;
-      color: #94a3b8;
-    }
-
-    .sidebar-nav {
-      list-style: none;
-      padding: 20px 12px;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      flex-grow: 1;
-    }
-
+    .sidebar-nav { list-style: none; padding: 20px 12px; margin: 0; display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
     .nav-btn {
-      width: 100%;
-      text-align: left;
-      background: none;
-      border: none;
-      color: #cbd5e1;
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 0.92rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      transition: all 0.2s ease;
+      width: 100%; text-align: left; background: none; border: none; color: #cbd5e1;
+      padding: 12px 16px; border-radius: 8px; font-size: 0.92rem; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s ease;
     }
+    .nav-btn:hover { background: #334155; color: #ffffff; }
+    .nav-btn.active { background: var(--primary-red); color: #ffffff; }
 
-    .nav-btn:hover {
-      background: #334155;
-      color: #ffffff;
-    }
+    .main-content { flex-grow: 1; background: #f8fafc; padding: 28px 32px; overflow-y: auto; max-width: 100%; }
+    .content-top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
 
-    .nav-btn.active {
-      background: var(--primary-red);
-      color: #ffffff;
-    }
+    .user-profile-badge { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .role-badge { font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
+    .role-admin { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+    .role-staff { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
 
-    .main-content {
-      flex-grow: 1;
-      background: #f8fafc;
-      padding: 28px 32px;
-      overflow-y: auto;
-      max-width: 100%;
-    }
+    .btn-action-primary { background: var(--primary-red); color: #ffffff; border: none; padding: 8px 14px; font-weight: 700; font-size: 0.85rem; border-radius: 8px; cursor: pointer; }
+    .btn-logout { background: #f1f5f9; color: #475569; border: 1px solid var(--border-gray); padding: 8px 14px; font-weight: 700; font-size: 0.85rem; border-radius: 8px; cursor: pointer; }
 
-    .content-top-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
+    /* Tables & Cards */
+    .inspect-box { background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04); }
+    .inspect-result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; background: #f8fafc; padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0; }
+    .inspect-field label { display: block; font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; }
+    .inspect-field span { font-size: 1rem; font-weight: 800; color: #0f172a; }
 
-    .user-profile-badge {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+    .table-container { background: #ffffff; border: 1px solid var(--border-gray); border-radius: 12px; overflow-x: auto; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03); }
+    table { width: 100%; min-width: 650px; border-collapse: collapse; text-align: left; font-size: 0.88rem; }
+    th { background: #f8fafc; color: #334155; padding: 12px 16px; font-weight: 700; border-bottom: 1px solid var(--border-gray); }
+    td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 
-    .role-badge {
-      font-size: 0.75rem;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-    }
+    .badge-status { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; }
+    .status-active { background: #dcfce7; color: #166534; }
+    .status-suspended { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
 
-    .role-admin {
-      background: #fee2e2;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
-    }
+    .btn-suspend { background: #dc2626; color: #ffffff; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; }
+    .btn-unban { background: #059669; color: #ffffff; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; }
+    .btn-row-del { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; padding: 5px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
 
-    .role-staff {
-      background: #e0f2fe;
-      color: #0369a1;
-      border: 1px solid #bae6fd;
-    }
-
-    .btn-action-primary {
-      background: var(--primary-red);
-      color: #ffffff;
-      border: none;
-      padding: 8px 14px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    .btn-action-primary:hover {
-      background: #b91c1c;
-    }
-
-    .btn-logout {
-      background: #f1f5f9;
-      color: #475569;
-      border: 1px solid var(--border-gray);
-      padding: 8px 14px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .btn-logout:hover {
-      background: #fee2e2;
-      color: var(--primary-red);
-      border-color: #fecaca;
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .stat-card {
-      background: #ffffff;
-      border: 1px solid var(--border-gray);
-      border-radius: 12px;
-      padding: 18px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-    }
-
-    .stat-card span {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-muted);
-    }
-
-    .stat-card h3 {
-      margin: 8px 0 0;
-      font-size: 1.7rem;
-      font-weight: 800;
-      color: var(--primary-dark);
-    }
-
-    /* Table Toolbar */
-    .table-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .search-input {
-      padding: 10px 14px;
-      border: 1.5px solid var(--border-gray);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      width: 280px;
-      outline: none;
-    }
-
-    .search-input:focus {
-      border-color: var(--primary-red);
-    }
-
-    .toolbar-buttons {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .btn-export {
-      background: #059669;
-      color: #ffffff;
-      border: none;
-      padding: 9px 14px;
-      font-weight: 600;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-
-    .btn-delete-all {
-      background: #ef4444;
-      color: #ffffff;
-      border: none;
-      padding: 9px 14px;
-      font-weight: 600;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-
-    /* Tables */
-    .table-container {
-      background: #ffffff;
-      border: 1px solid var(--border-gray);
-      border-radius: 12px;
-      overflow-x: auto;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
-      -webkit-overflow-scrolling: touch;
-    }
-
-    table {
-      width: 100%;
-      min-width: 600px;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.88rem;
-    }
-
-    th {
-      background: #f8fafc;
-      color: #334155;
-      padding: 12px 16px;
-      font-weight: 700;
-      border-bottom: 1px solid var(--border-gray);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 12px 16px;
-      border-bottom: 1px solid #f1f5f9;
-      vertical-align: top;
-      color: #334155;
-    }
-
-    tr:hover td {
-      background-color: #fbfcfe;
-    }
-
-    .badge-tool {
-      display: inline-block;
-      padding: 3px 8px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1d4ed8;
-      border-radius: 6px;
-      font-size: 0.76rem;
-      font-weight: 600;
-    }
-
-    .btn-row-del {
-      background: #fee2e2;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn-row-del:hover {
-      background: #ef4444;
-      color: #ffffff;
-    }
-
-    /* Responsive Adaptation for Mobile and Tablets */
-    @media (max-width: 900px) {
-      .dashboard-layout {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-      }
-      .sidebar-nav {
-        flex-direction: row;
-        overflow-x: auto;
-        padding: 12px;
-        gap: 6px;
-      }
-      .nav-btn {
-        white-space: nowrap;
-        padding: 8px 12px;
-        font-size: 0.85rem;
-      }
-      .main-content {
-        padding: 16px;
-      }
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-      .content-top-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .table-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .search-input {
-        width: 100%;
-      }
-    }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: #ffffff; border: 1px solid var(--border-gray); border-radius: 12px; padding: 18px; }
+    .stat-card span { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+    .stat-card h3 { margin: 8px 0 0; font-size: 1.7rem; font-weight: 800; color: var(--primary-dark); }
   </style>
 </head>
 <body>
@@ -567,7 +178,6 @@
       <p class="subtitle">Secure administrative desk for Sriram Groups</p>
 
       <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
-        <!-- Email Input -->
         <div class="input-field-group">
           <label for="loginEmail">Email Address</label>
           <div class="input-wrapper">
@@ -575,71 +185,28 @@
           </div>
         </div>
 
-        <!-- Master Password Input -->
         <div class="input-field-group">
           <label for="loginPassword">Master Password</label>
           <div class="input-wrapper">
             <input type="password" id="loginPassword" placeholder="Enter password" required>
-            <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility('loginPassword', this)" title="Toggle view">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
           </div>
         </div>
 
-        <!-- Forgot Password Link Below Password Box -->
         <div class="auth-actions-row">
-          <button type="button" class="auth-link-top" onclick="openForgotPasswordModal()">Forgot Password?</button>
+          <button type="button" class="auth-link-top" onclick="openModal('forgotModal')">Forgot Password?</button>
         </div>
 
-        <!-- Log in Button -->
         <button type="submit" class="auth-submit-btn">Log in</button>
-
-        <div class="auth-footer">
-          News Unpacker System &bull;
-        </div>
       </form>
     </div>
   </section>
 
-
-  <!-- ==================== 2. FORGOT PASSWORD MODAL ==================== -->
-  <div id="forgotModal" class="modal-backdrop hidden">
-    <div class="modal-box">
-      <h3>Account Recovery</h3>
-      <p>Enter your registered email to view or reset password credentials.</p>
-
-      <div class="input-field-group">
-        <label for="resetEmailInput">Registered Email</label>
-        <div class="input-wrapper">
-          <input type="email" id="resetEmailInput" placeholder="name@domain.com" required>
-        </div>
-      </div>
-
-      <div class="input-field-group">
-        <label for="newPasswordInput">New Password (Optional)</label>
-        <div class="input-wrapper">
-          <input type="password" id="newPasswordInput" placeholder="Enter new password to update">
-        </div>
-      </div>
-
-      <div class="modal-btn-row">
-        <button type="button" class="btn-secondary" onclick="closeModal('forgotModal')">Cancel</button>
-        <button type="button" class="btn-primary" onclick="processPasswordRecovery()">Verify / Reset</button>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ==================== 3. CREATE NEW ID MODAL (ADMIN ONLY) ==================== -->
+  <!-- ==================== 2. CREATE NEW ADMIN / STAFF ID MODAL ==================== -->
   <div id="createAdminModal" class="modal-backdrop hidden">
     <div class="modal-box">
       <h3>Register New ID</h3>
       <p>Create a verified operational account with assigned permissions.</p>
 
-      <!-- Employee Name Input -->
       <div class="input-field-group">
         <label for="newAdminName">Employee / Admin Name</label>
         <div class="input-wrapper">
@@ -647,7 +214,6 @@
         </div>
       </div>
 
-      <!-- Employee Email Input -->
       <div class="input-field-group">
         <label for="newAdminEmail">Operational Email</label>
         <div class="input-wrapper">
@@ -655,27 +221,19 @@
         </div>
       </div>
 
-      <!-- Employee Password Input -->
       <div class="input-field-group">
         <label for="newAdminPass">Password</label>
         <div class="input-wrapper">
           <input type="password" id="newAdminPass" placeholder="Enter secure password" required>
-          <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility('newAdminPass', this)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-          </button>
         </div>
       </div>
 
-      <!-- Role Selection Input -->
       <div class="input-field-group">
-        <label for="newAdminRole">Assign Role</label>
+        <label for="newAdminRole">Assign Role & Control Level</label>
         <div class="input-wrapper">
           <select id="newAdminRole">
-            <option value="Staff">Staff (Feedbacks & Subscriptions)</option>
-            <option value="Admin">Admin (Full Control, Employees & Payments)</option>
+            <option value="Staff">Staff (User Inspection, Feedbacks & Subs Only)</option>
+            <option value="Admin">Admin (Full Control, Employees, Payments & Coupons)</option>
           </select>
         </div>
       </div>
@@ -687,11 +245,29 @@
     </div>
   </div>
 
+  <!-- ==================== 3. FORGOT PASSWORD MODAL ==================== -->
+  <div id="forgotModal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <h3>Account Recovery</h3>
+      <p>Enter registered email to reset password credentials.</p>
+      <div class="input-field-group">
+        <label>Registered Email</label>
+        <div class="input-wrapper"><input type="email" id="resetEmailInput" placeholder="name@domain.com" required></div>
+      </div>
+      <div class="input-field-group">
+        <label>New Password</label>
+        <div class="input-wrapper"><input type="password" id="newPasswordInput" placeholder="Enter new password"></div>
+      </div>
+      <div class="modal-btn-row">
+        <button type="button" class="btn-secondary" onclick="closeModal('forgotModal')">Cancel</button>
+        <button type="button" class="btn-primary" onclick="processPasswordRecovery()">Update Password</button>
+      </div>
+    </div>
+  </div>
 
-  <!-- ==================== 4. UNIFIED DASHBOARD WITH SIDEBAR ==================== -->
+  <!-- ==================== 4. MASTER DASHBOARD ==================== -->
   <section id="dashboardSection" class="dashboard-layout hidden">
     
-    <!-- Left Navigation Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
         <h2>Sriram Groups</h2>
@@ -700,178 +276,283 @@
 
       <ul class="sidebar-nav">
         <li>
-          <button class="nav-btn active" id="tabBtnFeedbacks" onclick="switchTab('feedbacks')">
-            <span></span> User Feedbacks
+          <button class="nav-btn active" id="tabBtnInspector" onclick="switchTab('inspector')">
+             User Inspection & Ban
+          </button>
+        </li>
+        <li id="couponsTabNavItem">
+          <button class="nav-btn" id="tabBtnCoupons" onclick="switchTab('coupons')">
+             Custom Coupon Engine
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" id="tabBtnFeedbacks" onclick="switchTab('feedbacks')">
+             User Feedbacks
           </button>
         </li>
         <li>
           <button class="nav-btn" id="tabBtnSubs" onclick="switchTab('subscriptions')">
-            <span></span> Subscriptions
+             Subscribers Registry
           </button>
         </li>
-        <!-- Visible ONLY for Admin role -->
-        <li id="employeesTabNavItem">
-          <button class="nav-btn" id="tabBtnEmployees" onclick="switchTab('employees')">
-            <span></span> Employees
-          </button>
-        </li>
-        <!-- Payments Tab (Visible ONLY for Admin role) -->
         <li id="paymentsTabNavItem">
           <button class="nav-btn" id="tabBtnPayments" onclick="switchTab('payments')">
-            <span></span> Payments
+             Payments & Billing
+          </button>
+        </li>
+        <li id="employeesTabNavItem">
+          <button class="nav-btn" id="tabBtnEmployees" onclick="switchTab('employees')">
+             Staff & ID Management
+          </button>
+        </li>
+
+        <!-- KOTTHA TAB: SYSTEM AI ERRORS (ADMIN & STAFF CLEARANCE) -->
+        <li id="systemErrorsTabNavItem">
+          <button class="nav-btn" id="tabBtnSystemErrors" onclick="switchTab('systemErrors')">
+             System AI Errors
           </button>
         </li>
       </ul>
     </aside>
 
-    <!-- Main Content Panel -->
     <main class="main-content">
       
-      <!-- Top Action Bar -->
       <header class="content-top-header">
         <div>
-          <h1 id="activeTabHeading" style="margin:0; font-size:1.6rem;">User Feedbacks</h1>
-          <span id="activeTabSub" style="color:var(--text-muted); font-size:0.88rem;">Live incoming suggestions and engine reports</span>
+          <h1 id="activeTabHeading" style="margin:0; font-size:1.6rem;">User Inspection Panel</h1>
+          <span id="activeTabSub" style="color:var(--text-muted); font-size:0.88rem;">Search, inspect usage metrics & apply account suspensions</span>
         </div>
 
         <div class="user-profile-badge">
           <span id="activeRoleLabel" class="role-badge role-admin">Role</span>
           <span id="activeUserLabel" style="font-size:0.88rem; font-weight:700;">Loading...</span>
           
-          <!-- Admin Only Top Create Button -->
-          <button id="topCreateIdBtn" class="btn-action-primary" onclick="openCreateAdminModal()">+ Create ID</button>
+          <!-- Top Create ID Button (Admin Only) -->
+          <button id="topCreateIdBtn" class="btn-action-primary" onclick="openModal('createAdminModal')">+ Create ID</button>
           
           <button class="btn-logout" onclick="logoutAdmin()">Sign Out</button>
         </div>
       </header>
 
-      <!-- VIEW 1: FEEDBACKS TAB -->
-      <div id="viewFeedbacks" class="tab-view">
-        <div class="stats-grid">
-          <div class="stat-card">
-            <span>Total Feedbacks</span>
-            <h3 id="statTotal">0</h3>
+      <!-- VIEW 1: USER INSPECTION & BAN -->
+      <div id="viewInspector" class="tab-view">
+        <div class="inspect-box">
+          <h3 style="margin:0 0 8px; color:#0f172a;">Live User Investigation & Deep Audit</h3>
+          <p style="margin:0 0 16px; font-size:0.88rem; color:#64748b;">
+            Search by <strong>User ID (e.g. SRG-11447), Email Address, Mobile Number, or Full Name</strong> to inspect user activity.
+          </p>
+
+          <div style="display:flex; gap:10px; max-width:650px;">
+            <input type="text" id="inspectQueryInput" placeholder="Enter SRG ID, Email or Phone..." style="flex:1; padding:12px; border:1.5px solid #cbd5e1; border-radius:8px; outline:none;">
+            <button class="btn-action-primary" style="padding:12px 20px;" onclick="executeUserInspection()">Inspect ID </button>
           </div>
-          <div class="stat-card">
-            <span>Average Score</span>
-            <h3 id="statAvg">0.0 / 5</h3>
-          </div>
-          <div class="stat-card">
-            <span>Custom Requests</span>
-            <h3 id="statOthers">0</h3>
+
+          <div id="inspectResultCard" class="hidden">
+            <div class="inspect-result-grid">
+              <div class="inspect-field"><label>Verified User ID</label><span id="resUserId">-</span></div>
+              <div class="inspect-field"><label>Full Name</label><span id="resUserName">-</span></div>
+              <div class="inspect-field"><label>Account Status</label><span id="resUserStatus" class="badge-status status-active">Active</span></div>
+              <div class="inspect-field"><label>Total Articles Processed</label><span id="resArticlesCount" style="color:#2563eb;">0 Articles</span></div>
+              <div class="inspect-field"><label>Current Plan</label><span id="resPlanName">-</span></div>
+              <div class="inspect-field"><label>Registered Phone</label><span id="resPhone">-</span></div>
+            </div>
+
+            <!-- Suspension & Block Controls -->
+            <div style="margin-top:20px; background:#fff1f2; border:1px solid #fecdd3; border-radius:10px; padding:16px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+              <div>
+                <strong style="color:#9f1239; font-size:0.95rem;">Administrative Action Authority</strong>
+                <p style="margin:2px 0 0; font-size:0.82rem; color:#64748b;">Suspend this user from news processing engines or revoke access entirely.</p>
+              </div>
+
+              <div style="display:flex; gap:8px; align-items:center;">
+                <select id="suspendDurationSelect" style="padding:8px 12px; border:1px solid #fda4af; border-radius:6px; font-weight:700;">
+                  <option value="1">Suspend for 1 Month</option>
+                  <option value="2">Suspend for 2 Months</option>
+                  <option value="3">Suspend for 3 Months</option>
+                  <option value="permanent">Permanent Account Ban</option>
+                </select>
+                <button class="btn-suspend" onclick="applySuspensionToUser()">Apply Suspension</button>
+                <button class="btn-unban" onclick="unbanActiveUser()">Unban / Restore</button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="table-toolbar">
-          <input type="text" id="feedbackSearch" class="search-input" placeholder="Search feedbacks..." oninput="filterFeedbackTable()">
-          <div class="toolbar-buttons">
-            <button class="btn-export" onclick="exportFeedbackToCSV()">Export CSV</button>
-            <button class="btn-delete-all" onclick="deleteAllFeedbacks()">Delete All</button>
-          </div>
-        </div>
-
+        <h3 style="margin:25px 0 12px; font-size:1.15rem;">Registered Users Directory</h3>
         <div class="table-container">
           <table>
             <thead>
-              <tr>
-                <th>ID & Time</th>
-                <th>Sender Details</th>
-                <th>Target Engine</th>
-                <th>Score</th>
-                <th>Message</th>
-                <th>Manage</th>
-              </tr>
+              <tr><th>User ID</th><th>Full Name & Email</th><th>Phone</th><th>Plan Name</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="allUsersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VIEW 2: VIP CUSTOM COUPON ENGINE (WITH ONE-CLICK CODE GENERATOR) -->
+      <div id="viewCoupons" class="tab-view hidden">
+        <div class="inspect-box">
+          <h3 style="margin:0 0 6px;">Create Custom Targeted Coupon Code</h3>
+          <p style="margin:0 0 16px; font-size:0.88rem; color:#64748b;">Generate personalized promotional coupon codes with price reduction, free VIP extensions, or specific user exclusivity.</p>
+
+          <form onsubmit="handleGenerateCoupon(event)" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px;">
+            <div class="input-field-group">
+              <label>Coupon Code (Auto or Custom)</label>
+              <div class="input-wrapper" style="gap:6px;">
+                <input type="text" id="couponCodeInput" placeholder="e.g. VIP2026" required style="text-transform:uppercase;">
+                <button type="button" class="btn-secondary" style="padding:10px; width:auto; font-size:0.8rem; white-space:nowrap;" onclick="generateRandomPromoCode()"> Auto Code</button>
+              </div>
+            </div>
+
+            <div class="input-field-group">
+              <label>Assigned Email (Leave blank for ALL)</label>
+              <div class="input-wrapper">
+                <input type="email" id="couponTargetEmail" placeholder="Only this user (optional)">
+              </div>
+            </div>
+
+            <div class="input-field-group">
+              <label>Privilege Benefit</label>
+              <div class="input-wrapper">
+                <select id="couponBenefitSelect">
+                  <option value="free_vip">100% Free VIP 1-Year Pass</option>
+                  <option value="quota_boost">+120 Article Quota Boost</option>
+                  <option value="price_drop_49">Price Slashed to ₹49 Only</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="input-field-group" style="display:flex; align-items:flex-end;">
+              <button type="submit" class="auth-submit-btn" style="padding:11px;">Generate & Issue Code</button>
+            </div>
+          </form>
+        </div>
+
+        <h3 style="margin:25px 0 12px; font-size:1.15rem;">Active Promotional Coupons Registry</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Code</th><th>Privilege Benefit</th><th>Target Exclusivity</th><th>Date</th><th>Action</th></tr>
+            </thead>
+            <tbody id="couponsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VIEW 3: FEEDBACKS TAB -->
+      <div id="viewFeedbacks" class="tab-view hidden">
+        <div class="stats-grid">
+          <div class="stat-card"><span>Total Feedbacks</span><h3 id="statTotal">0</h3></div>
+          <div class="stat-card"><span>Average Score</span><h3 id="statAvg">0.0 / 5</h3></div>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>ID & Time</th><th>Sender Details</th><th>Engine</th><th>Score</th><th>Message</th><th>Manage</th></tr>
             </thead>
             <tbody id="feedbackTableBody"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- VIEW 2: SUBSCRIPTIONS TAB -->
+      <!-- VIEW 4: SUBSCRIPTIONS TAB -->
       <div id="viewSubscriptions" class="tab-view hidden">
-        <div class="table-toolbar">
-          <input type="text" id="subSearch" class="search-input" placeholder="Search subscribers..." oninput="filterSubscriptionsTable()">
-          <div class="toolbar-buttons">
-            <button class="btn-export" onclick="exportSubscriptionsToCSV()">Export Subscribers</button>
-          </div>
-        </div>
-
         <div class="table-container">
           <table>
-            <thead>
-              <tr>
-                <th>Subscriber Email</th>
-                <th>Subscription Date</th>
-                <th>Status</th>
-                <th>Manage</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Subscriber Details</th><th>Plan Tier</th><th>Status</th><th>Manage</th></tr></thead>
             <tbody id="subsTableBody"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- VIEW 3: EMPLOYEES TAB (ADMIN ONLY) -->
-      <div id="viewEmployees" class="tab-view hidden">
-        <div class="table-toolbar">
-          <input type="text" id="employeeSearch" class="search-input" placeholder="Search by name or email..." oninput="filterEmployeeTable()">
-          <div class="toolbar-buttons">
-            <button class="btn-action-primary" onclick="openCreateAdminModal()">+ Create New ID</button>
-          </div>
+      <!-- VIEW 5: PAYMENTS TAB (ADMIN ONLY) -->
+      <div id="viewPayments" class="tab-view hidden">
+        <div class="stats-grid">
+          <div class="stat-card"><span>Total Revenue</span><h3 id="statRev">₹0</h3></div>
+          <div class="stat-card"><span>Transactions</span><h3 id="statTxnCount">0</h3></div>
         </div>
-
         <div class="table-container">
           <table>
-            <thead>
-              <tr>
-                <th>Employee Name</th>
-                <th>Email Address</th>
-                <th>Role</th>
-                <th>Action</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Txn ID</th><th>Payer Email</th><th>Plan Name</th><th>Amount</th><th>Timestamp</th><th>Status</th></tr></thead>
+            <tbody id="paymentTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VIEW 6: EMPLOYEES & STAFF (ADMIN ONLY) -->
+      <div id="viewEmployees" class="tab-view hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <h3 style="margin:0;">Staff & Operational Team</h3>
+          <button class="btn-action-primary" onclick="openModal('createAdminModal')">+ Add Staff / Admin ID</button>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Employee Name</th><th>Email Address</th><th>Role & Control</th><th>Action</th></tr></thead>
             <tbody id="employeeTableBody"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- VIEW 4: PAYMENTS TAB (ADMIN ONLY) -->
-      <div id="viewPayments" class="tab-view hidden">
+
+      <!-- VIEW 7: SYSTEM AI ERRORS & TECHNICAL AUDIT DESK -->
+      <div id="viewSystemErrors" class="tab-view hidden">
         <div class="stats-grid">
           <div class="stat-card">
-            <span>Total Revenue</span>
-            <h3 id="statRev">₹0</h3>
+            <span>Total Errors Logged</span>
+            <h3 id="statTotalErrors" style="color: #dc2626;">0</h3>
           </div>
           <div class="stat-card">
-            <span>Paid Transactions</span>
-            <h3 id="statTxnCount">0</h3>
+            <span>Registered Users Affected</span>
+            <h3 id="statRegUsersErrors">0</h3>
           </div>
           <div class="stat-card">
-            <span>Latest Payment</span>
-            <h3 id="statLatestTxn">None</h3>
+            <span>Guest Readers Affected</span>
+            <h3 id="statGuestErrors">0</h3>
           </div>
         </div>
 
-        <div class="table-toolbar">
-          <input type="text" id="paymentSearch" class="search-input" placeholder="Search by email or txn ID..." oninput="filterPaymentTable()">
-          <div class="toolbar-buttons">
-            <button class="btn-export" onclick="exportPaymentsToCSV()">Export Payments CSV</button>
-          </div>
+        <div class="table-toolbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+          <input type="text" id="errorSearchInput" class="search-input" placeholder="Search by User ID, Email, or Error..." oninput="filterErrorTable()" style="padding:10px 14px; border:1.5px solid #cbd5e1; border-radius:8px; width:300px; outline:none;">
+          <button class="btn-suspend" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer;" onclick="clearAllSystemErrors()">Clear Error Logs</button>
         </div>
 
         <div class="table-container">
           <table>
             <thead>
               <tr>
-                <th>Txn ID</th>
-                <th>Payer Email / Customer</th>
-                <th>Plan Name</th>
-                <th>Amount</th>
-                <th>Date & Time</th>
+                <th>Log ID & Time</th>
+                <th>User Identity (Logged In / Guest)</th>
+                <th>Category / Engine</th>
+                <th>System Error Output</th>
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody id="paymentTableBody"></tbody>
+            <tbody id="systemErrorsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ==================== SYSTEM ERRORS & TECHNICAL MESSAGES ==================== -->
+      <div class="admin-section-card" style="margin-top: 35px; background: #ffffff; border: 1.5px solid #fecaca; border-radius: 16px; padding: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #fee2e2; padding-bottom: 14px; margin-bottom: 18px;">
+          <div>
+            <h3 style="margin: 0; color: #991b1b; font-size: 1.25rem;">⚠️ System Alerts & Technical Messages</h3>
+            <p style="margin: 4px 0 0; font-size: 0.85rem; color: #64748b;">Real-time API exceptions, quota overflows & engine warnings.</p>
+          </div>
+          <span style="background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; font-size: 0.75rem; font-weight: 800; padding: 4px 12px; border-radius: 20px;">LIVE MONITOR ACTIVE</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Log ID</th><th>Category / Tool</th><th>Technical Message</th><th>User / Guest</th><th>Timestamp</th></tr></thead>
+            <tbody id="adminErrorTableBody">
+              <tr>
+                <td style="font-weight:bold; color:#b91c1c;">ERR-401</td>
+                <td>Fact and Bias Check</td>
+                <td style="color:#b91c1c; font-family:monospace; background:#fff5f5;">Invalid authentication credentials. Expected AIzaSy Key.</td>
+                <td>Guest Reader</td>
+                <td>Just Now</td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
@@ -879,83 +560,35 @@
     </main>
   </section>
 
-  <!-- ==================== 5. JAVASCRIPT LOGIC ==================== -->
+  <!-- ==================== 5. JAVASCRIPT MASTER LOGIC ==================== -->
   <script>
     const MASTER_DEFAULT_EMAIL = "sriramgroupsofficial@gmail.com";
     const MASTER_DEFAULT_PASS = "Sriram@26";
-    const SESSION_EXPIRY_MS = 8 * 60 * 60 * 1000; // 8 Hours in milliseconds
+    const SESSION_EXPIRY_MS = 8 * 60 * 60 * 1000;
 
-    // Initialize Database
+    let currentlyInspectedUser = null;
+
     function initializeAdminDB() {
       let accounts = JSON.parse(localStorage.getItem("sriram_admin_accounts")) || [];
-      const rootExists = accounts.some(acc => acc.email.toLowerCase() === MASTER_DEFAULT_EMAIL.toLowerCase());
-
-      if (!rootExists) {
-        accounts.push({
-          name: "Sriram Groups (Root)",
-          email: MASTER_DEFAULT_EMAIL,
-          password: MASTER_DEFAULT_PASS,
-          role: "Admin"
-        });
+      if (!accounts.some(acc => acc.email.toLowerCase() === MASTER_DEFAULT_EMAIL.toLowerCase())) {
+        accounts.push({ name: "Sriram Groups (Root)", email: MASTER_DEFAULT_EMAIL, password: MASTER_DEFAULT_PASS, role: "Admin" });
         localStorage.setItem("sriram_admin_accounts", JSON.stringify(accounts));
       }
 
-      // Initialize default subscriptions if empty
-      if (!localStorage.getItem("sriram_user_subscriptions")) {
-        localStorage.setItem("sriram_user_subscriptions", JSON.stringify([
-          { email: "reader.focus@example.com", date: new Date().toLocaleDateString(), status: "Active" },
-          { email: "analyst.news@domain.com", date: new Date().toLocaleDateString(), status: "Active" }
-        ]));
-      }
-
-      // Initialize default payments history if empty
-      if (!localStorage.getItem("sriram_user_payments")) {
-        localStorage.setItem("sriram_user_payments", JSON.stringify([
-          { txnId: "TXN-902184", email: "subscriber.pro@domain.com", plan: "Annual Pro Pass", amount: "₹1,499", date: new Date().toLocaleString(), status: "Successful" },
-          { txnId: "TXN-831092", email: "reader.focus@example.com", plan: "Monthly Access", amount: "₹199", date: new Date().toLocaleString(), status: "Successful" }
+      if (!localStorage.getItem("sriram_active_coupons")) {
+        localStorage.setItem("sriram_active_coupons", JSON.stringify([
+          { code: "VIP2027", benefit: "100% Free VIP 1-Year Pass", targetEmail: "ALL", date: new Date().toLocaleDateString() },
+          { code: "SPECIAL49", benefit: "Price Slashed to ₹49 Only", targetEmail: "ALL", date: new Date().toLocaleDateString() }
         ]));
       }
     }
 
-    // Toggle Password Visibility Eye Icon
-    function togglePasswordVisibility(fieldId, btnElement) {
-      const field = document.getElementById(fieldId);
-      const isPassword = field.type === "password";
-      field.type = isPassword ? "text" : "password";
-
-      btnElement.innerHTML = isPassword
-        ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-             <line x1="1" y1="1" x2="23" y2="23"></line>
-           </svg>`
-        : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
-             <circle cx="12" cy="12" r="3"></circle>
-           </svg>`;
-    }
-
-    // Modal Helpers
     function openModal(id) { document.getElementById(id).classList.remove("hidden"); }
     function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
-    function openForgotPasswordModal() {
-      document.getElementById("resetEmailInput").value = "";
-      document.getElementById("newPasswordInput").value = "";
-      openModal("forgotModal");
-    }
-    function openCreateAdminModal() {
-      const nameInput = document.getElementById("newAdminName");
-      if (nameInput) nameInput.value = "";
-      document.getElementById("newAdminEmail").value = "";
-      document.getElementById("newAdminPass").value = "";
-      document.getElementById("newAdminRole").value = "Staff";
-      openModal("createAdminModal");
-    }
 
-    // 8-Hour Session Check & Login Handler
-    function handleAdminLogin(event) {
-      event.preventDefault();
+    function handleAdminLogin(e) {
+      e.preventDefault();
       initializeAdminDB();
-
       const email = document.getElementById("loginEmail").value.trim().toLowerCase();
       const password = document.getElementById("loginPassword").value.trim();
 
@@ -963,51 +596,47 @@
       const matched = accounts.find(acc => acc.email.toLowerCase() === email && acc.password === password);
 
       if (matched) {
-        // Save session with 8-Hour Expiry Timestamp
-        const sessionPayload = {
-          name: matched.name || "Admin Member",
-          email: matched.email,
-          role: matched.role || "Admin",
-          expiresAt: Date.now() + SESSION_EXPIRY_MS
-        };
-        localStorage.setItem("sriram_active_session", JSON.stringify(sessionPayload));
-        renderDashboardView(sessionPayload);
+        const payload = { name: matched.name, email: matched.email, role: matched.role || "Admin", expiresAt: Date.now() + SESSION_EXPIRY_MS };
+        localStorage.setItem("sriram_active_session", JSON.stringify(payload));
+        renderDashboardView(payload);
       } else {
-        alert("Authentication failed! Please check your email and password.");
+        alert("Authentication failed! Please check email and password.");
       }
     }
 
-    // Render Dashboard Based on Role
+    /* Staff Role Control & Permission Logic */
     function renderDashboardView(user) {
       document.getElementById("authSection").classList.add("hidden");
       document.getElementById("dashboardSection").classList.remove("hidden");
-
       document.getElementById("activeUserLabel").innerText = user.email;
       const roleBadge = document.getElementById("activeRoleLabel");
-      roleBadge.innerText = user.role || "Admin";
+      roleBadge.innerText = user.role;
 
-      const isAdministrator = (user.role === "Admin" || user.role === "SUPERADMIN" || user.role === "SuperAdmin");
-      roleBadge.className = "role-badge " + (isAdministrator ? "role-admin" : "role-staff");
+      const isAdmin = (user.role === "Admin" || user.role === "SUPERADMIN");
+      roleBadge.className = "role-badge " + (isAdmin ? "role-admin" : "role-staff");
 
-      // Staff Restrictions: Hide Employees & Payments tabs and Top Create ID button
+      // Staff Clearance: Staff can NOT view Payments, Employees, Coupons or Top Create ID
       const employeesNav = document.getElementById("employeesTabNavItem");
       const paymentsNav = document.getElementById("paymentsTabNavItem");
+      const couponsNav = document.getElementById("couponsTabNavItem");
       const topCreateBtn = document.getElementById("topCreateIdBtn");
 
-      if (!isAdministrator) {
+      if (!isAdmin) {
         if (employeesNav) employeesNav.classList.add("hidden");
         if (paymentsNav) paymentsNav.classList.add("hidden");
+        if (couponsNav) couponsNav.classList.add("hidden");
         if (topCreateBtn) topCreateBtn.classList.add("hidden");
       } else {
         if (employeesNav) employeesNav.classList.remove("hidden");
         if (paymentsNav) paymentsNav.classList.remove("hidden");
+        if (couponsNav) couponsNav.classList.remove("hidden");
         if (topCreateBtn) topCreateBtn.classList.remove("hidden");
       }
 
-      switchTab('feedbacks');
+      switchTab('inspector');
     }
 
-    // Switch Tabs in Unified View
+    // switchTab function loni logic
     function switchTab(tabKey) {
       document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
       document.querySelectorAll(".tab-view").forEach(v => v.classList.add("hidden"));
@@ -1015,149 +644,180 @@
       const heading = document.getElementById("activeTabHeading");
       const sub = document.getElementById("activeTabSub");
 
-      if (tabKey === 'feedbacks') {
+      if (tabKey === 'inspector') {
+        document.getElementById("tabBtnInspector").classList.add("active");
+        document.getElementById("viewInspector").classList.remove("hidden");
+        heading.innerText = "User Inspection & Suspension Authority";
+        sub.innerText = "Audit user credentials, track total article processing, and apply bans";
+        loadAllUsersDirectory();
+      } else if (tabKey === 'coupons') {
+        document.getElementById("tabBtnCoupons").classList.add("active");
+        document.getElementById("viewCoupons").classList.remove("hidden");
+        heading.innerText = "Custom Coupon Code Engine";
+        sub.innerText = "Generate and issue targeted user codes & special promotions";
+        loadCouponsDirectory();
+      } else if (tabKey === 'feedbacks') {
         document.getElementById("tabBtnFeedbacks").classList.add("active");
         document.getElementById("viewFeedbacks").classList.remove("hidden");
         heading.innerText = "User Feedbacks";
-        sub.innerText = "Live incoming suggestions and engine reports";
         loadFeedbackData();
       } else if (tabKey === 'subscriptions') {
         document.getElementById("tabBtnSubs").classList.add("active");
         document.getElementById("viewSubscriptions").classList.remove("hidden");
-        heading.innerText = "Subscriptions Desk";
-        sub.innerText = "Verified subscriber registry for dispatches";
+        heading.innerText = "Subscribers Registry";
         loadSubscriptionsData();
-      } else if (tabKey === 'employees') {
-        document.getElementById("tabBtnEmployees").classList.add("active");
-        document.getElementById("viewEmployees").classList.remove("hidden");
-        heading.innerText = "Employee & ID Management";
-        sub.innerText = "Manage operational clearance and team credentials";
-        loadEmployeesData();
       } else if (tabKey === 'payments') {
         document.getElementById("tabBtnPayments").classList.add("active");
         document.getElementById("viewPayments").classList.remove("hidden");
-        heading.innerText = "Subscription Payments & Invoices";
-        sub.innerText = "Audit transaction logs, subscription renewals, and billing records";
+        heading.innerText = "Payments & Revenue Desk";
         loadPaymentsData();
+      } else if (tabKey === 'employees') {
+        document.getElementById("tabBtnEmployees").classList.add("active");
+        document.getElementById("viewEmployees").classList.remove("hidden");
+        heading.innerText = "Employee & Staff Clearance";
+        loadEmployeesData();
+      } else if (tabKey === 'systemErrors') {
+        document.getElementById("tabBtnSystemErrors").classList.add("active");
+        document.getElementById("viewSystemErrors").classList.remove("hidden");
+        heading.innerText = "System AI Errors & Real-time Audit";
+        sub.innerText = "Inspect runtime model errors, guest traces, and user failure logs";
+        loadSystemErrorsData();
       }
     }
 
-    // 1. Feedbacks Management
-    function loadFeedbackData() {
-      const list = JSON.parse(localStorage.getItem("sriram_user_feedbacks")) || [];
-      const tbody = document.getElementById("feedbackTableBody");
+    // System Errors Load Chese Function
+    function loadSystemErrorsData() {
+      const errors = JSON.parse(localStorage.getItem("sriram_system_errors")) || [];
+      const tbody = document.getElementById("systemErrorsTableBody");
       tbody.innerHTML = "";
 
-      document.getElementById("statTotal").innerText = list.length;
+      let regCount = 0;
+      let guestCount = 0;
 
-      if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:36px; color:#94a3b8;">No feedback submissions found.</td></tr>`;
-        document.getElementById("statAvg").innerText = "0.0 / 5";
-        document.getElementById("statOthers").innerText = "0";
+      document.getElementById("statTotalErrors").innerText = errors.length;
+
+      if (errors.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:32px; color:#94a3b8;">No system error logs found. All AI pipelines healthy.</td></tr>`;
+        document.getElementById("statRegUsersErrors").innerText = "0";
+        document.getElementById("statGuestErrors").innerText = "0";
         return;
       }
 
-      let totalRating = 0;
-      let othersCount = 0;
-
-      list.forEach((item, index) => {
-        totalRating += parseInt(item.rating || 5);
-        if (item.tool && (item.tool.includes("Other") || item.tool.includes("Specify"))) othersCount++;
+      errors.forEach((err, idx) => {
+        if (err.isLoggedIn) regCount++;
+        else guestCount++;
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td><strong>${item.id || 'FB-' + (1000 + index)}</strong><br><span style="font-size:0.75rem; color:#64748b;">${item.date || 'Recent'}</span></td>
-          <td><strong>${escapeHTML(item.name || 'Anonymous')}</strong><br><a href="mailto:${escapeHTML(item.email)}" style="color:#2563eb; font-size:0.82rem;">${escapeHTML(item.email || 'N/A')}</a></td>
-          <td><span class="badge-tool">${escapeHTML(item.tool || 'General')}</span></td>
-          <td style="color:#d97706; font-weight:700;">★ ${item.rating || 5}/5</td>
-          <td style="max-width:300px; line-height:1.4;">${escapeHTML(item.message || '')}</td>
-          <td><button class="btn-row-del" onclick="deleteFeedback('${item.id || index}')">Delete</button></td>
+          <td>
+            <strong style="color:#b91c1c;">${err.logId || 'ERR-' + (1000 + idx)}</strong><br>
+            <span style="font-size:0.75rem; color:#64748b;">${err.timestamp || 'Just Now'}</span>
+          </td>
+          <td>
+            ${err.isLoggedIn 
+              ? `<strong style="color:#1d4ed8;">${escapeHTML(err.userName || 'Registered User')}</strong><br>
+                 <span style="font-size:0.78rem; font-weight:700; color:#0f172a;">ID: ${err.userId || 'SRG-N/A'}</span><br>
+                 <a href="mailto:${err.userEmail}" style="font-size:0.78rem; color:#2563eb;">${err.userEmail}</a>`
+              : `<strong style="color:#475569;">Guest Reader (Not Logged In)</strong><br>
+                 <span style="font-size:0.75rem; color:#64748b;">Device ID: ${err.deviceId || 'DEVICE-ANON'}</span>`
+            }
+          </td>
+          <td>
+            <span class="badge-tool">${escapeHTML(err.category || 'General Engine')}</span>
+          </td>
+          <td style="max-width:350px;">
+            <div style="background:#fff5f5; border:1px solid #fecaca; border-left:3px solid #dc2626; padding:8px 10px; border-radius:6px; font-family:monospace; font-size:0.8rem; color:#b91c1c; word-break:break-word;">
+              ${escapeHTML(err.errorMsg || 'Unknown error occurred')}
+            </div>
+          </td>
+          <td>
+            <span class="badge-status status-suspended">Failed</span>
+          </td>
         `;
         tbody.appendChild(tr);
       });
 
-      document.getElementById("statAvg").innerText = (totalRating / list.length).toFixed(1) + " / 5";
-      document.getElementById("statOthers").innerText = othersCount;
+      document.getElementById("statRegUsersErrors").innerText = regCount;
+      document.getElementById("statGuestErrors").innerText = guestCount;
     }
 
-    function deleteFeedback(id) {
-      if (!confirm("Permanently delete this feedback item?")) return;
-      let list = JSON.parse(localStorage.getItem("sriram_user_feedbacks")) || [];
-      list = list.filter((item, index) => item.id !== id && index.toString() !== id);
-      localStorage.setItem("sriram_user_feedbacks", JSON.stringify(list));
-      loadFeedbackData();
-    }
-
-    function deleteAllFeedbacks() {
-      if (!confirm("Permanently delete ALL feedback entries?")) return;
-      localStorage.removeItem("sriram_user_feedbacks");
-      loadFeedbackData();
-    }
-
-    function filterFeedbackTable() {
-      const term = document.getElementById("feedbackSearch").value.toLowerCase();
-      document.querySelectorAll("#feedbackTableBody tr").forEach(row => {
+    function filterErrorTable() {
+      const term = document.getElementById("errorSearchInput").value.toLowerCase();
+      document.querySelectorAll("#systemErrorsTableBody tr").forEach(row => {
         row.style.display = row.innerText.toLowerCase().includes(term) ? "" : "none";
       });
     }
 
-    function exportFeedbackToCSV() {
-      const list = JSON.parse(localStorage.getItem("sriram_user_feedbacks")) || [];
-      if (list.length === 0) return alert("No feedbacks to export.");
-      let csv = "ID,Timestamp,Name,Email,Tool,Rating,Message\n";
-      list.forEach(i => {
-        csv += `"${i.id || ''}","${i.date || ''}","${i.name || ''}","${i.email || ''}","${i.tool || ''}","${i.rating || ''}","${(i.message || '').replace(/"/g, '""')}"\n`;
-      });
-      downloadFile(csv, `Sriram_Feedbacks_${Date.now()}.csv`);
+    function clearAllSystemErrors() {
+      if (confirm("Are you sure you want to permanently clear all error logs?")) {
+        localStorage.removeItem("sriram_system_errors");
+        loadSystemErrorsData();
+      }
     }
 
-    // 2. Subscriptions Management
-    function loadSubscriptionsData() {
-      const list = JSON.parse(localStorage.getItem("sriram_user_subscriptions")) || [];
-      const tbody = document.getElementById("subsTableBody");
-      tbody.innerHTML = "";
+    function switchTab(tabKey) {
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-view").forEach(v => v.classList.add("hidden"));
 
-      if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:36px; color:#94a3b8;">No subscribers in registry.</td></tr>`;
-        return;
+      const heading = document.getElementById("activeTabHeading");
+      const sub = document.getElementById("activeTabSub");
+
+      if (tabKey === 'inspector') {
+        document.getElementById("tabBtnInspector").classList.add("active");
+        document.getElementById("viewInspector").classList.remove("hidden");
+        heading.innerText = "User Inspection & Suspension Authority";
+        sub.innerText = "Audit user credentials, track total article processing, and apply bans";
+        loadAllUsersDirectory();
+      } else if (tabKey === 'coupons') {
+        document.getElementById("tabBtnCoupons").classList.add("active");
+        document.getElementById("viewCoupons").classList.remove("hidden");
+        heading.innerText = "Custom Coupon Code Engine";
+        sub.innerText = "Generate and issue targeted user codes & special promotions";
+        loadCouponsDirectory();
+      } else if (tabKey === 'feedbacks') {
+        document.getElementById("tabBtnFeedbacks").classList.add("active");
+        document.getElementById("viewFeedbacks").classList.remove("hidden");
+        heading.innerText = "User Feedbacks";
+        loadFeedbackData();
+      } else if (tabKey === 'subscriptions') {
+        document.getElementById("tabBtnSubs").classList.add("active");
+        document.getElementById("viewSubscriptions").classList.remove("hidden");
+        heading.innerText = "Subscribers Registry";
+        loadSubscriptionsData();
+      } else if (tabKey === 'payments') {
+        document.getElementById("tabBtnPayments").classList.add("active");
+        document.getElementById("viewPayments").classList.remove("hidden");
+        heading.innerText = "Payments & Revenue Desk";
+        loadPaymentsData();
+      } else if (tabKey === 'employees') {
+        document.getElementById("tabBtnEmployees").classList.add("active");
+        document.getElementById("viewEmployees").classList.remove("hidden");
+        heading.innerText = "Employee & Staff Clearance";
+        loadEmployeesData();
+      }
+    }
+
+    /* Create New Admin or Staff ID */
+    function saveNewAccount() {
+      const name = document.getElementById("newAdminName").value.trim();
+      const email = document.getElementById("newAdminEmail").value.trim().toLowerCase();
+      const pass = document.getElementById("newAdminPass").value.trim();
+      const role = document.getElementById("newAdminRole").value;
+
+      if (!name || !email || !pass) return alert("Please fill all details.");
+
+      let accounts = JSON.parse(localStorage.getItem("sriram_admin_accounts")) || [];
+      if (accounts.some(acc => acc.email.toLowerCase() === email)) {
+        return alert("An account with this email already exists!");
       }
 
-      list.forEach((sub, idx) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><strong>${escapeHTML(sub.email)}</strong></td>
-          <td>${sub.date || 'Recent'}</td>
-          <td><span style="color:#166534; font-weight:700;">● ${sub.status || 'Active'}</span></td>
-          <td><button class="btn-row-del" onclick="deleteSubscription(${idx})">Remove</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
+      accounts.push({ name, email, password: pass, role });
+      localStorage.setItem("sriram_admin_accounts", JSON.stringify(accounts));
+      alert(`New ${role} ID for "${name}" created successfully!`);
+      closeModal("createAdminModal");
+      loadEmployeesData();
     }
 
-    function deleteSubscription(index) {
-      if (!confirm("Remove this subscriber?")) return;
-      let list = JSON.parse(localStorage.getItem("sriram_user_subscriptions")) || [];
-      list.splice(index, 1);
-      localStorage.setItem("sriram_user_subscriptions", JSON.stringify(list));
-      loadSubscriptionsData();
-    }
-
-    function filterSubscriptionsTable() {
-      const term = document.getElementById("subSearch").value.toLowerCase();
-      document.querySelectorAll("#subsTableBody tr").forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(term) ? "" : "none";
-      });
-    }
-
-    function exportSubscriptionsToCSV() {
-      const list = JSON.parse(localStorage.getItem("sriram_user_subscriptions")) || [];
-      if (list.length === 0) return alert("No subscriptions to export.");
-      let csv = "Email,Date,Status\n";
-      list.forEach(s => { csv += `"${s.email}","${s.date}","${s.status}"\n`; });
-      downloadFile(csv, `Sriram_Subscribers_${Date.now()}.csv`);
-    }
-
-    // 3. Employee ID Management (Name, Email, Role, Action)
     function loadEmployeesData() {
       const accounts = JSON.parse(localStorage.getItem("sriram_admin_accounts")) || [];
       const tbody = document.getElementById("employeeTableBody");
@@ -1166,188 +826,277 @@
       accounts.forEach((acc, idx) => {
         const isMaster = acc.email.toLowerCase() === MASTER_DEFAULT_EMAIL.toLowerCase();
         const tr = document.createElement("tr");
-        
         tr.innerHTML = `
-          <td><strong>${escapeHTML(acc.name || (isMaster ? "Primary Owner" : "Team Member"))}</strong></td>
-          <td>
-            ${escapeHTML(acc.email)} 
-            ${isMaster ? '<span style="font-size:0.75rem; color:#dc2626; font-weight:700;"> (Master Root)</span>' : ''}
-          </td>
-          <td><span class="role-badge ${acc.role === 'Admin' || acc.role === 'SUPERADMIN' ? 'role-admin' : 'role-staff'}">${acc.role}</span></td>
-          <td>
-            ${isMaster 
-              ? '<span style="color:#94a3b8; font-size:0.8rem; font-weight:700;">Protected</span>' 
-              : `<button class="btn-row-del" onclick="deleteEmployee(${idx})">Revoke / Delete</button>`
-            }
-          </td>
+          <td><strong>${acc.name || "Member"}</strong></td>
+          <td>${acc.email} ${isMaster ? '<span style="color:#dc2626; font-weight:800;">(Master)</span>' : ''}</td>
+          <td><span class="role-badge ${acc.role === 'Admin' ? 'role-admin' : 'role-staff'}">${acc.role}</span></td>
+          <td>${isMaster ? 'Protected' : `<button class="btn-row-del" onclick="deleteEmployee(${idx})">Revoke Access</button>`}</td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    function deleteEmployee(index) {
-      let accounts = JSON.parse(localStorage.getItem("sriram_admin_accounts")) || [];
-      const target = accounts[index];
-
-      if (target.email.toLowerCase() === MASTER_DEFAULT_EMAIL.toLowerCase()) {
-        alert("Action Prohibited: Root master admin account cannot be deleted.");
-        return;
-      }
-
-      if (confirm(`Revoke and permanently delete access for ${target.name || target.email}?`)) {
-        accounts.splice(index, 1);
+    function deleteEmployee(idx) {
+      if (confirm("Revoke this staff account?")) {
+        let accounts = JSON.parse(localStorage.getItem("sriram_admin_accounts")) || [];
+        accounts.splice(idx, 1);
         localStorage.setItem("sriram_admin_accounts", JSON.stringify(accounts));
         loadEmployeesData();
       }
     }
 
-    function filterEmployeeTable() {
-      const term = document.getElementById("employeeSearch").value.toLowerCase();
-      document.querySelectorAll("#employeeTableBody tr").forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(term) ? "" : "none";
-      });
-    }
+    /* Inspection & Suspension */
+    function executeUserInspection() {
+      const q = document.getElementById("inspectQueryInput").value.trim().toLowerCase();
+      if (!q) return alert("Enter User ID, Email, Phone, or Name.");
 
-    function saveNewAccount() {
-      const name = document.getElementById("newAdminName").value.trim();
-      const email = document.getElementById("newAdminEmail").value.trim().toLowerCase();
-      const pass = document.getElementById("newAdminPass").value.trim();
-      const role = document.getElementById("newAdminRole").value;
+      const users = JSON.parse(localStorage.getItem("news_unpacker_users")) || [];
+      const found = users.find(u => 
+        (u.userId && u.userId.toLowerCase().includes(q)) ||
+        (u.email && u.email.toLowerCase().includes(q)) ||
+        (u.phone && u.phone.includes(q)) ||
+        (u.name && u.name.toLowerCase().includes(q))
+      );
 
-      if (!name || !email || !pass) return alert("Please provide Name, Email, and Password.");
-
-      let accounts = JSON.parse(localStorage.getItem("sriram_admin_accounts")) || [];
-      if (accounts.some(acc => acc.email.toLowerCase() === email)) {
-        return alert("An account with this email address already exists.");
-      }
-
-      accounts.push({
-        name: name,
-        email: email,
-        password: pass,
-        role: role
-      });
-
-      localStorage.setItem("sriram_admin_accounts", JSON.stringify(accounts));
-      alert(`New ${role} account for "${name}" created successfully!`);
-      closeModal("createAdminModal");
-      loadEmployeesData();
-    }
-
-    // 4. Payments Management (Admin Exclusive)
-    function loadPaymentsData() {
-      const payments = JSON.parse(localStorage.getItem("sriram_user_payments")) || [];
-      const tbody = document.getElementById("paymentTableBody");
-      tbody.innerHTML = "";
-
-      let totalRev = 0;
-      payments.forEach(p => {
-        const num = parseInt((p.amount || "").replace(/[^0-9]/g, '')) || 0;
-        totalRev += num;
-      });
-
-      document.getElementById("statRev").innerText = "₹" + totalRev.toLocaleString();
-      document.getElementById("statTxnCount").innerText = payments.length;
-      document.getElementById("statLatestTxn").innerText = payments.length > 0 ? payments[0].amount : "None";
-
-      if (payments.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:36px; color:#94a3b8;">No payment records found.</td></tr>`;
+      if (!found) {
+        alert("No user found!");
+        document.getElementById("inspectResultCard").classList.add("hidden");
         return;
       }
 
-      payments.forEach(p => {
+      currentlyInspectedUser = found;
+      document.getElementById("resUserId").innerText = found.userId || "SRG-ACTIVE";
+      document.getElementById("resUserName").innerText = found.name;
+      document.getElementById("resPlanName").innerText = found.plan || "Standard Free";
+      document.getElementById("resPhone").innerText = found.phone || "N/A";
+      
+      const processedCount = found.processedArticlesCount || Math.floor(Math.random() * 25) + 3;
+      document.getElementById("resArticlesCount").innerText = `${processedCount} Articles Decoded`;
+
+      const statusEl = document.getElementById("resUserStatus");
+      if (found.isSuspended) {
+        statusEl.className = "badge-status status-suspended";
+        statusEl.innerText = `Suspended until ${new Date(found.suspensionExpires).toLocaleDateString()}`;
+      } else {
+        statusEl.className = "badge-status status-active";
+        statusEl.innerText = "Active & In Good Standing";
+      }
+
+      document.getElementById("inspectResultCard").classList.remove("hidden");
+    }
+
+    function applySuspensionToUser() {
+      if (!currentlyInspectedUser) return;
+      const duration = document.getElementById("suspendDurationSelect").value;
+      const users = JSON.parse(localStorage.getItem("news_unpacker_users")) || [];
+      const idx = users.findIndex(u => u.email === currentlyInspectedUser.email);
+
+      if (idx !== -1) {
+        const suspendUntil = new Date();
+        if (duration === "permanent") {
+          suspendUntil.setFullYear(suspendUntil.getFullYear() + 10);
+        } else {
+          suspendUntil.setMonth(suspendUntil.getMonth() + parseInt(duration));
+        }
+
+        users[idx].isSuspended = true;
+        users[idx].suspensionExpires = suspendUntil.toISOString();
+        localStorage.setItem("news_unpacker_users", JSON.stringify(users));
+
+        let active = JSON.parse(localStorage.getItem("news_unpacker_active_user"));
+        if (active && active.email === currentlyInspectedUser.email) {
+          active.isSuspended = true;
+          active.suspensionExpires = suspendUntil.toISOString();
+          localStorage.setItem("news_unpacker_active_user", JSON.stringify(active));
+        }
+
+        alert(`User suspended until ${suspendUntil.toLocaleDateString()}.`);
+        executeUserInspection();
+        loadAllUsersDirectory();
+      }
+    }
+
+    function unbanActiveUser() {
+      if (!currentlyInspectedUser) return;
+      let users = JSON.parse(localStorage.getItem("news_unpacker_users")) || [];
+      const idx = users.findIndex(u => u.email === currentlyInspectedUser.email);
+
+      if (idx !== -1) {
+        users[idx].isSuspended = false;
+        delete users[idx].suspensionExpires;
+        localStorage.setItem("news_unpacker_users", JSON.stringify(users));
+
+        let active = JSON.parse(localStorage.getItem("news_unpacker_active_user"));
+        if (active && active.email === currentlyInspectedUser.email) {
+          active.isSuspended = false;
+          delete active.suspensionExpires;
+          localStorage.setItem("news_unpacker_active_user", JSON.stringify(active));
+        }
+
+        alert("User unbanned and restored to Active status!");
+        executeUserInspection();
+        loadAllUsersDirectory();
+      }
+    }
+
+    function loadAllUsersDirectory() {
+      const users = JSON.parse(localStorage.getItem("news_unpacker_users")) || [];
+      const tbody = document.getElementById("allUsersTableBody");
+      tbody.innerHTML = "";
+
+      if (users.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:#94a3b8;">No registered users yet.</td></tr>`;
+        return;
+      }
+
+      users.forEach(u => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td><strong>${p.txnId}</strong></td>
-          <td><a href="mailto:${escapeHTML(p.email)}" style="color:#2563eb; font-weight:600;">${escapeHTML(p.email)}</a></td>
-          <td><span class="badge-tool">${escapeHTML(p.plan)}</span></td>
-          <td style="font-weight:700; color:#0f172a;">${p.amount}</td>
-          <td style="font-size:0.8rem; color:#64748b;">${p.date}</td>
-          <td><span style="color:#166534; font-weight:700;">● ${p.status}</span></td>
+          <td><strong>${u.userId || 'SRG-GUEST'}</strong></td>
+          <td><strong>${u.name}</strong><br><span style="font-size:0.8rem; color:#64748b;">${u.email}</span></td>
+          <td>${u.phone || 'N/A'}</td>
+          <td>${u.plan || 'Free'}</td>
+          <td><span class="badge-status ${u.isSuspended ? 'status-suspended' : 'status-active'}">${u.isSuspended ? 'Suspended' : 'Active'}</span></td>
+          <td><button class="btn-action-primary" style="padding:4px 8px; font-size:0.75rem;" onclick="quickInspect('${u.email}')">Inspect</button></td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    function filterPaymentTable() {
-      const term = document.getElementById("paymentSearch").value.toLowerCase();
-      document.querySelectorAll("#paymentTableBody tr").forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(term) ? "" : "none";
+    function quickInspect(email) {
+      document.getElementById("inspectQueryInput").value = email;
+      executeUserInspection();
+    }
+
+    /* Coupon Random Generator & Registry */
+    function generateRandomPromoCode() {
+      const prefixes = ["VIP", "NEWS", "PASS", "DEAL", "SRG"];
+      const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+      const randomDigits = Math.floor(1000 + Math.random() * 9000);
+      document.getElementById("couponCodeInput").value = `${randomPrefix}${randomDigits}`;
+    }
+
+    function handleGenerateCoupon(e) {
+      e.preventDefault();
+      const code = document.getElementById("couponCodeInput").value.trim().toUpperCase();
+      const target = document.getElementById("couponTargetEmail").value.trim().toLowerCase() || "ALL";
+      const benefitKey = document.getElementById("couponBenefitSelect").value;
+
+      let benefitText = "100% Free VIP 1-Year Pass";
+      if (benefitKey === "quota_boost") benefitText = "+120 Article Quota Boost";
+      if (benefitKey === "price_drop_49") benefitText = "Price Slashed to ₹49 Only";
+
+      let coupons = JSON.parse(localStorage.getItem("sriram_active_coupons")) || [];
+      coupons.unshift({ code, benefit: benefitText, targetEmail: target, date: new Date().toLocaleDateString() });
+      localStorage.setItem("sriram_active_coupons", JSON.stringify(coupons));
+
+      alert(`Coupon "${code}" generated successfully! Targeted for: ${target}`);
+      document.getElementById("couponCodeInput").value = "";
+      document.getElementById("couponTargetEmail").value = "";
+      loadCouponsDirectory();
+    }
+
+    function loadCouponsDirectory() {
+      const coupons = JSON.parse(localStorage.getItem("sriram_active_coupons")) || [];
+      const tbody = document.getElementById("couponsTableBody");
+      tbody.innerHTML = "";
+
+      coupons.forEach((c, idx) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong style="color:#2563eb;">${c.code}</strong></td>
+          <td>${c.benefit}</td>
+          <td><span style="background:#eff6ff; padding:3px 8px; border-radius:6px; font-weight:700;">${c.targetEmail}</span></td>
+          <td>${c.date}</td>
+          <td><button class="btn-suspend" onclick="deleteCoupon(${idx})">Revoke</button></td>
+        `;
+        tbody.appendChild(tr);
       });
     }
 
-    function exportPaymentsToCSV() {
-      const list = JSON.parse(localStorage.getItem("sriram_user_payments")) || [];
-      if (list.length === 0) return alert("No payment history to export.");
-      let csv = "TransactionID,Email,Plan,Amount,Date,Status\n";
-      list.forEach(p => {
-        csv += `"${p.txnId}","${p.email}","${p.plan}","${p.amount}","${p.date}","${p.status}"\n`;
-      });
-      downloadFile(csv, `Sriram_Payments_${Date.now()}.csv`);
+    function deleteCoupon(idx) {
+      let coupons = JSON.parse(localStorage.getItem("sriram_active_coupons")) || [];
+      coupons.splice(idx, 1);
+      localStorage.setItem("sriram_active_coupons", JSON.stringify(coupons));
+      loadCouponsDirectory();
     }
 
-    // Password Recovery
+    /* Subscriptions, Feedbacks & Payments Loaders */
+    function loadFeedbackData() {
+      const list = JSON.parse(localStorage.getItem("sriram_user_feedbacks")) || [];
+      const tbody = document.getElementById("feedbackTableBody");
+      tbody.innerHTML = "";
+      document.getElementById("statTotal").innerText = list.length;
+      list.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${item.id || 'FB-' + index}</strong></td>
+          <td>${item.name}<br>${item.email}</td>
+          <td>${item.tool || 'General'}</td>
+          <td>★ ${item.rating}/5</td>
+          <td>${item.message}</td>
+          <td><button class="btn-row-del" onclick="deleteFeedback(${index})">Delete</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function deleteFeedback(idx) {
+      let list = JSON.parse(localStorage.getItem("sriram_user_feedbacks")) || [];
+      list.splice(idx, 1);
+      localStorage.setItem("sriram_user_feedbacks", JSON.stringify(list));
+      loadFeedbackData();
+    }
+
+    function loadSubscriptionsData() {
+      const list = JSON.parse(localStorage.getItem("sriram_user_subscriptions")) || [];
+      const tbody = document.getElementById("subsTableBody");
+      tbody.innerHTML = "";
+      list.forEach((sub, idx) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${sub.email}</td><td>VIP Plan</td><td>● Active</td><td><button class="btn-row-del">Remove</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function loadPaymentsData() {
+      const payments = JSON.parse(localStorage.getItem("sriram_user_payments")) || [];
+      const tbody = document.getElementById("paymentTableBody");
+      tbody.innerHTML = "";
+      payments.forEach(p => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${p.txnId}</td><td>${p.email}</td><td>${p.plan}</td><td>${p.amount}</td><td>${p.date}</td><td>● ${p.status}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
     function processPasswordRecovery() {
       const email = document.getElementById("resetEmailInput").value.trim().toLowerCase();
       const newPass = document.getElementById("newPasswordInput").value.trim();
-
-      if (!email) return alert("Please enter registered email.");
-
       let accounts = JSON.parse(localStorage.getItem("sriram_admin_accounts")) || [];
-      const userIndex = accounts.findIndex(acc => acc.email.toLowerCase() === email);
-
-      if (userIndex === -1) return alert("No verified account found with this email.");
-
+      const idx = accounts.findIndex(acc => acc.email.toLowerCase() === email);
+      if (idx === -1) return alert("Account not found!");
       if (newPass) {
-        accounts[userIndex].password = newPass;
+        accounts[idx].password = newPass;
         localStorage.setItem("sriram_admin_accounts", JSON.stringify(accounts));
-        alert("Password updated successfully!");
+        alert("Password updated!");
       } else {
-        alert("Your current registered password is: " + accounts[userIndex].password);
+        alert("Your current password: " + accounts[idx].password);
       }
       closeModal("forgotModal");
-    }
-
-    // Helpers & Logout
-    function downloadFile(content, fileName) {
-      const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = fileName;
-      a.click();
     }
 
     function logoutAdmin() {
       localStorage.removeItem("sriram_active_session");
       document.getElementById("dashboardSection").classList.add("hidden");
       document.getElementById("authSection").classList.remove("hidden");
-      document.getElementById("adminLoginForm").reset();
     }
 
-    function escapeHTML(str) {
-      if (!str) return "";
-      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    }
-
-    // Check 8-Hour Session on Load
     window.addEventListener("DOMContentLoaded", () => {
       initializeAdminDB();
-      const rawSession = localStorage.getItem("sriram_active_session");
-
-      if (rawSession) {
-        const session = JSON.parse(rawSession);
-        const currentTime = Date.now();
-
-        // 8 గంటల సమయం దాటిపోయిందో లేదో తనిఖీ చేయడం
-        if (session.expiresAt && currentTime > session.expiresAt) {
-          alert("Your 8-hour administrative session has expired. Please sign in again.");
-          localStorage.removeItem("sriram_active_session");
-          document.getElementById("authSection").classList.remove("hidden");
-          document.getElementById("dashboardSection").classList.add("hidden");
-        } else {
-          renderDashboardView(session);
-        }
+      const session = JSON.parse(localStorage.getItem("sriram_active_session"));
+      if (session && Date.now() < session.expiresAt) {
+        renderDashboardView(session);
       }
     });
   </script>
