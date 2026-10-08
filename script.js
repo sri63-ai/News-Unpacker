@@ -1,5 +1,5 @@
 // ==================== CONFIGURATION & BACKEND ENDPOINTS ====================
-const API_KEY = "AQ.Ab8RN6JfkjIq56mJkQkOVOdMxJ79g6EkNtBifIKOTbxHx1nlUA";
+const API_KEY = "AQ.Ab8RN6Jy4n1Ey9XKPl_W7MkT8K_geI41Ww2j667e14XRosiE_A";
 
 // Separate Endpoints for Authentication vs Billing
 const AUTH_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTpt_57anfxQY0cWfXg91qokYOZFCUUFSAt6mbJxrpjzPjJujaIIOSEHBquiMTp-Sl/exec";
@@ -704,9 +704,9 @@ function applyQuotaDeduction() {
   }
 }
 
-// 6. Gemini Flash API Caller
+// 6. Gemini Flash API Caller (Updated to gemini-3.8-flash)
 async function callGeminiAPI(promptText) {
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${API_KEY}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
