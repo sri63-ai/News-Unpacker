@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>News Unpacker – AI News Summarizer & Fact Checker | Powered by Sriram Groups</title>
@@ -20,874 +21,1409 @@
   <meta name="twitter:description" content="Summarize, verify, and listen to any news story instantly.">
 
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Profile Circle and User Menu Styles */
+    .user-profile-wrapper {
+      position: relative;
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+    }
+    
+    .profile-avatar-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      color: #1e293b;
+      font-weight: 800;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-transform: uppercase;
+      user-select: none;
+    }
+    
+    .profile-avatar-btn:hover {
+      transform: scale(1.05);
+      border-color: #2563eb;
+    }
+
+    .profile-avatar-btn.subscribed {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+      color: #ffffff !important;
+      border: 2px solid #60a5fa !important;
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.45) !important;
+    }
+
+    .profile-dropdown-card {
+      position: absolute;
+      top: 54px;
+      right: 0;
+      width: 290px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.15);
+      padding: 18px;
+      z-index: 10001;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .profile-user-info {
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 12px;
+    }
+
+    .profile-user-info h4 {
+      margin: 0;
+      font-size: 1.05rem;
+      color: #0f172a;
+      font-weight: 800;
+    }
+
+    .profile-user-info p {
+      margin: 3px 0 0;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .sub-status-pill {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 12px;
+      margin-top: 6px;
+    }
+
+    .sub-active {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .sub-inactive {
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+    }
+
+    .profile-action-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      color: #334155;
+      font-size: 0.92rem;
+      font-weight: 600;
+      text-decoration: none;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .profile-action-item:hover {
+      background: #eff6ff;
+      border-color: #93c5fd;
+      color: #1d4ed8;
+    }
+
+    .code-redeem-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .code-redeem-row input {
+      flex: 1;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+
+    .code-redeem-row button {
+      background: #059669;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.82rem;
+    }
+
+    .logout-item-btn {
+      color: #dc2626 !important;
+      background: #fef2f2 !important;
+      border-color: #fecaca !important;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .logout-item-btn:hover {
+      background: #fee2e2 !important;
+    }
+  </style>
 </head>
 <body>
 
+  <!-- ==================== TOP NAVIGATION HEADER ==================== -->
   <header class="main-header">
     <nav class="top-nav">
       <div class="nav-item">
-        <a href="#" class="nav-link nav-btn-home" onclick="backToDashboard()">𝓱𝓸𝓶𝓮</a>
+        <a href="index.html" class="nav-link nav-btn-home">Home</a>
       </div>
 
       <div class="nav-item dropdown">
-        <button class="nav-link drop-btn">𝓒𝓸𝓶𝓹𝓪𝓷𝔂 ▾</button>
+        <button class="nav-link drop-btn" type="button">Company ▾</button>
         <div class="dropdown-content">
           <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a>
-          <a href="#about" onclick="openAboutSection()">About Us</a>
+          <a href="javascript:void(0)" onclick="openAboutSection()">About Us</a>
           <a href="websites.html">Other Websites</a>
         </div>
       </div>
 
       <div class="nav-item dropdown">
-        <button class="nav-link drop-btn">Connect ▾</button>
+        <button class="nav-link drop-btn" type="button">Connect ▾</button>
         <div class="dropdown-content">
           <a href="mailto:sriramgroups.help@gmail.com">Help Line</a>
-          <a href="#social" onclick="openSocialSection()">Social Media</a>
+          <a href="javascript:void(0)" onclick="openSocialSection()">Social Media</a>
           <a href="javascript:void(0)" onclick="scrollToFeedback()">Feedback & Requests</a>
         </div>
       </div>
 
       <div class="nav-item dropdown">
-        <button class="nav-link drop-btn">𝓣𝓮𝓻𝓶𝓼 & 𝓟𝓸𝓵𝓲𝓬𝓲𝓮𝓼 ▾</button>
+        <button class="nav-link drop-btn" type="button">Terms & Policies ▾</button>
         <div class="dropdown-content">
           <a href="terms.html">Terms & Conditions</a>
+          <a href="subscription.html">Subscription Plans</a>
           <a href="privacy.html">Privacy Policy</a>
-          <a href="#policies">Other Policies</a>
+          <a href="policies.html">Other Policies</a>
         </div>
       </div>
 
       <div class="nav-item dropdown">
-        <button class="nav-link drop-btn">Category ▾</button>
+        <button class="nav-link drop-btn" type="button">Category ▾</button>
         <div class="dropdown-content">
-          <a href="#" onclick="openWorkspace('politics')">Politics</a>
-          <a href="#" onclick="openWorkspace('business')">Business & Economy</a>
-          <a href="#" onclick="openWorkspace('tech')">Technology</a>
-          <a href="#" onclick="openWorkspace('crime_legal')">Crime & Legal</a>
-          <a href="#" onclick="openWorkspace('education')">Education & Careers</a>
-          <a href="#" onclick="openWorkspace('health')">Health & Lifestyle</a>
-          <a href="#" onclick="openWorkspace('sports')">Sports</a>
-          <a href="#" onclick="openWorkspace('environment')">Weather & Climate</a>
-          <a href="#" onclick="openWorkspace('kids')">Kids & Students</a>
+          <a href="javascript:void(0)" onclick="openWorkspace('politics')">Politics</a>
+          <a href="javascript:void(0)" onclick="openWorkspace('business')">Business & Economy</a>
+          <a href="javascript:void(0)" onclick="openWorkspace('tech')">Technology</a>
+          <a href="javascript:void(0)" onclick="openWorkspace('crime_legal')">Crime & Legal</a>
+          <a href="javascript:void(0)" onclick="openWorkspace('education')">Education & Careers</a>
+          <a href="javascript:void(0)" onclick="openWorkspace('health')">Health & Lifestyle</a>
+          <a href="javascript:void(0)" onclick="openWorkspace('sports')">Sports</a>
+          <a href="javascript:void(0)" onclick="openWorkspace('environment')">Weather & Climate</a>
+          <a href="javascript:void(0)" onclick="openWorkspace('kids')">Kids & Students</a>
         </div>
       </div>
 
       <div class="nav-item dropdown">
-        <button class="nav-link drop-btn">Blogs ▾</button>
+        <button class="nav-link drop-btn" type="button">Blogs ▾</button>
         <div class="dropdown-content">
           <a href="blogs.html">News Unpacker Blogs</a>
-          <a href="#impact">Impact of AI in News</a>
-          <a href="#guide">How to Use Guide</a>
+          <a href="blogs.html#impact">Impact of AI in News</a>
+          <a href="javascript:void(0)" onclick="scrollToGuideSection(event)">How to Use Guide</a>
         </div>
+      </div>
+
+      <!-- Right Corner User Profile Circle with Initial Letter Support -->
+      <div class="user-profile-wrapper">
+        <button type="button" class="profile-avatar-btn" id="userProfileBtn" onclick="toggleProfileDropdown()" title="User Account">
+          <span id="userAvatarText">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </span>
+        </button>
+        <div id="profileDropdownCard" class="profile-dropdown-card hidden"></div>
       </div>
     </nav>
   </header>
 
-  <!-- Center Logo & Branding -->
-  <div class="brand-hero">
-    <div class="logo-box">
-      <svg class="site-logo" width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="48" height="48" rx="10" fill="#2563EB"/>
-        <path d="M14 16H34V34C34 35.1 33.1 36 32 36H16C14.9 36 14 35.1 14 34V16Z" fill="#FFFFFF" fill-opacity="0.9"/>
-        <path d="M20 22H28M20 26H26M20 30H24" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
-        <path d="M30 26L34 22L38 26" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <div class="brand-text">
-        <span class="logo-text">News<span class="highlight">Unpacker</span></span>
-        <span class="tagline">DECODE • VERIFY • BRIEF</span>
+  <main>
+    <!-- Center Logo & Branding -->
+    <div class="brand-hero">
+      <div class="logo-box">
+        <svg class="site-logo" width="44" height="44" viewBox="0 0 48 48" fill="none">
+          <rect width="48" height="48" rx="10" fill="#2563EB"/>
+          <path d="M14 16H34V34C34 35.1 33.1 36 32 36H16C14.9 36 14 35.1 14 34V16Z" fill="#FFFFFF" fill-opacity="0.9"/>
+          <path d="M20 22H28M20 26H26M20 30H24" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+          <path d="M30 26L34 22L38 26" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="brand-text">
+          <span class="logo-text">News<span class="highlight">Unpacker</span></span>
+          <span class="tagline">DECODE • VERIFY • BRIEF</span>
+        </div>
       </div>
+      <p class="header-desc">Analyze, decode, and verify any social media post or news article instantly.</p>
     </div>
-    <p class="header-desc">Analyze, decode, and verify any social media post or news article instantly.</p>
-  </div>
 
-  <div class="container">
-    <main>
-      <!-- Dashboard View: Modular Feature Hub -->
-      <section id="toolsDashboard" class="tools-dashboard">
-        
-        <!-- Primary 4 Core AI Engines with Distinct Colors -->
-        <div class="category-group">
-          <h2 class="section-title">Core Intelligence Engines</h2>
-          <div class="cards-grid core-grid">
-            <div class="tool-card card-blue" onclick="openWorkspace('unpack_news')">
-              <h3>Unpack News</h3>
-              <p>Decode complex stories into structured, neutral facts and clear takeaways.</p>
-              <span class="launch-link">Launch Engine →</span>
-            </div>
+    <!-- Dashboard View: Modular Feature Hub -->
+    <section id="toolsDashboard" class="tools-dashboard">
+      
+      <!-- Core Intelligence Engines -->
+      <div class="category-group">
+        <h2 class="section-title">Core Intelligence Engines</h2>
+        <div class="cards-grid core-grid">
+          <div class="tool-card card-unpack-real" onclick="openWorkspace('unpack_news')">
+            <h3>Unpack News</h3>
+            <p>Decode complex stories into structured, neutral facts and clear takeaways.</p>
+            <span class="launch-link">Launch Engine →</span>
+          </div>
 
-            <div class="tool-card card-emerald" onclick="openWorkspace('factcheck')">
-              <h3>Fact and Bias Check</h3>
-              <p>Detect media bias, propaganda traps, and unverified viral claims.</p>
-              <span class="launch-link">Launch Engine →</span>
-            </div>
+          <div class="tool-card card-factcheck-real" onclick="openWorkspace('factcheck')">
+            <h3>Fact and Bias Check</h3>
+            <p>Detect media bias, propaganda traps, and unverified viral claims.</p>
+            <span class="launch-link">Launch Engine →</span>
+          </div>
 
-            <div class="tool-card card-violet" onclick="openWorkspace('eli5')">
-              <h3>Explain Like I'm 5</h3>
-              <p>Breaks down ultra-complex legal, financial, or political jargon into simple everyday language.</p>
-              <span class="launch-link">Launch Engine →</span>
-            </div>
+          <div class="tool-card card-eli5-real" onclick="openWorkspace('eli5')">
+            <h3>Explain Like I'm 5</h3>
+            <p>Breaks down ultra-complex legal, financial, or political jargon into simple everyday language.</p>
+            <span class="launch-link">Launch Engine →</span>
+          </div>
 
-            <div class="tool-card card-amber" onclick="openWorkspace('bullet_points')">
-              <h3>Bullet Points & Briefs</h3>
-              <p>Converts dense multi-page write-ups into sharp, skimmable takeaway lists.</p>
-              <span class="launch-link">Launch Engine →</span>
-            </div>
+          <div class="tool-card card-bullet-real" onclick="openWorkspace('bullet_points')">
+            <h3>Bullet Points & Briefs</h3>
+            <p>Converts dense multi-page write-ups into sharp, skimmable takeaway lists.</p>
+            <span class="launch-link">Launch Engine →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Specialized Processing Utilities -->
+      <div class="category-group">
+        <h2 class="section-title">Specialized Processing Utilities</h2>
+        <div class="cards-grid core-grid">
+          <div class="tool-card card-speech-real" onclick="openWorkspace('news_to_speech')">
+            <h3>News to Speech Engine</h3>
+            <p>Convert lengthy news articles, exam notes, and reports into natural audio with 1.25x, 1.5x, and 2.0x playback speeds for rapid listening.</p>
+            <span class="launch-link">Launch Engine →</span>
+          </div>
+
+          <div class="tool-card card-depth-real" onclick="openWorkspace('short_to_depth')">
+            <h3>Short News to In-Depth Converter</h3>
+            <p>Expand brief flash updates and social media snippets into comprehensive analytical briefs complete with background context and key impacts.</p>
+            <span class="launch-link">Launch Engine →</span>
+          </div>
+
+          <div class="tool-card card-translator-real" onclick="openWorkspace('news_translator')">
+            <h3>News Translator Engine</h3>
+            <p>Translate complex national and global news updates seamlessly into local languages with preserved factual nuance and terminology.</p>
+            <span class="launch-link">Launch Engine →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Domain Categories Grid -->
+      <div class="category-group">
+        <h2 class="section-title">Specialized Domain Analyzers</h2>
+        <div class="cards-grid domain-grid">
+          <div class="tool-card card-politics-real" onclick="openWorkspace('politics')">
+            <h3>Politics</h3>
+            <p>Filters partisan rhetoric, party bias, and gives balanced governance takeaways.</p>
+            <span class="launch-link">Analyze Politics →</span>
+          </div>
+
+          <div class="tool-card card-business-real" onclick="openWorkspace('business')">
+            <h3>Business & Economy</h3>
+            <p>Track market shifts, fiscal policies, and corporate earnings with neutral clarity.</p>
+            <span class="launch-link">Analyze Business →</span>
+          </div>
+
+          <div class="tool-card card-tech-real" onclick="openWorkspace('tech')">
+            <h3>Technology</h3>
+            <p>Unpack complex AI, software, and gadget news into practical insights.</p>
+            <span class="launch-link">Analyze Technology →</span>
+          </div>
+
+          <div class="tool-card card-crime-real" onclick="openWorkspace('crime_legal')">
+            <h3>Crime & Legal</h3>
+            <p>Deconstruct legal verdicts, investigative files, and judicial developments without sensation.</p>
+            <span class="launch-link">Analyze Legal →</span>
+          </div>
+
+          <div class="tool-card card-education-real" onclick="openWorkspace('education')">
+            <h3>Education & Careers</h3>
+            <p>Exam notifications, policy reforms, and campus updates summarized accurately.</p>
+            <span class="launch-link">Explore Education →</span>
+          </div>
+
+          <div class="tool-card card-health-real" onclick="openWorkspace('health')">
+            <h3>Health & Lifestyle</h3>
+            <p>Evidence-backed medical reports and wellness updates free from fear-mongering.</p>
+            <span class="launch-link">Verify Health →</span>
+          </div>
+
+          <div class="tool-card card-entertainment-real" onclick="openWorkspace('entertainment')">
+            <h3>Entertainment</h3>
+            <p>Delivers factual movie industry updates, box-office data, and industry reports minus gossip.</p>
+            <span class="launch-link">Analyze Entertainment →</span>
+          </div>
+
+          <div class="tool-card card-sports-real" onclick="openWorkspace('sports')">
+            <h3>Sports</h3>
+            <p>Match analytics, tournament statistics, and player updates without gossip.</p>
+            <span class="launch-link">View Sports →</span>
+          </div>
+
+          <div class="tool-card card-weather-real" onclick="openWorkspace('environment')">
+            <h3>Weather & Climate</h3>
+            <p>Actionable forecasts, meteorological alerts, and environmental changes.</p>
+            <span class="launch-link">Track Climate →</span>
+          </div>
+
+          <div class="tool-card card-kids-real" onclick="openWorkspace('kids')">
+            <h3>Kids & Students</h3>
+            <p>Age-appropriate knowledge digests, safe global affairs, and science discoveries.</p>
+            <span class="launch-link">Open Student Digest →</span>
+          </div>
+
+          <div class="tool-card card-hardnews-real" onclick="openWorkspace('hard_news')">
+            <h3>Hard News</h3>
+            <p>Timely, factual stories about major events like governance, critical incidents, and global events.</p>
+            <span class="launch-link">Analyze Hard News →</span>
+          </div>
+
+          <div class="tool-card card-local-real" onclick="openWorkspace('local')">
+            <h3>Local News</h3>
+            <p>Community reports, civic issues, regional events, and city-level updates simplified.</p>
+            <span class="launch-link">Analyze Local →</span>
+          </div>
+
+          <div class="tool-card card-softnews-real" onclick="openWorkspace('soft_news')">
+            <h3>Soft News</h3>
+            <p>Feature stories, human-interest narratives, culture, and positive lifestyle updates.</p>
+            <span class="launch-link">Analyze Soft News →</span>
+          </div>
+
+          <div class="tool-card card-editorial-real" onclick="openWorkspace('editorial')">
+            <h3>Opinion & Editorial</h3>
+            <p>Decodes columns, expert commentaries, and subjective viewpoints from hard facts.</p>
+            <span class="launch-link">Analyze Editorial →</span>
+          </div>
+
+          <div class="tool-card card-geoscope-real" onclick="openWorkspace('geo_scope')">
+            <h3>Local vs. International</h3>
+            <p>Stories framed by geographic scope, comparing grassroots local impacts with global geopolitics.</p>
+            <span class="launch-link">Analyze Scope →</span>
+          </div>
+
+          <div class="tool-card card-devotional-real" onclick="openWorkspace('devotional')">
+            <h3>Devotional</h3>
+            <p>Horoscopes, festival highlights, and worship rituals.</p>
+            <span class="launch-link">Devotional →</span>
+          </div>
+          
+          <div class="tool-card card-travel-real" onclick="openWorkspace('travel')">
+            <h3>Travel & Tourism</h3>
+            <p>Global travel advisories, route policies, eco-tourism insights, and destination updates.</p>
+            <span class="launch-link">Analyze Travel →</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DYNAMIC WORKSPACE AREA -->
+    <section id="workspaceArea" class="workspace-container hidden">
+      <button class="back-link" onclick="backToDashboard()">← Back to All Hubs</button>
+      
+      <h2 id="workspaceTitle" class="workspace-heading">Unpack News Engine</h2>
+      <p id="workspaceDesc" class="workspace-sub">Paste your news article, circular, or breaking dispatches below to decode.</p>
+
+      <!-- Device Daily Quota Counter Strip -->
+      <div id="guestDailyUsageStrip" class="guest-quota-strip" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:8px 16px; font-size:0.85rem; color:#475569; margin-bottom:14px; display:flex; align-items:center;">
+        <span>Guest Free Daily Access: <strong id="guestQuotaText">5 / 5</strong> free summaries remaining today</span>
+      </div>
+
+      <div class="input-group">
+        <textarea id="newsInput" class="news-textarea" placeholder="Paste your article or post text here..."></textarea>
+      </div>
+
+      <div id="speechSpeedContainer" class="speech-speed-wrap hidden">
+        <label for="playbackSpeedSelect">Acoustic Playback Speed:</label>
+        <select id="playbackSpeedSelect">
+          <option value="1.0" selected>1.0x Normal Speed</option>
+          <option value="1.25">1.25x Rapid Speed</option>
+          <option value="1.5">1.5x Fast Speed</option>
+          <option value="2.0">2.0x Double Speed</option>
+        </select>
+      </div>
+
+      <button id="processBtn" class="primary-btn" onclick="startProcessing()">Unpack News</button>
+
+      <div id="loader" class="loader-container hidden">
+        <div class="spinner"></div>
+        <p id="loaderText">Analyzing & decoding content, please wait...</p>
+      </div>
+
+      <div id="outputCard" class="output-card hidden">
+        <div class="action-bar">
+          <button id="voiceBtn" class="action-btn" onclick="toggleVoice()">Listen</button>
+          <button id="shortenBtn" class="action-btn secondary" onclick="makeShorter()">Make Shorter</button>
+          <button class="action-btn secondary" onclick="clearOutput()">Clear</button>
+          
+          <div class="lang-pills">
+            <button class="lang-pill" onclick="quickTranslate('English', this)">English</button>
+            <button class="lang-pill" onclick="quickTranslate('Hindi', this)">Hindi</button>
+            <button class="lang-pill google-direct-btn" onclick="openGoogleTranslate()">More (Google Translate) ↗</button>
           </div>
         </div>
 
-        <!-- Specialized Processing Utilities -->
-        <div class="category-group">
-          <h2 class="section-title">Specialized Processing Utilities</h2>
-          <div class="cards-grid core-grid">
-            <!-- Tool 1: News to Speech -->
-            <div class="tool-card card-amber" onclick="openWorkspace('news_to_speech')">
-              <h3>News to Speech Engine</h3>
-              <p>Convert lengthy news articles, exam notes, and reports into natural audio with 1.25x, 1.5x, and 2.0x playback speeds for rapid listening.</p>
-              <span class="launch-link">Launch Engine →</span>
-            </div>
+        <h2 id="newsTitle" class="news-title"></h2>
+        <hr class="divider">
+        <div id="newsBody" class="news-body"></div>
+        <div class="char-count" id="charCount"></div>
+      </div>
 
-            <!-- Tool 2: Short News to In-Depth Converter -->
-            <div class="tool-card card-amber" onclick="openWorkspace('short_to_depth')">
-              <h3>Short News to In-Depth Converter</h3>
-              <p>Expand brief flash updates and social media snippets into comprehensive analytical briefs complete with background context and key impacts.</p>
-              <span class="launch-link">Launch Engine →</span>
-            </div>
+      <div id="dynamicToolOverview" class="dynamic-tool-showcase"></div>
+    </section>
 
-            <!-- Tool 3: News Translator -->
-            <div class="tool-card card-amber" onclick="openWorkspace('news_translator')">
-              <h3>News Translator Engine</h3>
-              <p>Translate complex national and global news updates seamlessly into local languages with preserved factual nuance and terminology.</p>
-              <span class="launch-link">Launch Engine →</span>
-            </div>
-          </div>
-        </div>
+    <!-- Dedicated Full-Page About Us Section -->
+    <section id="aboutSection" class="about-fullscreen-view hidden">
+      <div class="about-container">
+        <button class="back-btn" onclick="backToDashboard()">← Back to Home</button>
 
-        <!-- Domain Categories Grid -->
-        <div class="category-group">
-          <h2 class="section-title">Specialized Domain Analyzers</h2>
-          <div class="cards-grid domain-grid">
-            <div class="tool-card" onclick="openWorkspace('politics')">
-              <h3>Politics</h3>
-              <p>Filters partisan rhetoric, party bias, and gives balanced governance takeaways.</p>
-              <span class="launch-link">Analyze Politics →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('business')">
-              <h3>Business & Economy</h3>
-              <p>Explains inflation numbers, corporate deals, markets, and macroeconomic policy impacts.</p>
-              <span class="launch-link">Analyze Business →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('tech')">
-              <h3>Technology</h3>
-              <p>Simplifies AI breakthroughs, gadget announcements, cybersecurity, and platform changes.</p>
-              <span class="launch-link">Analyze Tech →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('crime_legal')">
-              <h3>Crime & Legal Updates</h3>
-              <p>Clarifies court verdicts, constitutional clauses, charges, and ongoing trials objectively.</p>
-              <span class="launch-link">Analyze Legal →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('education')">
-              <h3>Education & Careers</h3>
-              <p>Summarizes exam updates, notification eligibility criteria, and workforce shifts.</p>
-              <span class="launch-link">Analyze Education →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('health')">
-              <h3>Health & Lifestyle</h3>
-              <p>Extracts verified medical study conclusions, diet myths, and public health guidelines.</p>
-              <span class="launch-link">Analyze Health →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('entertainment')">
-              <h3>Entertainment</h3>
-              <p>Delivers factual movie industry updates, box-office data, and industry reports minus gossip.</p>
-              <span class="launch-link">Analyze Entertainment →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('sports')">
-              <h3>Sports</h3>
-              <p>Condenses match analyses, tournament standings, stats, and rule changes.</p>
-              <span class="launch-link">Analyze Sports →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('environment')">
-              <h3>Weather & Climate</h3>
-              <p>Decodes meteorological forecasts, pollution indexes, and environment shifts.</p>
-              <span class="launch-link">Analyze Environment →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('kids')">
-              <h3>Kids & Students Mode</h3>
-              <p>Safe, educational news breakdowns with age-appropriate vocabulary and no graphic elements.</p>
-              <span class="launch-link">Analyze for Kids →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('hard_news')">
-              <h3>Hard News</h3>
-              <p>Timely, factual stories about major events like governance, critical incidents, and global events.</p>
-              <span class="launch-link">Analyze Hard News →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('local')">
-              <h3>Local News</h3>
-              <p>Community reports, civic issues, regional events, and city-level updates simplified.</p>
-              <span class="launch-link">Analyze Local →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('soft_news')">
-              <h3>Soft News</h3>
-              <p>Feature stories, human-interest narratives, culture, and positive lifestyle updates.</p>
-              <span class="launch-link">Analyze Soft News →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('editorial')">
-              <h3>Opinion & Editorial</h3>
-              <p>Decodes columns, expert commentaries, and subjective viewpoints from hard facts.</p>
-              <span class="launch-link">Analyze Editorial →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('geo_scope')">
-              <h3>Local vs. International</h3>
-              <p>Stories framed by geographic scope, comparing grassroots local impacts with global geopolitics.</p>
-              <span class="launch-link">Analyze Scope →</span>
-            </div>
-
-            <div class="tool-card" onclick="openWorkspace('devotional')">
-              <h3>Devotional</h3>
-              <p>Horoscopes, festival highlights, and worship rituals.</p>
-              <span class="launch-link">Devotional →</span>
-            </div>
-            
-            <div class="tool-card" onclick="openWorkspace('travel')">
-              <h3>Travel & Tourism</h3>
-              <p>Global travel advisories, route policies, eco-tourism insights, and destination updates.</p>
-              <span class="launch-link">Analyze Travel →</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 100% DYNAMIC WORKSPACE AREA -->
-      <section id="workspaceArea" class="workspace-container hidden">
-        <button class="back-link" onclick="backToDashboard()">← Back to All Hubs</button>
-        
-        <h2 id="workspaceTitle" class="workspace-heading">Unpack News Engine</h2>
-        <p id="workspaceDesc" class="workspace-sub">Paste your news article, circular, or breaking dispatches below to decode.</p>
-
-        <div class="input-group">
-          <textarea id="newsInput" class="news-textarea" placeholder="Paste your article or post text here..."></textarea>
-        </div>
-
-        <!-- Optional Voice Speed Controls for News to Speech -->
-        <div id="speechSpeedContainer" class="speech-speed-wrap hidden">
-          <label for="playbackSpeedSelect">Acoustic Playback Speed:</label>
-          <select id="playbackSpeedSelect">
-            <option value="1.0" selected>1.0x Normal Speed</option>
-            <option value="1.25">1.25x Rapid Speed</option>
-            <option value="1.5">1.5x Fast Speed</option>
-            <option value="2.0">2.0x Double Speed</option>
-          </select>
-        </div>
-
-        <!-- Dynamic Action Button: Changes dynamically per tool -->
-        <button id="processBtn" class="primary-btn" onclick="startProcessing()">Unpack News</button>
-
-        <!-- Spinner Loader -->
-        <div id="loader" class="loader-container hidden">
-          <div class="spinner"></div>
-          <p id="loaderText">Analyzing & decoding content, please wait...</p>
-        </div>
-
-        <!-- Result Output Card -->
-        <div id="outputCard" class="output-card hidden">
-          <div class="action-bar">
-            <button id="voiceBtn" class="action-btn" onclick="toggleVoice()">Listen</button>
-            <button id="shortenBtn" class="action-btn secondary" onclick="makeShorter()">Make Shorter</button>
-            <button class="action-btn secondary" onclick="clearOutput()">Clear</button>
-            
-            <div class="lang-pills">
-              <button class="lang-pill" onclick="quickTranslate('English', this)">English</button>
-              <button class="lang-pill" onclick="quickTranslate('Hindi', this)">Hindi</button>
-              <button class="lang-pill google-direct-btn" onclick="openGoogleTranslate()">More (Google Translate) ↗</button>
+        <div class="founder-card-wrapper">
+          <div class="founder-photo-box">
+            <div class="photo-inner-placeholder">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span class="photo-hint">A4/A5 Photo Frame</span>
             </div>
           </div>
 
-          <h2 id="newsTitle" class="news-title"></h2>
-          <hr class="divider">
-          <div id="newsBody" class="news-body"></div>
-          <div class="char-count" id="charCount"></div>
-        </div>
+          <div class="founder-content">
+            <span class="leadership-badge">FOUNDER & LEADERSHIP</span>
+            <h1 class="founder-name">S. Purushotham</h1>
+            <h3 class="founder-role">Founder & CEO, Sriram Groups</h3>
 
-        <!-- 100% Dynamic Engine Architecture, Operations & Basic Facts (Updates dynamically per tool) -->
-        <div id="dynamicToolOverview" class="dynamic-tool-showcase"></div>
-      </section>
-
-      <!-- Dedicated Full-Page About Us Section (Hidden by default) -->
-      <section id="aboutSection" class="about-fullscreen-view hidden">
-        <div class="about-container">
-          <button class="back-btn" onclick="backToDashboard()">← Back to Home</button>
-
-          <div class="founder-card-wrapper">
-            <div class="founder-photo-box">
-              <div class="photo-inner-placeholder">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-                <span class="photo-hint">A4/A5 Photo Frame</span>
-              </div>
-            </div>
-
-            <div class="founder-content">
-              <span class="leadership-badge">FOUNDER & LEADERSHIP</span>
-              <h1 class="founder-name">S. Purushotham</h1>
-              <h3 class="founder-role">Founder & CEO, Sriram Groups</h3>
-
-              <div class="founder-bio">
-                <p>
-                  Backed by years of active on-ground journalism experience, I lead Sriram Groups to build practical, transparent, and impact-driven digital platforms. As a developer, project architect, and game creator, my focus is on solving everyday real-world problems through purpose-built technology.
-                </p>
-                <p>
-                  The primary mission behind building News Unpacker is simple: readers shouldn't have to wade through overwhelming blocks of text and repetitive filler just to understand a story. News Unpacker leverages intelligent processing to strip down massive news articles into clean, actionable, high-value bullet summaries within seconds—saving time while preserving essential context.
-                </p>
-                <p class="founder-subtext">
-                  For more development roadmaps, upcoming utility releases, and organizational news, follow Sriram Groups across our verified official social media handles.
-                </p>
-              </div>
-
-              <div class="founder-social-action">
-                <a href="https://sriramgroupsofficial.com#social" target="_blank" rel="noopener noreferrer" class="social-hub-btn">
-                  <span class="dot-indicator"></span>
-                  Connect & Follow on Official Channels ↗
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Official Full-Screen Social Media & Ventures Hub -->
-      <section id="socialSection" class="social-fullscreen-hub hidden">
-        <div class="social-hub-container">
-          <div class="social-brand-hero">
-            <div class="sriram-eagle-logo-box">
-              <img 
-                src="image_045e9f.jpg" 
-                alt="Sriram Groups Official Logo" 
-                class="sriram-eagle-img"
-                onerror="this.onerror=null; this.src='https://lh3.googleusercontent.com/d/1HQZbmwZXZUw9x_L7hv_N-kle4W2DHNTV';"
-              >
-            </div>
-            
-            <span class="hub-network-badge">ENTERPRISE DIGITAL CONNECTIVITY</span>
-            <h1 class="hub-title">Sriram Groups Official Channels</h1>
-            <p class="hub-tagline">Join our official verified network for platform roadmaps, releases, live support, and tech discussions.</p>
-          </div>
-
-          <div class="social-interactive-grid">
-            <!-- X (Twitter) -->
-            <a href="https://x.com/sriramgroupsown" target="_blank" rel="noopener noreferrer" class="social-click-card x-theme">
-              <div class="card-icon-header">
-                <svg class="social-svg-logo" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </div>
-              <h3>X (Twitter)</h3>
-              <p>Real-time company updates, tech news, and announcements.</p>
-              <span class="visit-action-pill">Visit X Profile ↗</span>
-            </a>
-
-            <!-- YouTube -->
-            <a href="https://youtube.com/@sriramgroups-official?si=14l_6QH38dRmvzqt" target="_blank" rel="noopener noreferrer" class="social-click-card yt-theme">
-              <div class="card-icon-header">
-                <svg class="social-svg-logo" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-              </div>
-              <h3>YouTube</h3>
-              <p>Watch product demos, tutorials, press releases, and esports streams.</p>
-              <span class="visit-action-pill">Subscribe Channel ↗</span>
-            </a>
-
-            <!-- Instagram -->
-            <a href="https://www.instagram.com/sriramgroupsofficial?igsh=aXV4eGs4ejhxNW0y" target="_blank" rel="noopener noreferrer" class="social-click-card insta-theme">
-              <div class="card-icon-header">
-                <svg class="social-svg-logo" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-              </div>
-              <h3>Instagram</h3>
-              <p>Behind-the-scenes, project highlights, and visual stories.</p>
-              <span class="visit-action-pill">Follow Instagram ↗</span>
-            </a>
-
-            <!-- Facebook -->
-            <a href="https://www.facebook.com/share/1BxpdAEynw/" target="_blank" rel="noopener noreferrer" class="social-click-card fb-theme">
-              <div class="card-icon-header">
-                <svg class="social-svg-logo" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-              </div>
-              <h3>Facebook Page</h3>
-              <p>Official community notices, events, and real estate plot listings.</p>
-              <span class="visit-action-pill">Visit Facebook ↗</span>
-            </a>
-
-            <!-- LinkedIn -->
-            <a href="https://www.linkedin.com/in/sriram-groups-927152420/" target="_blank" rel="noopener noreferrer" class="social-click-card in-theme">
-              <div class="card-icon-header">
-                <svg class="social-svg-logo" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                </svg>
-              </div>
-              <h3>LinkedIn</h3>
-              <p>Corporate networking, career opportunities, and executive insights.</p>
-              <span class="visit-action-pill">Connect LinkedIn ↗</span>
-            </a>
-
-            <!-- Freelance & IT Services -->
-            <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" class="social-click-card it-theme">
-              <div class="card-icon-header">
-                <svg class="social-svg-logo" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/>
-                </svg>
-              </div>
-              <h3>IT & Creative Services</h3>
-              <p>Hire our digital sector for web development, video workflows, and software.</p>
-              <span class="visit-action-pill">Hire Our Services ↗</span>
-            </a>
-          </div>
-        </div>
-      </section>  
-
-      <!-- Platform Info Section -->
-      <section class="info-section">
-        <div class="info-card">
-          <h3>What is News Unpacker?</h3>
-          <p>
-            News Unpacker is a high-speed intelligence engine built to strip away sensationalism, political hyperbole, and media noise. Powered by next-gen neural processing, it extracts structured core facts, verifies claims, checks bias, and delivers clean briefings across all domains.
-          </p>
-        </div>
-        
-        <!-- Core Applications & Capabilities Section -->
-        <section class="features-detail-section">
-          <div class="features-detail-card">
-            <div class="features-header">
-              <span class="features-badge">PRODUCT CAPABILITIES</span>
-              <h2>News Unpacker — Core Applications & Features</h2>
-              <p class="features-subtext">
-                Designed to bridge the gap between high-volume journalism and rapid factual comprehension. Here is how our neural parsing engines transform daily information consumption:
+            <div class="founder-bio">
+              <p>
+                Backed by years of active on-ground journalism experience, I lead Sriram Groups to build practical, transparent, and impact-driven digital platforms. As a developer, project architect, and game creator, my focus is on solving everyday real-world problems through purpose-built technology.
+              </p>
+              <p>
+                The primary mission behind building News Unpacker is simple: readers shouldn't have to wade through overwhelming blocks of text and repetitive filler just to understand a story. News Unpacker leverages intelligent processing to strip down massive news articles into clean, actionable, high-value bullet summaries within seconds—saving time while preserving essential context.
+              </p>
+              <p class="founder-subtext">
+                For more development roadmaps, upcoming utility releases, and organizational news, follow Sriram Groups across our verified official social media handles.
               </p>
             </div>
 
-            <div class="capabilities-grid">
-              <div class="capability-item">
-                <div class="cap-icon"></div>
-                <h4>Rapid News Summarization</h4>
-                <p>Condenses dense, long-form investigative articles, editorials, and official government press releases into concise, high-value briefs within seconds.</p>
-              </div>
-
-              <div class="capability-item">
-                <div class="cap-icon"></div>
-                <h4>Precision Extraction</h4>
-                <p>Strips away clickbait framing, emotional adjectives, and narrative filler to isolate the exact verifiable takeaway of any unfolding event.</p>
-              </div>
-
-              <div class="capability-item">
-                <div class="cap-icon"></div>
-                <h4>In-Depth to Simple Synthesis</h4>
-                <p>Translates complex regulatory jargon, policy paperwork, and legal briefs into clear, transparent, and easy-to-digest language.</p>
-              </div>
-
-              <div class="capability-item">
-                <div class="cap-icon"></div>
-                <h4>Key Takeaways & Bullet Points</h4>
-                <p>Structures heavy reports into actionable, skimmable bullet points designed for fast mobile reading and rapid knowledge retention.</p>
-              </div>
-
-              <div class="capability-item">
-                <div class="cap-icon"></div>
-                <h4>Fact Extraction & Media Clarity</h4>
-                <p>Pinpoints underlying timelines, dates, verified statistics, and hard claims, keeping them distinct from speculative subjective media spin.</p>
-              </div>
-
-              <div class="capability-item">
-                <div class="cap-icon"></div>
-                <h4>Cross-Domain & Multi-Language Support</h4>
-                <p>Delivers sharp intelligence across politics, economics, technology, and sports, with dedicated support for both English and Telugu text sources.</p>
-              </div>
-            </div>
-
-            <!-- Value Add: Target Applications -->
-            <div class="audience-strip">
-              <h4>Target Applications & Built For:</h4>
-              <div class="audience-tags">
-                <span class="aud-tag">Competitive Exam Aspirants (UPSC / State PSC)</span>
-                <span class="aud-tag">Working Professionals & Researchers</span>
-                <span class="aud-tag">Content Creators & Fact Checkers</span>
-                <span class="aud-tag">Busy Daily Readers</span>
-              </div>
-            </div>
-
-            <!-- Tag Cloud -->
-            <div class="keywords-cloud-wrap">
-              <div class="tag-cloud">
-                <span class="kw-tag">AI News Summarizer</span>
-                <span class="kw-tag">Convert Article to Bullet Points</span>
-                <span class="kw-tag">Fast Bias Verifier</span>
-                <span class="kw-tag">Political News Bullet Summary</span>
-                <span class="kw-tag">Business Highlights Engine</span>
-                <span class="kw-tag">Tech News Decoder</span>
-                <span class="kw-tag">News Summarizer</span>
-                <span class="kw-tag">Breaking News Fast Reader</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Official Infinite Scrolling Contact Hub -->
-        <div class="contact-hub-card">
-          <div class="contact-hub-header">
-            <span class="header-badge">OFFICIAL SUPPORT & ENTERPRISE GATEWAY</span>
-            <h3>Get in Touch with Sriram Groups</h3>
-            <p>For instant query resolution, strategic enterprise collaborations, and official verified portal access.</p>
-          </div>
-
-          <div class="contact-ticker-viewport" id="contactTickerViewport">
-            <div class="contact-ticker-track" id="contactTickerTrack">
-              <!-- 1. Help Line -->
-              <div class="contact-box">
-                <div class="contact-icon-wrap icon-help">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                  </svg>
-                </div>
-                <div class="contact-details">
-                  <span class="box-tag tag-emerald">USER ASSISTANCE</span>
-                  <h4>Official Help Line</h4>
-                  <a href="mailto:sriramgroups.help@gmail.com" class="contact-link">sriramgroups.help@gmail.com</a>
-                </div>
-              </div>
-
-              <!-- 2. Company Corporate Email -->
-              <div class="contact-box">
-                <div class="contact-icon-wrap icon-biz">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-                  </svg>
-                </div>
-                <div class="contact-details">
-                  <span class="box-tag tag-blue">ENTERPRISE & LEGAL</span>
-                  <h4>Official Company Email</h4>
-                  <a href="mailto:sriramgroupsofficial@gmail.com" class="contact-link">sriramgroupsofficial@gmail.com</a>
-                </div>
-              </div>
-
-              <!-- 3. Official Central Portal -->
-              <div class="contact-box highlight-box">
-                <div class="contact-icon-wrap icon-net">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="2" y1="12" x2="22" y2="12"></line>
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                  </svg>
-                </div>
-                <div class="contact-details">
-                  <span class="box-tag tag-purple">SOCIAL HUB & PORTALS</span>
-                  <h4>Sriram Groups Network</h4>
-                  <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" class="contact-btn-link">Visit Official Portal ↗</a>
-                </div>
-              </div>
-
-              <!-- 4. Direct Social Hub -->
-              <div class="contact-box">
-                <div class="contact-icon-wrap icon-social">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                  </svg>
-                </div>
-                <div class="contact-details">
-                  <span class="box-tag tag-amber">CONNECTIVITY</span>
-                  <h4>Media Channels</h4>
-                  <a href="#social" onclick="openSocialSection()" class="contact-link">Open Full Social Hub →</a>
-                </div>
-              </div>
+            <div class="founder-social-action">
+              <a href="https://sriramgroupsofficial.com#social" target="_blank" rel="noopener noreferrer" class="social-hub-btn">
+                <span class="dot-indicator"></span>
+                Connect & Follow on Official Channels ↗
+              </a>
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- High-Impact Red-Themed Feedback & Suggestion Hub -->
-        <section id="feedbackSection" class="feedback-container">
-          <div class="feedback-card">
-            <div class="feedback-header">
-              <span class="feedback-badge">COMMUNITY VOICES & FEATURE REQUESTS</span>
-              <h2>Share Your Thoughts with Sriram Groups</h2>
-              <p>Have an engine enhancement request, found a bug, or want to suggest a new news analytical category? We prioritize user feedback to refine our zero-retention platform.</p>
-            </div>
-
-            <form id="userFeedbackForm" class="feedback-form" onsubmit="handleFeedbackSubmit(event)">
-              <div class="feedback-form-grid">
-                <div class="form-group">
-                  <label for="fbName">Your Name</label>
-                  <input type="text" id="fbName" placeholder="Your name" required>
-                </div>
-
-                <div class="form-group">
-                  <label for="fbEmail">Official / Personal Email</label>
-                  <input type="email" id="fbEmail" placeholder="e.g., name@example.com" required>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="fbTool">Select Intelligence Engine</label>
-                <select id="fbTool" onchange="checkOtherOption(this)" required>
-                  <option value="" disabled selected>Choose a tool or area...</option>
-                  <option value="unpack_news">Unpack News Engine</option>
-                  <option value="bullet_points">Bullet Points & Briefs</option>
-                  <option value="factcheck">Fact & Bias Check</option>
-                  <option value="eli5">Explain Like I'm 5</option>
-                  <option value="news_to_speech">News to Speech</option>
-                  <option value="short_to_depth">Short News to In-Depth</option>
-                  <option value="news_translator">News Translator</option>
-                  <option value="categories">Categories & Workspaces</option>
-                  <option value="general_request">General Feature Request</option>
-                  <option value="other">Other (Specify manually)</option>
-                </select>
-              </div>
-
-              <div class="form-group hidden" id="customToolGroup">
-                <label for="fbCustomTool">Specify Tool / Feature Name</label>
-                <input type="text" id="fbCustomTool" placeholder="Write the name of the tool or topic you want to mention.">
-              </div>
-
-              <div class="form-group">
-                <label>Experience Rating</label>
-                <div class="rating-pills">
-                  <label class="rating-pill">
-                    <input type="radio" name="rating" value="5" checked>
-                    <span>Rating: 5 Stars (Excellent)</span>
-                  </label>
-                  <label class="rating-pill">
-                    <input type="radio" name="rating" value="4">
-                    <span>Rating: 4 Stars (Good)</span>
-                  </label>
-                  <label class="rating-pill">
-                    <input type="radio" name="rating" value="3">
-                    <span>Rating: 3 Stars (Neutral)</span>
-                  </label>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="fbMessage">Your Feedback, Request or Suggestion</label>
-                <textarea id="fbMessage" rows="4" placeholder="Tell us what you loved, what needs improvement, or what new tools you would like to see..." required></textarea>
-              </div>
-
-              <button type="submit" class="feedback-submit-btn" id="fbSubmitBtn">
-                <span>Send Feedback to Desk</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-              </button>
-
-              <div id="feedbackSuccessMsg" class="feedback-success hidden">
-                Thank you! Your feedback has been forwarded directly to the Sriram Groups editorial & development desk.
-              </div>
-            </form>
+    <!-- Official Full-Screen Social Media Hub -->
+    <section id="socialSection" class="social-fullscreen-hub hidden">
+      <div class="social-hub-container">
+        <div class="social-brand-hero">
+          <div class="sriram-eagle-logo-box">
+            <img 
+              src="image_045e9f.jpg" 
+              alt="Sriram Groups Official Logo" 
+              class="sriram-eagle-img"
+              onerror="this.onerror=null; this.src='https://lh3.googleusercontent.com/d/1HQZbmwZXZUw9x_L7hv_N-kle4W2DHNTV';"
+            >
           </div>
-        </section>
+          
+          <span class="hub-network-badge">ENTERPRISE DIGITAL CONNECTIVITY</span>
+          <h1 class="hub-title">Sriram Groups Official Channels</h1>
+          <p class="hub-tagline">Join our official verified network for platform roadmaps, releases, live support, and tech discussions.</p>
+        </div>
 
-        <!-- Sriram Groups Mother Enterprise Luxury Gold Section -->
-        <section id="enterpriseSection" class="enterprise-gold-wrapper">
-          <div class="enterprise-inner-container">
-            <div class="enterprise-badge-wrap">
-              <span class="gold-pill-badge">PARENT ORGANIZATION & ECOSYSTEM</span>
+        <div class="social-interactive-grid">
+          <a href="https://x.com/sriramgroupsown" target="_blank" rel="noopener noreferrer" class="social-click-card x-theme">
+            <div class="card-icon-header">
+              <svg class="social-svg-logo" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
             </div>
+            <h3>X (Twitter)</h3>
+            <p>Real-time company updates, tech news, and announcements.</p>
+            <span class="visit-action-pill">Visit X Profile ↗</span>
+          </a>
 
-            <h2 class="gold-main-heading">Sriram Groups — The Mother Enterprise Driving Digital Innovation</h2>
-            
-            <p class="enterprise-narrative">
-              As the flagship parent organization, Sriram Groups powers a versatile ecosystem of high-performance web applications, digital utilities, and custom software architectures. Built on uncompromising technical standards and clear execution, our platforms consistently deliver excellence across the digital spectrum.
+          <a href="https://youtube.com/@sriramgroups-official?si=14l_6QH38dRmvzqt" target="_blank" rel="noopener noreferrer" class="social-click-card yt-theme">
+            <div class="card-icon-header">
+              <svg class="social-svg-logo" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+            </div>
+            <h3>YouTube</h3>
+            <p>Watch product demos, tutorials, press releases, and esports streams.</p>
+            <span class="visit-action-pill">Subscribe Channel ↗</span>
+          </a>
+
+          <a href="https://www.instagram.com/sriramgroupsofficial?igsh=aXV4eGs4ejhxNW0y" target="_blank" rel="noopener noreferrer" class="social-click-card insta-theme">
+            <div class="card-icon-header">
+              <svg class="social-svg-logo" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </div>
+            <h3>Instagram</h3>
+            <p>Behind-the-scenes, project highlights, and visual stories.</p>
+            <span class="visit-action-pill">Follow Instagram ↗</span>
+          </a>
+
+          <a href="https://www.facebook.com/share/1BxpdAEynw/" target="_blank" rel="noopener noreferrer" class="social-click-card fb-theme">
+            <div class="card-icon-header">
+              <svg class="social-svg-logo" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </div>
+            <h3>Facebook Page</h3>
+            <p>Official community notices, events, and real estate plot listings.</p>
+            <span class="visit-action-pill">Visit Facebook ↗</span>
+          </a>
+
+          <a href="https://www.linkedin.com/in/sriram-groups-927152420/" target="_blank" rel="noopener noreferrer" class="social-click-card in-theme">
+            <div class="card-icon-header">
+              <svg class="social-svg-logo" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </div>
+            <h3>LinkedIn</h3>
+            <p>Corporate networking, career opportunities, and executive insights.</p>
+            <span class="visit-action-pill">Connect LinkedIn ↗</span>
+          </a>
+
+          <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" class="social-click-card it-theme">
+            <div class="card-icon-header">
+              <svg class="social-svg-logo" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/>
+              </svg>
+            </div>
+            <h3>IT & Creative Services</h3>
+            <p>Hire our digital sector for web development, video workflows, and software.</p>
+            <span class="visit-action-pill">Hire Our Services ↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Platform Info Section -->
+    <section class="info-section">
+      <div class="info-card">
+        <h3>What is News Unpacker?</h3>
+        <p>
+          News Unpacker is a high-speed intelligence engine built to strip away sensationalism, political hyperbole, and media noise. Powered by next-gen neural processing, it extracts structured core facts, verifies claims, checks bias, and delivers clean briefings across all domains.
+        </p>
+      </div>
+
+      <!-- Core Applications & Capabilities Section -->
+      <div class="features-detail-section">
+        <div class="features-detail-card">
+          <div class="features-header">
+            <span class="features-badge">PRODUCT CAPABILITIES</span>
+            <h2>News Unpacker — Core Applications & Features</h2>
+            <p class="features-subtext">
+              Designed to bridge the gap between high-volume journalism and rapid factual comprehension. Here is how our neural parsing engines transform daily information consumption:
             </p>
+          </div>
 
-            <div class="gold-metrics-container">
-              <!-- మొదటి కార్డ్ (99% Satisfaction) -->
-              <div class="gold-metric-card">
-                <div class="gold-circular-wrap">
-                  <svg class="gold-svg-ring" viewBox="0 0 160 160">
-                    <defs>
-                      <linearGradient id="goldGradientStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#fbbf24" />
-                        <stop offset="50%" stop-color="#f59e0b" />
-                        <stop offset="100%" stop-color="#d97706" />
-                      </linearGradient>
-                    </defs>
-                    <circle class="ring-bg" cx="80" cy="80" r="70"></circle>
-                    <circle class="ring-progress ring-99" id="ring99" cx="80" cy="80" r="70"></circle>
-                  </svg>
-                  <div class="ring-number-box">
-                    <span class="ring-count" id="count99">0</span><span class="gold-percent">%</span>
-                  </div>
-                </div>
-                <h4 class="metric-title">Client Satisfaction Rate</h4>
-                <p class="metric-sub">Verified enterprise metric</p>
-              </div>
-
-              <!-- రెండవ కార్డ్ (100% Commitment) -->
-             <!-- 2. Service Commitment Card -->
-              <div class="gold-metric-card">
-                <div class="gold-circular-wrap">
-                  <svg class="gold-svg-ring" viewBox="0 0 160 160">
-                    <circle class="ring-bg" cx="80" cy="80" r="70"></circle>
-                    <circle class="ring-progress ring-100" id="ring100" cx="80" cy="80" r="70"></circle>
-                  </svg>
-                  <div class="ring-number-box">
-                    <span class="ring-count" id="count100">0</span><span class="gold-percent">%</span>
-                  </div>
-                </div>
-                <h4 class="metric-title">Service Commitment</h4>
-                <p class="metric-sub">Guaranteed uptime & execution</p>
-              </div>
-
-              <!-- 3. Kotha Card: NewsUnpacker Success Rate 99% -->
-              <div class="gold-metric-card">
-                <div class="gold-circular-wrap">
-                  <svg class="gold-svg-ring" viewBox="0 0 160 160">
-                    <circle class="ring-bg" cx="80" cy="80" r="70"></circle>
-                    <circle class="ring-progress ring-success" id="ringSuccess" cx="80" cy="80" r="70"></circle>
-                  </svg>
-                  <div class="ring-number-box">
-                    <span class="ring-count" id="countSuccess">0</span><span class="gold-percent">%</span>
-                  </div>
-                </div>
-                <h4 class="metric-title">NewsUnpacker Success Rate</h4>
-                <p class="metric-sub">• DECODE • VERIFY • BRIEF</p>
-              </div>
+          <div class="capabilities-grid">
+            <div class="capability-item">
+              <div class="cap-icon"></div>
+              <h4>Rapid News Summarization</h4>
+              <p>Condenses dense, long-form investigative articles, editorials, and official government press releases into concise, high-value briefs within seconds.</p>
             </div>
 
-            <div class="gold-launch-card">
-              <div class="gold-card-shine"></div>
-              <div class="launch-details">
-                <div class="calendar-chip">
-                  <span class="chip-label">GRAND PRE-LAUNCH</span>
-                  <span class="chip-date">January 1, 2027</span>
-                </div>
-                <h3 class="launch-title">Central Digital Headquarters Unveiling</h3>
-                <p class="launch-desc">
-                  Experience the unified ecosystem of Sriram Groups as we unveil our central digital headquarters. For official announcements, platform roadmaps, and early privilege registrations, visit our verified web destination.
-                </p>
-                <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" class="gold-cta-btn">
-                  Visit sriramgroupsofficial.com ↗
-                </a>
-              </div>
+            <div class="capability-item">
+              <div class="cap-icon"></div>
+              <h4>Precision Extraction</h4>
+              <p>Strips away clickbait framing, emotional adjectives, and narrative filler to isolate the exact verifiable takeaway of any unfolding event.</p>
+            </div>
+
+            <div class="capability-item">
+              <div class="cap-icon"></div>
+              <h4>In-Depth to Simple Synthesis</h4>
+              <p>Translates complex regulatory jargon, policy paperwork, and legal briefs into clear, transparent, and easy-to-digest language.</p>
+            </div>
+
+            <div class="capability-item">
+              <div class="cap-icon"></div>
+              <h4>Key Takeaways & Bullet Points</h4>
+              <p>Structures heavy reports into actionable, skimmable bullet points designed for fast mobile reading and rapid knowledge retention.</p>
+            </div>
+
+            <div class="capability-item">
+              <div class="cap-icon"></div>
+              <h4>Fact Extraction & Media Clarity</h4>
+              <p>Pinpoints underlying timelines, dates, verified statistics, and hard claims, keeping them distinct from speculative subjective media spin.</p>
+            </div>
+
+            <div class="capability-item">
+              <div class="cap-icon"></div>
+              <h4>Cross-Domain & Multi-Language Support</h4>
+              <p>Delivers sharp intelligence across politics, economics, technology, and sports, with dedicated support for both English and Telugu text sources.</p>
             </div>
           </div>
-        </section>   
 
-        <!-- 6 Equal Columns Modern Footer Grid -->
-        <div class="footer-grid">
-          <div class="footer-col">
-            <h4 class="title-home">Home</h4>
-            <ul>
-              <li><a href="#" onclick="backToDashboard()">𝓜𝓪𝓲𝓷 𝓓𝓪𝓼𝓱𝓫𝓸𝓪𝓻𝓭</a></li>
-              <li><a href="#" onclick="backToDashboard()">𝓠𝓾𝓲𝓬𝓴 𝓞𝓿𝓮𝓻𝓿𝓲𝓮𝔀</a></li>
-              <li><a href="#about" onclick="openAboutSection()">ₗₑₐdₑᵣₛₕᵢₚ</a></li>
-            </ul>
+          <div class="audience-strip">
+            <h4>Target Applications & Built For:</h4>
+            <div class="audience-tags">
+              <span class="aud-tag">Competitive Exam Aspirants (UPSC / State PSC)</span>
+              <span class="aud-tag">Working Professionals & Researchers</span>
+              <span class="aud-tag">Content Creators & Fact Checkers</span>
+              <span class="aud-tag">Busy Daily Readers</span>
+            </div>
           </div>
 
-          <div class="footer-col">
-            <h4 class="title-company">𝓒𝓸𝓶𝓹𝓪𝓷𝔂</h4>
-            <ul>
-              <li><a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a></li>
-              <li><a href="#about" onclick="openAboutSection()">About Us</a></li>
-              <li><a href="websites.html">Other Websites</a></li>
-            </ul>
+          <div class="keywords-cloud-wrap">
+            <div class="tag-cloud">
+              <span class="kw-tag">AI News Summarizer</span>
+              <span class="kw-tag">Convert Article to Bullet Points</span>
+              <span class="kw-tag">Fast Bias Verifier</span>
+              <span class="kw-tag">Political News Bullet Summary</span>
+              <span class="kw-tag">Business Highlights Engine</span>
+              <span class="kw-tag">Tech News Decoder</span>
+              <span class="kw-tag">News Summarizer</span>
+              <span class="kw-tag">Breaking News Fast Reader</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== NEWS UNPACKER INTERACTIVE ROADMAP GUIDE ==================== -->
+    <section id="guideRoadmap" class="workflow-roadmap-section">
+      <div class="roadmap-header">
+        <span class="roadmap-badge">STEP-BY-STEP USER JOURNEY</span>
+        <h2>How News Unpacker Works — The Intelligence Roadmap</h2>
+        <p>The advanced AI processing journey from a bulky news article somewhere to the most straightforward, unbiased, true analysis.</p>
+      </div>
+
+      <div class="roadmap-track-container">
+        <!-- Animated connecting line & blue energy pulser -->
+        <div class="road-path-svg-wrap">
+          <svg class="road-svg" viewBox="0 0 1000 240" fill="none" preserveAspectRatio="none">
+            <path d="M 60 120 C 250 30, 280 210, 480 120 C 680 30, 720 210, 940 120" stroke="#e2e8f0" stroke-width="8" stroke-linecap="round"/>
+            <path class="road-glowing-path" d="M 60 120 C 250 30, 280 210, 480 120 C 680 30, 720 210, 940 120" stroke="url(#blueRoadGradient)" stroke-width="6" stroke-linecap="round" stroke-dasharray="14 10"/>
+            <defs>
+              <linearGradient id="blueRoadGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#3b82f6"/>
+                <stop offset="50%" stop-color="#2563eb"/>
+                <stop offset="100%" stop-color="#059669"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="traveling-blue-pulse"></div>
+        </div>
+
+        <!-- 4 Zigzag Step Cards -->
+        <div class="roadmap-nodes-wrap">
+          <div class="road-card step-top">
+            <div class="road-milestone-marker">
+              <span class="marker-dot">1</span>
+            </div>
+            <div class="road-card-content">
+              <div class="step-icon"></div>
+              <h4>1. Copy & Paste (Input)</h4>
+              <p>Copy long articles or ambiguous social media posts from your constituency, region, or newspapers and place them in the input box.</p>
+            </div>
           </div>
 
-          <div class="footer-col">
-            <h4 class="title-news">News Unpacker</h4>
-            <ul>
-              <li><a href="#" onclick="openWorkspace('unpack_news')">AI Decoder Engine</a></li>
-              <li><a href="#" onclick="openWorkspace('factcheck')">Bias Analysis</a></li>
-              <li><a href="#" onclick="openWorkspace('bullet_points')">Bullet Points</a></li>
-            </ul>
+          <div class="road-card step-bottom">
+            <div class="road-milestone-marker">
+              <span class="marker-dot">2</span>
+            </div>
+            <div class="road-card-content">
+              <div class="step-icon"></div>
+              <h4>2. Category Selection (Select Mode)</h4>
+              <p>Choose the mode that fits your needs among 24 specialized categories like politics, legal, business, or fact-checking.</p>
+            </div>
           </div>
 
-          <div class="footer-col">
-            <h4 class="title-terms">𝓣𝓮𝓻𝓶𝓼 & 𝓟𝓸𝓵𝓲𝓬𝓲𝓮𝓼</h4>
-            <ul>
-              <li><a href="terms.html">Terms & Conditions</a></li>
-              <li><a href="#subscription">Subscription</a></li>
-              <li><a href="privacy.html">Privacy Policy</a></li>
-              <li><a href="#policies">Other Policies</a></li>
-            </ul>
+          <div class="road-card step-top">
+            <div class="road-milestone-marker">
+              <span class="marker-dot">3</span>
+            </div>
+            <div class="road-card-content">
+              <div class="step-icon"></div>
+              <h4>3. Neural Verification (Process)</h4>
+              <p>As soon as you click the processing button, the AI filters out misinformation, political bias, and unnecessary terminology in the background.</p>
+            </div>
           </div>
 
-          <div class="footer-col">
-            <h4 class="title-connect">Connect</h4>
-            <ul>
-              <li><a href="mailto:sriramgroups.help@gmail.com">Help Line</a></li>
-              <li><a href="#social" onclick="openSocialSection()">Social Media</a></li>
-              <li><a href="javascript:void(0)" onclick="scrollToFeedback()">User Feedback</a></li>
-              
-              <div class="footer-social-icons-strip">
-                <a href="https://www.facebook.com/share/1BxpdAEynw/" target="_blank" rel="noopener noreferrer" class="ft-icon-link fb-color" title="Facebook">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                </a>
-                <a href="https://youtube.com/@sriramgroups-official?si=14l_6QH38dRmvzqt" target="_blank" rel="noopener noreferrer" class="ft-icon-link yt-color" title="YouTube">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                </a>
-                <a href="https://www.instagram.com/sriramgroupsofficial?igsh=aXV4eGs4ejhxNW0y" target="_blank" rel="noopener noreferrer" class="ft-icon-link insta-color" title="Instagram">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                </a>
-                <a href="https://www.linkedin.com/in/sriram-groups-927152420/" target="_blank" rel="noopener noreferrer" class="ft-icon-link in-color" title="LinkedIn">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                </a>
-                <a href="https://x.com/sriramgroupsown" target="_blank" rel="noopener noreferrer" class="ft-icon-link x-color" title="X (Twitter)">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                </a>
+          <div class="road-card step-bottom">
+            <div class="road-milestone-marker">
+              <span class="marker-dot">4</span>
+            </div>
+            <div class="road-card-content">
+              <div class="step-icon"></div>
+              <h4>4. Clean Summary (Result)</h4>
+              <p>Receive large articles as straightforward bullet points, or short news with full analysis and audio voiceover directly in your mother tongue.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+   <!-- Official Contact Hub -->
+    <div class="contact-hub-card">
+      <div class="contact-hub-header">
+        <span class="header-badge">OFFICIAL SUPPORT & ENTERPRISE GATEWAY</span>
+        <h3>Get in Touch with Sriram Groups</h3>
+        <p>For instant query resolution, strategic enterprise collaborations, and official verified portal access.</p>
+      </div>
+
+      <div class="contact-ticker-viewport" id="contactTickerViewport">
+        <div class="contact-ticker-track" id="contactTickerTrack">
+          <div class="contact-box">
+            <div class="contact-icon-wrap icon-help">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <div class="contact-details">
+              <span class="box-tag tag-emerald">USER ASSISTANCE</span>
+              <h4>Official Help Line</h4>
+              <a href="mailto:sriramgroups.help@gmail.com" class="contact-link">sriramgroups.help@gmail.com</a>
+            </div>
+          </div>
+
+          <div class="contact-box">
+            <div class="contact-icon-wrap icon-biz">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+              </svg>
+            </div>
+            <div class="contact-details">
+              <span class="box-tag tag-blue">ENTERPRISE & LEGAL</span>
+              <h4>Official Company Email</h4>
+              <a href="mailto:sriramgroupsofficial@gmail.com" class="contact-link">sriramgroupsofficial@gmail.com</a>
+            </div>
+          </div>
+
+          <div class="contact-box highlight-box">
+            <div class="contact-icon-wrap icon-net">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+            </div>
+            <div class="contact-details">
+              <span class="box-tag tag-purple">SOCIAL HUB & PORTALS</span>
+              <h4>Sriram Groups Network</h4>
+              <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" class="contact-btn-link">Visit Official Portal ↗</a>
+            </div>
+          </div>
+
+          <div class="contact-box">
+            <div class="contact-icon-wrap icon-social">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+            </div>
+            <div class="contact-details">
+              <span class="box-tag tag-amber">CONNECTIVITY</span>
+              <h4>Media Channels</h4>
+              <a href="javascript:void(0)" onclick="openSocialSection()" class="contact-link">Open Full Social Hub →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback Section -->
+    <section id="feedbackSection" class="feedback-container">
+      <div class="feedback-card">
+        <div class="feedback-header">
+          <span class="feedback-badge">COMMUNITY VOICES & FEATURE REQUESTS</span>
+          <h2>Share Your Thoughts with Sriram Groups</h2>
+          <p>Have an engine enhancement request, found a bug, or want to suggest a new news analytical category? We prioritize user feedback to refine our zero-retention platform.</p>
+        </div>
+
+        <form id="userFeedbackForm" class="feedback-form" onsubmit="handleFeedbackSubmit(event)">
+          <div class="feedback-form-grid">
+            <div class="form-group">
+              <label for="fbName">Your Name</label>
+              <input type="text" id="fbName" placeholder="Your name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="fbEmail">Official / Personal Email</label>
+              <input type="email" id="fbEmail" placeholder="Enter your Email id" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fbTool">Select Intelligence Engine</label>
+            <select id="fbTool" onchange="checkOtherOption(this)" required>
+              <option value="" disabled selected>Choose a tool or area...</option>
+              <option value="unpack_news">Unpack News Engine</option>
+              <option value="bullet_points">Bullet Points & Briefs</option>
+              <option value="factcheck">Fact & Bias Check</option>
+              <option value="eli5">Explain Like I'm 5</option>
+              <option value="news_to_speech">News to Speech</option>
+              <option value="short_to_depth">Short News to In-Depth</option>
+              <option value="news_translator">News Translator</option>
+              <option value="categories">Categories & Workspaces</option>
+              <option value="general_request">General Feature Request</option>
+              <option value="other">Other (Specify manually)</option>
+            </select>
+          </div>
+
+          <div class="form-group hidden" id="customToolGroup">
+            <label for="fbCustomTool">Specify Tool / Feature Name</label>
+            <input type="text" id="fbCustomTool" placeholder="Write the name of the tool or topic you want to mention.">
+          </div>
+
+          <div class="form-group">
+            <label>Experience Rating</label>
+            <div class="rating-pills">
+              <label class="rating-pill">
+                <input type="radio" name="rating" value="5" checked>
+                <span>Rating: 5 Stars (Excellent)</span>
+              </label>
+              <label class="rating-pill">
+                <input type="radio" name="rating" value="4">
+                <span>Rating: 4 Stars (Good)</span>
+              </label>
+              <label class="rating-pill">
+                <input type="radio" name="rating" value="3">
+                <span>Rating: 3 Stars (Neutral)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fbMessage">Your Feedback, Request or Suggestion</label>
+            <textarea id="fbMessage" rows="4" placeholder="Tell us what you loved, what needs improvement, or what new tools you would like to see..." required></textarea>
+          </div>
+
+          <button type="submit" class="feedback-submit-btn" id="fbSubmitBtn">
+            <span>Send Feedback to Desk</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+
+          <div id="feedbackSuccessMsg" class="feedback-success hidden">
+            Thank you! Your feedback has been forwarded directly to the Sriram Groups editorial & development desk.
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Sriram Groups Mother Enterprise Luxury Gold Section -->
+    <section id="enterpriseSection" class="enterprise-gold-wrapper">
+      <div class="enterprise-inner-container">
+        <div class="enterprise-badge-wrap">
+          <span class="gold-pill-badge">PARENT ORGANIZATION & ECOSYSTEM</span>
+        </div>
+
+        <h2 class="gold-main-heading">Sriram Groups — The Mother Enterprise Driving Digital Innovation</h2>
+        
+        <p class="enterprise-narrative">
+          As the flagship parent organization, Sriram Groups powers a versatile ecosystem of high-performance web applications, digital utilities, and custom software architectures. Built on uncompromising technical standards and clear execution, our platforms consistently deliver excellence across the digital spectrum.
+        </p>
+
+        <div class="gold-metrics-container">
+          <div class="gold-metric-card">
+            <div class="gold-circular-wrap">
+              <svg class="gold-svg-ring" viewBox="0 0 160 160">
+                <defs>
+                  <linearGradient id="goldGradientStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fbbf24" />
+                    <stop offset="50%" stop-color="#f59e0b" />
+                    <stop offset="100%" stop-color="#d97706" />
+                  </linearGradient>
+                </defs>
+                <circle class="ring-bg" cx="80" cy="80" r="70"></circle>
+                <circle class="ring-progress ring-99" id="ring99" cx="80" cy="80" r="70"></circle>
+              </svg>
+              <div class="ring-number-box">
+                <span class="ring-count" id="count99">0</span><span class="gold-percent">%</span>
               </div>
-            </ul>
+            </div>
+            <h4 class="metric-title">Client Satisfaction Rate</h4>
+            <p class="metric-sub">Verified enterprise metric</p>
           </div>
 
-          <div class="footer-col">
-            <h4 class="title-blogs">Blogs</h4>
-            <ul>
-              <li><a href="blogs.html">News Unpacker Blogs</a></li>
-              <li><a href="#impact">Impact of AI in News</a></li>
-              <li><a href="#guide">How to Use Guide</a></li>
-            </ul>
+          <div class="gold-metric-card">
+            <div class="gold-circular-wrap">
+              <svg class="gold-svg-ring" viewBox="0 0 160 160">
+                <circle class="ring-bg" cx="80" cy="80" r="70"></circle>
+                <circle class="ring-progress ring-100" id="ring100" cx="80" cy="80" r="70"></circle>
+              </svg>
+              <div class="ring-number-box">
+                <span class="ring-count" id="count100">0</span><span class="gold-percent">%</span>
+              </div>
+            </div>
+            <h4 class="metric-title">Service Commitment</h4>
+            <p class="metric-sub">Guaranteed uptime & execution</p>
+          </div>
+
+          <div class="gold-metric-card">
+            <div class="gold-circular-wrap">
+              <svg class="gold-svg-ring" viewBox="0 0 160 160">
+                <circle class="ring-bg" cx="80" cy="80" r="70"></circle>
+                <circle class="ring-progress ring-success" id="ringSuccess" cx="80" cy="80" r="70"></circle>
+              </svg>
+              <div class="ring-number-box">
+                <span class="ring-count" id="countSuccess">0</span><span class="gold-percent">%</span>
+              </div>
+            </div>
+            <h4 class="metric-title">NewsUnpacker Success Rate</h4>
+            <p class="metric-sub">• DECODE • VERIFY • BRIEF</p>
           </div>
         </div>
 
-        <div class="footer-bottom">
-          <p>
-            <span class="copyright-symbol">©</span> 2026 News Unpacker. All rights reserved. Powered by 
-            <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups</a>.
-          </p>
+        <div class="gold-launch-card">
+          <div class="gold-card-shine"></div>
+
+          <!-- Realistic Flying Messenger Doves -->
+          <div class="messenger-doves-container">
+            <div class="messenger-pigeon pigeon-left">
+              <div class="dove-wing dove-wing-back"></div>
+              <svg class="dove-svg" viewBox="0 0 100 80" width="68" height="54">
+                <defs>
+                  <linearGradient id="doveShadeLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="70%" stop-color="#f1f5f9"/>
+                    <stop offset="100%" stop-color="#cbd5e1"/>
+                  </linearGradient>
+                </defs>
+                <path d="M12 56 C6 62 2 54 8 46 C16 48 24 50 32 50 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+                <path d="M16 60 C8 66 4 58 10 50 C20 52 28 52 36 50 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+                <path d="M28 50 C22 42 26 28 42 26 C54 24 64 16 74 16 C82 16 88 20 86 26 C84 32 76 44 60 52 C46 58 34 56 28 50 Z" fill="url(#doveShadeLeft)" stroke="#cbd5e1" stroke-width="1.2"/>
+                <path d="M86 21 L94 24 L85 26 Z" fill="#f59e0b"/>
+                <circle cx="78" cy="20" r="2.2" fill="#0f172a"/>
+                <circle cx="77.4" cy="19.4" r="0.8" fill="#ffffff"/>
+              </svg>
+              <div class="dove-wing dove-wing-front"></div>
+            </div>
+
+            <div class="messenger-pigeon pigeon-right">
+              <div class="dove-wing dove-wing-back"></div>
+              <svg class="dove-svg" viewBox="0 0 100 80" width="68" height="54">
+                <defs>
+                  <linearGradient id="doveShadeRight" x1="100%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="70%" stop-color="#f1f5f9"/>
+                    <stop offset="100%" stop-color="#cbd5e1"/>
+                  </linearGradient>
+                </defs>
+                <path d="M88 56 C94 62 98 54 92 46 C84 48 76 50 68 50 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+                <path d="M84 60 C92 66 96 58 90 50 C80 52 72 52 64 50 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+                <path d="M72 50 C78 42 74 28 58 26 C46 24 36 16 26 16 C18 16 12 20 14 26 C16 32 24 44 40 52 C54 58 66 56 72 50 Z" fill="url(#doveShadeRight)" stroke="#cbd5e1" stroke-width="1.2"/>
+                <path d="M14 21 L6 24 L15 26 Z" fill="#f59e0b"/>
+                <circle cx="22" cy="20" r="2.2" fill="#0f172a"/>
+                <circle cx="21.4" cy="19.4" r="0.8" fill="#ffffff"/>
+              </svg>
+              <div class="dove-wing dove-wing-front"></div>
+            </div>
+          </div>
+
+          <div class="launch-details">
+            <div class="calendar-chip">
+              <span class="chip-label">GRAND PRE-LAUNCH</span>
+              <span class="chip-date">January 1, 2027</span>
+            </div>
+            <h3 class="launch-title">Central Digital Headquarters Unveiling</h3>
+            <p class="launch-desc">
+              Experience the unified ecosystem of Sriram Groups as we unveil our central digital headquarters. For official announcements, platform roadmaps, and early privilege registrations, visit our verified web destination.
+            </p>
+            <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" class="gold-cta-btn">
+              Visit sriramgroupsofficial.com ↗
+            </a>
+          </div>
         </div>
-      </section>
-    </main>
-  </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4 class="title-home">Home</h4>
+        <ul>
+          <li><a href="index.html">Main Dashboard</a></li>
+          <li><a href="index.html">Quick Overview</a></li>
+          <li><a href="javascript:void(0)" onclick="openAboutSection()">Leadership & Bio</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="title-company">Company</h4>
+        <ul>
+          <li><a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a></li>
+          <li><a href="javascript:void(0)" onclick="openAboutSection()">About Us</a></li>
+          <li><a href="websites.html">Other Websites</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="title-news">News Unpacker</h4>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="openWorkspace('unpack_news')">AI Decoder Engine</a></li>
+          <li><a href="javascript:void(0)" onclick="openWorkspace('factcheck')">Bias Analysis</a></li>
+          <li><a href="javascript:void(0)" onclick="openWorkspace('bullet_points')">Bullet Points</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="title-terms">Terms & Policies</h4>
+        <ul>
+          <li><a href="terms.html">Terms & Conditions</a></li>
+          <li><a href="subscription.html">Subscription</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="policies.html">Other Policies</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="title-connect">Connect</h4>
+        <ul>
+          <li><a href="mailto:sriramgroups.help@gmail.com">Help Line</a></li>
+          <li><a href="javascript:void(0)" onclick="scrollToFeedback()">User Feedback</a></li>
+          <li><a href="javascript:void(0)" onclick="openSocialSection()">Social Media</a></li>
+          
+          <div class="footer-social-icons-strip">
+            <a href="https://www.facebook.com/share/1BxpdAEynw/" target="_blank" rel="noopener noreferrer" class="ft-icon-link fb-color" title="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="https://youtube.com/@sriramgroups-official?si=14l_6QH38dRmvzqt" target="_blank" rel="noopener noreferrer" class="ft-icon-link yt-color" title="YouTube">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/sriramgroupsofficial?igsh=aXV4eGs4ejhxNW0y" target="_blank" rel="noopener noreferrer" class="ft-icon-link insta-color" title="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/sriram-groups-927152420/" target="_blank" rel="noopener noreferrer" class="ft-icon-link in-color" title="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </a>
+            <a href="https://x.com/sriramgroupsown" target="_blank" rel="noopener noreferrer" class="ft-icon-link x-color" title="X (Twitter)">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+          </div>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="title-blogs">Blogs</h4>
+        <ul>
+          <li><a href="blogs.html">News Unpacker Blogs</a></li>
+          <li><a href="blogs.html#impact">Impact of AI in News</a></li>
+          <li><a href="javascript:void(0)" onclick="scrollToGuideSection(event)">How to Use Guide</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>
+        <span class="copyright-symbol">©</span> 2026 News Unpacker. All rights reserved. Powered by 
+        <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups</a>.
+      </p>
+    </div>
+  </footer>
+
+  <!-- ==================== USER AUTHENTICATION POPUP MODAL ==================== -->
+  <section id="userAuthOverlay" class="auth-gate-wrapper hidden" style="display: none !important;">
+    <div class="auth-gate-card">
+      <button type="button" class="modal-close-x" onclick="closeAuthModal()" title="Close">✕</button>
+
+      <div class="auth-brand-badge" style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:14px;">
+        <svg class="site-logo" width="34" height="34" viewBox="0 0 48 48" fill="none">
+          <rect width="48" height="48" rx="10" fill="#2563EB"/>
+          <path d="M14 16H34V34C34 35.1 33.1 36 32 36H16C14.9 36 14 35.1 14 34V16Z" fill="#FFFFFF" fill-opacity="0.9"/>
+          <path d="M20 22H28M20 26H26M20 30H24" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span style="font-weight:800; font-size:1.15rem; color:#0f172a;">News<b style="color:#2563eb;">Unpacker</b></span>
+      </div>
+
+      <!-- VIEW 1: SIGN IN -->
+      <div id="authLoginView" class="auth-subview">
+        <h2>Sign In to Process News</h2>
+        <p class="auth-subtext">Access AI factual extraction, bias audit, and news decoding engines.</p>
+
+        <div id="googleSignInBtnLogin" class="google-signin-wrapper"></div>
+
+        <div class="auth-divider-or">
+          <span>OR CONTINUE WITH EMAIL</span>
+        </div>
+
+        <form id="userLoginForm" onsubmit="handleUserLogin(event)" autocomplete="on">
+          <div class="input-field-group">
+            <label for="userEmailInput">Email Address</label>
+            <div class="input-wrapper">
+              <input type="email" id="userEmailInput" name="username" autocomplete="username email" placeholder="Enter registered Email id" required>
+            </div>
+          </div>
+
+          <div class="input-field-group">
+            <label for="userPasswordInput">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="userPasswordInput" name="password" autocomplete="current-password" placeholder="Enter your password" required>
+              <button type="button" class="toggle-pass-btn" onclick="togglePassView('userPasswordInput', this)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="auth-options-row">
+            <label class="remember-checkbox-label"></label>
+            <button type="button" class="text-link-btn" onclick="switchAuthView('forgot')">Forgot Password?</button>
+          </div>
+
+          <button type="submit" class="auth-main-btn" id="loginSubmitBtn">Sign In (Enter ↵)</button>
+
+          <div class="auth-switch-footer">
+            Don't have an account? <button type="button" class="switch-bold-link" onclick="switchAuthView('register')">Create Account</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- VIEW 2: REGISTER -->
+      <div id="authRegisterView" class="auth-subview hidden">
+        <h2>Create Account</h2>
+        <p class="auth-subtext">Sign up to access and process news articles on News Unpacker.</p>
+
+        <div id="googleSignInBtnRegister" class="google-signin-wrapper"></div>
+
+        <div class="auth-divider-or">
+          <span>OR SIGN UP MANUALLY</span>
+        </div>
+
+        <form id="userRegisterForm" onsubmit="handleUserRegister(event)" autocomplete="on">
+          <div class="input-field-group">
+            <label for="regName">Full Name</label>
+            <div class="input-wrapper">
+              <input type="text" id="regName" name="name" autocomplete="name" placeholder="Your name" required>
+            </div>
+          </div>
+
+          <div class="input-field-group">
+            <label for="regEmail">Email Address</label>
+            <div class="input-wrapper">
+              <input type="email" id="regEmail" name="email" autocomplete="username email" placeholder="Enter your Email ID" required>
+            </div>
+          </div>
+
+          <div class="input-field-group">
+            <label for="regPhone">Mobile Number</label>
+            <div class="input-wrapper">
+              <input type="tel" id="regPhone" name="tel" autocomplete="tel" placeholder="10-digit mobile number" pattern="[0-9]{10}" required>
+            </div>
+          </div>
+
+          <div class="input-field-group">
+            <label for="regPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regPassword" name="new-password" autocomplete="new-password" placeholder="At least 8 characters" oninput="validatePasswordStrength(this.value)" required>
+              <button type="button" class="toggle-pass-btn" onclick="togglePassView('regPassword', this)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+            
+            <div class="pass-rules-box" id="passRulesBox">
+              <div class="rule-item" id="ruleLength">• Minimum 8 characters</div>
+              <div class="rule-item" id="ruleUpper">• At least 1 uppercase letter (A-Z)</div>
+              <div class="rule-item" id="ruleLower">• At least 1 lowercase letter (a-z)</div>
+              <div class="rule-item" id="ruleNumber">• At least 1 number (0-9)</div>
+              <div class="rule-item" id="ruleSpecial">• At least 1 special character (@, #, $, etc.)</div>
+            </div>
+          </div>
+
+          <div class="input-field-group">
+            <label for="regConfirmPassword">Confirm Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="regConfirmPassword" name="confirm-password" autocomplete="new-password" placeholder="Re-enter identical password" required>
+              <button type="button" class="toggle-pass-btn" onclick="togglePassView('regConfirmPassword', this)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="auth-main-btn" id="regSubmitBtn">Send 6-Digit Verification OTP (Enter ↵)</button>
+
+          <div class="auth-switch-footer">
+            Already have an account? <button type="button" class="switch-bold-link" onclick="switchAuthView('login')">Sign In</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- VIEW 3: OTP VERIFICATION -->
+      <div id="authOtpView" class="auth-subview hidden">
+        <div class="otp-shield-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <polyline points="9 12 11 14 15 10"></polyline>
+          </svg>
+        </div>
+
+        <h2>Verify your code</h2>
+        <p class="auth-subtext">We sent a 6-digit code to <strong id="otpTargetEmail">your email</strong>. Please check your inbox / spam.</p>
+
+        <form id="userOtpForm" onsubmit="handleOtpVerification(event)">
+          <div class="otp-boxes-container" id="otpBoxesWrap">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-digit-box" autofocus>
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-digit-box">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-digit-box">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-digit-box">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-digit-box">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-digit-box">
+          </div>
+
+          <input type="hidden" id="otpCodeInput" name="full_otp">
+
+          <div class="auth-link-row" style="justify-content:space-between; align-items:center; margin-top:14px;">
+            <span style="font-size:0.8rem; color:#64748b;">Code valid for 5 mins</span>
+            <button type="button" class="text-link-btn" onclick="resendRealOtp()">Resend Code</button>
+          </div>
+
+          <button type="submit" class="auth-main-btn" id="otpVerifyBtn" style="margin-top:12px;">Verify & Activate (Enter ↵)</button>
+        </form>
+      </div>
+
+      <!-- VIEW 4: FORGOT PASSWORD -->
+      <div id="authForgotView" class="auth-subview hidden">
+        <h2>Forgot Password?</h2>
+        <p class="auth-subtext">Enter your registered email address. We will send a secure password reset link to your inbox.</p>
+
+        <form id="userForgotForm" onsubmit="handlePasswordRecovery(event)">
+          <div class="input-field-group">
+            <label for="forgotEmailInput">Registered Email Address</label>
+            <div class="input-wrapper">
+              <input type="email" id="forgotEmailInput" placeholder="Enter your Email id" required>
+            </div>
+          </div>
+
+          <button type="submit" class="auth-main-btn" id="resetReqSubmitBtn">Send Reset Link (Enter ↵)</button>
+
+          <div class="auth-switch-footer">
+            Remembered your password? <button type="button" class="switch-bold-link" onclick="switchAuthView('login')">Back to Sign In</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
 
   <!-- Custom Alert Modal -->
   <div id="customAlert" class="modal-overlay hidden">
     <div class="modal-box">
-      <div class="modal-icon-circle">
-        <span class="modal-icon">!</span>
+      <div class="modal-logo-badge">
+        <svg class="site-logo" width="46" height="46" viewBox="0 0 48 48" fill="none">
+          <rect width="48" height="48" rx="10" fill="#2563EB"/>
+          <path d="M14 16H34V34C34 35.1 33.1 36 32 36H16C14.9 36 14 35.1 14 34V16Z" fill="#FFFFFF" fill-opacity="0.9"/>
+          <path d="M20 22H28M20 26H26M20 30H24" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+          <path d="M30 26L34 22L38 26" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
-      <h3 id="modalTitle">News Unpacker</h3>
+
+      <h3 id="modalTitle">News Unpacker Verified ID</h3>
       <p id="modalMsg">Alert message goes here.</p>
-      <button class="modal-btn" onclick="closeCustomAlert()">OK</button>
+      <button class="modal-btn" onclick="closeCustomAlert()">OK (Enter / Esc)</button>
     </div>
   </div>
+
+  <!-- 1. GRAND LAUNCH EVENT POSTER POPUP -->
+  <div id="eventPosterOverlay" class="event-poster-overlay">
+    <div class="event-poster-card animate-poster-in">
+      <button type="button" class="poster-close-btn" onclick="minimizeEventPoster()" title="Minimize">✕</button>
+
+      <div class="poster-logo-wrapper">
+        <div class="poster-fire-glow"></div>
+        <img 
+          src="https://lh3.googleusercontent.com/d/1HQZbmwZXZUw9x_L7hv_N-kle4W2DHNTV" 
+          alt="Sriram Groups Official Logo" 
+          class="poster-eagle-img"
+          onerror="this.src='image_045e9f.jpg';"
+        >
+      </div>
+
+      <div class="poster-badge-row">
+        <span class="poster-fire-tag"> GRAND PRE-RELEASE EVENT</span>
+        <span class="poster-timer-tag">DEADLINE: JAN 1, 2027</span>
+      </div>
+
+      <h2 class="poster-heading">Claim 3 Months Unlimited VIP Pass (100% Free)</h2>
+      
+      <p class="poster-description">
+        Celebrating the upcoming <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a> Central Digital HQ unveiling on <strong>January 1, 2027</strong>. Activate your 90-day complimentary AI news decoding access now!
+      </p>
+
+      <button type="button" class="poster-claim-action-btn" onclick="claimEventPassFromPoster()">
+        <span>Claim Free 3-Month Pass ↗</span>
+      </button>
+
+      <span class="poster-auto-note" style="color: #94a3b8; font-size: 0.75rem; margin-top: 8px;">Click 'Claim' or '✕' to minimize to badge</span>
+    </div>
+  </div>
+
+  <!-- 2. FLOATING BOTTOM-RIGHT TRIGGER BADGE -->
+  <button id="floatingEventBadge" class="floating-event-badge hidden" onclick="maximizeEventPoster()" title="Special 3-Month Free Pass Offer">
+    <div class="badge-fire-ring"></div>
+    <img 
+      src="https://lh3.googleusercontent.com/d/1HQZbmwZXZUw9x_L7hv_N-kle4W2DHNTV" 
+      alt="Sriram Groups Logo" 
+      class="badge-eagle-icon"
+      onerror="this.src='image_045e9f.jpg';"
+    >
+    <div class="badge-text-strip">
+      <span class="badge-top-text"> 3-Month Free</span>
+      <span class="badge-sub-text">Jan 1, 2027 Event</span>
+    </div>
+  </button>
+
+  <!-- ==================== KEYBOARD SHORTCUTS SCRIPT ==================== -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Textarea lo Enter / Ctrl+Enter kottinappudu processing jaragadam
+      const newsInput = document.getElementById("newsInput");
+      if (newsInput) {
+        newsInput.addEventListener("keydown", (e) => {
+          if ((e.ctrlKey && e.key === "Enter") || (e.key === "Enter" && !e.shiftKey)) {
+            e.preventDefault();
+            const procBtn = document.getElementById("processBtn");
+            if (procBtn && !procBtn.disabled) {
+              procBtn.click();
+            }
+          }
+        });
+      }
+
+      // 2. Esc key press chesinappudu Popups close avvadam
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeAuthModal();
+          closeCustomAlert();
+          minimizeEventPoster();
+          const dropdown = document.getElementById("profileDropdownCard");
+          if (dropdown) dropdown.classList.add("hidden");
+        }
+      });
+    });
+  </script>
 
   <script src="script.js"></script>
 </body>
