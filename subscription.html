@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscription Plans & Passes – News Unpacker</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Razorpay Official Checkout Library -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <!-- Realistic Flower/Confetti Falling Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    .sub-page-wrapper {
+      max-width: 1100px;
+      margin: 40px auto 80px;
+      padding: 0 20px;
+    }
+
+    .sub-header-center {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .sub-page-pill {
+      display: inline-block;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #2563eb;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .sub-header-center h1 {
+      font-size: 2.2rem;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+
+    .sub-header-center p {
+      color: #64748b;
+      font-size: 1.05rem;
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .user-current-banner {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .user-current-banner .left-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .current-plan-pill {
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 50px;
+    }
+
+    .plan-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 26px 20px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.25s ease;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    .plan-popular {
+      border-color: #2563eb;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.12);
+    }
+
+    .popular-ribbon {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .plan-name {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .plan-desc {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-bottom: 18px;
+      line-height: 1.45;
+    }
+
+    .plan-price-wrap {
+      margin-bottom: 20px;
+    }
+
+    .price-currency {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .price-amount {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    .price-period {
+      font-size: 0.8rem;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .plan-features-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px 0;
+      flex-grow: 1;
+    }
+
+    .plan-features-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.84rem;
+      color: #334155;
+      margin-bottom: 10px;
+    }
+
+    .plan-features-list li svg {
+      flex-shrink: 0;
+      color: #10b981;
+    }
+
+    .plan-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-starter-tier {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .btn-starter-tier:hover {
+      background: #dbeafe;
+    }
+
+    .btn-primary-tier {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-primary-tier:hover {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      transform: translateY(-2px);
+    }
+
+    .btn-vip-tier {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+    }
+
+    .btn-vip-tier:hover {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      transform: translateY(-2px);
+    }
+
+    /* Support Desk Box */
+    .support-desk-card {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      border-radius: 18px;
+      padding: 32px 28px;
+      color: #ffffff;
+      margin-bottom: 50px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+      border: 1.5px solid #334155;
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .support-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      background: rgba(37, 99, 235, 0.3);
+      color: #60a5fa;
+      border: 1px solid #3b82f6;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .support-grid h3 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+      color: #f8fafc;
+    }
+
+    .support-grid p {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .support-action-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .support-mail-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #2563eb;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      justify-content: center;
+      transition: background 0.2s ease;
+    }
+
+    .support-mail-link:hover {
+      background: #1d4ed8;
+    }
+
+    /* FAQ Section */
+    .faq-container {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 36px 30px;
+      margin-bottom: 60px;
+    }
+
+    .faq-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .faq-header h2 {
+      font-size: 1.65rem;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+
+    .faq-header p {
+      font-size: 0.92rem;
+      color: #64748b;
+    }
+
+    .faq-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .faq-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+
+    .faq-question {
+      padding: 16px 20px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #1e293b;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #ffffff;
+      transition: background 0.2s ease;
+    }
+
+    .faq-question:hover {
+      background: #f1f5f9;
+    }
+
+    .faq-answer {
+      padding: 14px 20px;
+      font-size: 0.88rem;
+      color: #475569;
+      line-height: 1.6;
+      border-top: 1px solid #f1f5f9;
+      display: none;
+      background: #f8fafc;
+    }
+
+    .faq-item.active .faq-answer {
+      display: block;
+    }
+
+    .faq-item.active .faq-toggle-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-toggle-icon {
+      font-size: 1.1rem;
+      color: #64748b;
+      transition: transform 0.2s ease;
+    }
+
+    /* Celebration Modal */
+    .success-celebrate-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999;
+    }
+
+    .success-celebrate-card {
+      background: #ffffff;
+      max-width: 440px;
+      width: 90%;
+      border-radius: 20px;
+      padding: 36px 28px;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      animation: popIn 0.35s ease;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 1024px) {
+      .plans-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .support-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 640px) {
+      .plans-grid {
+        grid-template-columns: 1fr;
+      }
+      .sub-header-center h1 {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+<!-- ==================== PREMIUM DARK VAULT SECURITY LOCK GATE ==================== -->
+<div id="subscriptionLockOverlay" class="sub-vault-lock-overlay">
+  <div class="sub-vault-lock-card">
+    
+    <!-- Vault Master Security Lock Symbol -->
+    <div class="vault-lock-visual">
+      <div class="vault-glow-pulse"></div>
+      <div class="vault-padlock-icon">
+        <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="3" ry="3" fill="#1e293b" stroke="#f59e0b" stroke-width="2.2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="#f59e0b" stroke-width="2.5"></path>
+          <circle cx="12" cy="16" r="1.8" fill="#f59e0b"></circle>
+          <path d="M12 18v2" stroke="#f59e0b" stroke-width="2"></path>
+        </svg>
+      </div>
+    </div>
+
+    <span class="vault-status-pill">PRE-LAUNCH GATEWAY • TEMPORARILY LOCKED</span>
+    
+    <h1 class="vault-title">Subscription Portal Under Construction</h1>
+
+    <div class="vault-content-text">
+      <p>
+        In celebration of the upcoming Grand Pre-Launch Event scheduled for <strong>January 1, 2027</strong> by 
+        <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" class="sriram-blue-glow-link">Sriram Groups Official </a>, 
+        all active readers of <strong>News Unpacker</strong> are already entitled to a complimentary <strong>3-Month (90-Day) Unlimited VIP Access Pass</strong>.
+      </p>
+
+      <div class="vault-warning-box">
+        <div class="vault-box-header"> GATEWAY STATUS: TEMPORARILY FROZEN</div>
+        <p>
+          Because reader accounts currently enjoy full unmetered VIP decoding privileges without charges, direct plan checkout and billing modules remain locked and pending implementation.
+        </p>
+      </div>
+
+      <p class="vault-offer-highlight">
+        Following the pre-launch cycle, our subscription portal will officially launch with mind-blowing promotional plans at competitive and accessible price points.
+      </p>
+    </div>
+
+    <!-- Official Connect & Social Network Action -->
+    <div class="vault-action-footer">
+      <p class="vault-action-label">Stay tuned for official releases, engineering updates, and launch roadmaps:</p>
+      
+      <a href="index.html#socialSection" class="vault-social-cta-btn">
+        <span> Connect on Sriram Groups Official Channels </span>
+      </a>
+
+      <!-- Direct Official Handles Strip -->
+      <div class="vault-handles-strip">
+        <a href="https://x.com/sriramgroupsown" target="_blank" rel="noopener noreferrer" class="handle-link" title="X (Twitter)">𝕏</a>
+        <a href="https://youtube.com/@sriramgroups-official?si=14l_6QH38dRmvzqt" target="_blank" rel="noopener noreferrer" class="handle-link" title="YouTube">▶</a>
+        <a href="https://www.instagram.com/sriramgroupsofficial?igsh=aXV4eGs4ejhxNW0y" target="_blank" rel="noopener noreferrer" class="handle-link" title="Instagram">📷</a>
+        <a href="https://www.facebook.com/share/1BxpdAEynw/" target="_blank" rel="noopener noreferrer" class="handle-link" title="Facebook">f</a>
+        <a href="https://www.linkedin.com/in/sriram-groups-927152420/" target="_blank" rel="noopener noreferrer" class="handle-link" title="LinkedIn">in</a>
+        <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" class="handle-link" title="Sriram Corporate Portal">🌐</a>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <a href="index.html" class="vault-return-home">← Return to Main News Dashboard</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+/* Dark Vault Fullscreen Lock Overlay */
+.sub-vault-lock-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 1) 100%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999999;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* Metallic Vault Secured Card Container */
+.sub-vault-lock-card {
+  background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+  border: 1.8px solid #334155;
+  border-radius: 26px;
+  max-width: 620px;
+  width: 100%;
+  padding: 42px 34px;
+  text-align: center;
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.8), 0 0 35px rgba(37, 99, 235, 0.15);
+  animation: vaultPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #f8fafc;
+}
+
+@keyframes vaultPopIn {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Master Padlock Animated Frame */
+.vault-lock-visual {
+  position: relative;
+  width: 95px;
+  height: 95px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vault-padlock-icon {
+  z-index: 2;
+  filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.45));
+}
+
+.vault-glow-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, transparent 70%);
+  border: 2px dashed rgba(245, 158, 11, 0.5);
+  animation: vaultSpinPulse 4s infinite linear;
+}
+
+@keyframes vaultSpinPulse {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.vault-status-pill {
+  display: inline-block;
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.vault-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 0 16px;
+  letter-spacing: -0.5px;
+}
+
+.vault-content-text {
+  font-size: 0.94rem;
+  color: #cbd5e1;
+  line-height: 1.7;
+  text-align: left;
+}
+
+.vault-content-text p {
+  margin: 0 0 12px;
+}
+
+/* Sriram Groups Official Glowing Blue Link */
+.sriram-blue-glow-link {
+  color: #60a5fa !important;
+  font-weight: 800;
+  text-decoration: underline;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.sriram-blue-glow-link:hover {
+  color: #93c5fd !important;
+  text-shadow: 0 0 10px rgba(96, 165, 250, 0.7);
+}
+
+.vault-warning-box {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid #334155;
+  border-left: 4px solid #f59e0b;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 16px 0;
+}
+
+.vault-box-header {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #fbbf24;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.vault-warning-box p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #94a3b8;
+  line-height: 1.55;
+}
+
+.vault-offer-highlight {
+  font-size: 0.92rem;
+  color: #34d399;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 12px 14px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* Actions Section */
+.vault-action-footer {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #334155;
+}
+
+.vault-action-label {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.vault-social-cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  text-decoration: none;
+  padding: 14px 22px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 0.96rem;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45);
+  transition: all 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.vault-social-cta-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.6);
+}
+
+.vault-handles-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.handle-link {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e2e8f0;
+  font-weight: 800;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.handle-link:hover {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #60a5fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+}
+
+.vault-return-home {
+  color: #94a3b8;
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.vault-return-home:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+</style>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="main-header">
+    <nav class="top-nav">
+      <div class="nav-item">
+        <a href="index.html" class="nav-link nav-btn-home">Home</a>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Company ▾</button>
+        <div class="dropdown-content">
+          <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a>
+          <a href="index.html#about">About Us</a>
+          <a href="websites.html">Other Websites</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Connect ▾</button>
+        <div class="dropdown-content">
+          <a href="mailto:sriramgroups.help@gmail.com">Help Line</a>
+          <a href="index.html#social">Social Media</a>
+          <a href="index.html#feedbackSection">Feedback & Requests</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Terms & Policies ▾</button>
+        <div class="dropdown-content">
+          <a href="terms.html">Terms & Conditions</a>
+          <a href="subscription.html">Subscription Plans</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="policies.html">Other Policies</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Category ▾</button>
+        <div class="dropdown-content">
+          <a href="index.html?workspace=politics">Politics</a>
+          <a href="index.html?workspace=business">Business & Economy</a>
+          <a href="index.html?workspace=tech">Technology</a>
+          <a href="index.html?workspace=crime_legal">Crime & Legal</a>
+          <a href="index.html?workspace=education">Education & Careers</a>
+          <a href="index.html?workspace=health">Health & Lifestyle</a>
+          <a href="index.html?workspace=sports">Sports</a>
+          <a href="index.html?workspace=environment">Weather & Climate</a>
+          <a href="index.html?workspace=kids">Kids & Students</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <button class="nav-link drop-btn">Blogs ▾</button>
+        <div class="dropdown-content">
+          <a href="blogs.html">News Unpacker Blogs</a>
+          <a href="blogs.html#impact">Impact of AI in News</a>
+          <a href="index.html#guide">How to Use Guide</a>
+        </div>
+      </div>
+      <div class="user-profile-wrapper">
+        <a href="index.html?action=login" class="profile-avatar-btn" id="subPageProfileBtn" title="User Account">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="sub-page-wrapper">
+    <div class="sub-header-center">
+      <span class="sub-page-pill">UNLIMITED AI DECODING ACCESS</span>
+      <h1>Select Your News Unpacker Plan</h1>
+      <p>Continuous factual extractions, acoustic text-to-speech briefings, and bias audits without API constraints or daily limits.</p>
+    </div>
+
+    <!-- Active User Current Pass Status -->
+    <div class="user-current-banner">
+      <div class="left-info">
+        <span style="font-size: 1.3rem;">👤</span>
+        <div>
+          <strong id="bannerUserName">Guest User</strong>
+          <div style="font-size: 0.82rem; color: #64748b;" id="bannerUserEmail">Please sign in to manage pass</div>
+        </div>
+      </div>
+      <div class="right-info">
+        <span class="current-plan-pill" id="bannerPassStatus">No Active Paid Pass</span>
+      </div>
+    </div>
+
+    <!-- 4 Pricing Cards Grid -->
+    <div class="plans-grid">
+      
+      <!-- Tier 1: 120 Articles Lifetime Pass (₹49) -->
+      <div class="plan-card">
+        <h3 class="plan-name">Lifetime Starter</h3>
+        <p class="plan-desc">Fixed quota for steady reading. Zero expiry pressure until limit exhausts.</p>
+        <div class="plan-price-wrap">
+          <span class="price-currency">₹</span>
+          <span class="price-amount">49</span>
+          <span class="price-period">/ Lifetime</span>
+        </div>
+        <ul class="plan-features-list">
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <strong>120 Summaries (Lifetime Quota)</strong>
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <strong>100% Zero Ads</strong>
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Valid until all 120 articles are used
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Factual Extraction & Neutral Briefs
+          </li>
+        </ul>
+        <button class="plan-btn btn-starter-tier" onclick="initiateRealPayment(49, 'Lifetime Starter (120 Articles)', 120)">Get 120 Articles for ₹49</button>
+      </div>
+
+      <!-- Tier 2: Unlimited Monthly Pro (₹99) -->
+      <div class="plan-card">
+        <h3 class="plan-name">Monthly Pro Unlimited</h3>
+        <p class="plan-desc">For active readers who need uncapped summarisation and audio synthesis.</p>
+        <div class="plan-price-wrap">
+          <span class="price-currency">₹</span>
+          <span class="price-amount">99</span>
+          <span class="price-period">/ month</span>
+        </div>
+        <ul class="plan-features-list">
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <strong>UNLIMITED Summaries</strong>
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Zero Ads & Instant Decoding
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Full Acoustic Speech Engine (1.25x - 2.0x)
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            English & Hindi or Regional Translators
+          </li>
+        </ul>
+        <button class="plan-btn btn-primary-tier" onclick="initiateRealPayment(99, 'Monthly Pro Unlimited Plan', 'unlimited')">Activate Unlimited for ₹99</button>
+      </div>
+
+      <!-- Tier 3: 6-Month Hero Pass (₹399) -->
+      <div class="plan-card plan-popular">
+        <span class="popular-ribbon">BEST VALUE (5+1 FREE)</span>
+        <h3 class="plan-name">6-Month Special Pass</h3>
+        <p class="plan-desc">Pay for 5 months, get 1 month completely free. Zero interruption access.</p>
+        <div class="plan-price-wrap">
+          <span class="price-currency">₹</span>
+          <span class="price-amount">399</span>
+          <span class="price-period">/ 6 months</span>
+        </div>
+        <ul class="plan-features-list">
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <strong>UNLIMITED Full AI Decoding</strong>
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Zero Ads Across All Devices
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Deep Fact-Check & Bias Detector
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Blue Glow VIP Profile Badge
+          </li>
+        </ul>
+        <button class="plan-btn btn-primary-tier" onclick="initiateRealPayment(399, '6-Month Special Pass', 'unlimited')">Get 6 Months for ₹399</button>
+      </div>
+
+      <!-- Tier 4: Annual Mega Pass (₹699) -->
+      <div class="plan-card">
+        <h3 class="plan-name">Annual Mega Pass</h3>
+        <p class="plan-desc">For serious researchers, journalists, and competitive exam aspirants.</p>
+        <div class="plan-price-wrap">
+          <span class="price-currency">₹</span>
+          <span class="price-amount">699</span>
+          <span class="price-period">/ year (Save 65%)</span>
+        </div>
+        <ul class="plan-features-list">
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <strong>UNLIMITED Everything</strong>
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Zero Ads Guaranteed
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Priority Neural Engine Processing Speed
+          </li>
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Early Access to Sriram Groups Tools
+          </li>
+        </ul>
+        <button class="plan-btn btn-vip-tier" onclick="initiateRealPayment(699, 'Annual Mega Pass', 'unlimited')">Claim 1 Year for ₹699</button>
+      </div>
+
+    </div>
+
+    <!-- Official Support Desk Box -->
+    <div class="support-desk-card">
+      <div class="support-grid">
+        <div>
+          <span class="support-badge">24/7 DEDICATED ASSISTANCE</span>
+          <h3>Payment Help & Account Support</h3>
+          <p>
+          If you encounter issues during payment processing or your subscription fails to activate immediately, reach out directly to our official editorial and technical support desk. Our team typically resolves account queries within shortly.
+          </p>
+        </div>
+        <div class="support-action-box">
+          <div style="font-size: 0.82rem; color: #cbd5e1;">Official Support Email:</div>
+          <a href="mailto:sriramgroups.help@gmail.com" class="support-mail-link">
+            ✉ sriramgroups.help@gmail.com
+          </a>
+          <div style="font-size: 0.76rem; color: #94a3b8; text-align: center;">
+            Subject Line: Please include your Transaction ID or Registered Email for rapid resolution.
+          </div>
+
+          <!-- 1. Official Website Link -->
+          <div style="border-top: 1px solid rgba(255, 255, 255, 0.12); padding-top: 12px; margin-top: 4px;">
+            <div style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 6px;">Official Corporate Portal:</div>
+            <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" style="color: #60a5fa; font-size: 0.88rem; font-weight: 700; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px;">
+              sriramgroupsofficial.com 
+            </a>
+          </div>
+
+          <!-- 2. Sriram Groups Official Channels Button -->
+          <div style="margin-top: 6px;">
+            <a href="index.html#socialSection" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.2); color: #ffffff; text-decoration: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 0.86rem; transition: all 0.2s ease;">
+              <span> Connect on Sriram Groups Official Channels ↗</span>
+            </a>
+          </div>
+
+          <!-- 3. Urgent Support & Social Media Reply Notice -->
+          <div style="background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 10px; margin-top: 4px; text-align: center;">
+            <p style="font-size: 0.76rem; color: #cbd5e1; line-height: 1.45; margin: 0;">
+              <strong style="color: #93c5fd;">Need Urgent Help?</strong> Connect with us directly across our official social media handles for prompt responses, live community support, and verified updates.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment & Subscription FAQs (Pure Professional English) -->
+    <div class="faq-container">
+      <div class="faq-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about plans, billing, and premium AI features.</p>
+      </div>
+
+      <div class="faq-accordion">
+        <!-- 1. Why Subscribe -->
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span> Why should I subscribe to News Unpacker?</span>
+            <span class="faq-toggle-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            News Unpacker eliminates media sensationalism, clickbait clutter, and political bias. By subscribing, you get high-speed access to 24+ domain intelligence decoders, fast text-to-speech audio, multilingual translation, and verified fact-checking without interruptions or daily limits.
+          </div>
+        </div>
+
+        <!-- 2. Benefits of Paid Subscription -->
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span> What are the key benefits of having an active subscription pass?</span>
+            <span class="faq-toggle-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Subscribers receive 100% ad-free reading, priority neural processing speeds, acoustic playback speed controls (1.25x to 2.0x), unlimited deep-story expansions, and an official VIP profile badge with automated email invoice generation.
+          </div>
+        </div>
+
+        <!-- 3. How to Subscribe -->
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span> How do I purchase or activate a subscription plan?</span>
+            <span class="faq-toggle-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Simply sign in to your account, choose your preferred tier (from ₹49 Lifetime Starter up to Annual Mega Pass), and click the plan button. Complete the transaction using any UPI App (QR code scan or UPI ID request), debit/credit card, or netbanking. Your account upgrades instantly.
+          </div>
+        </div>
+
+        <!-- 4. Activation Time -->
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span> How quickly is my account upgraded after payment?</span>
+            <span class="faq-toggle-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Activation is instantaneous. The moment your payment succeeds via Razorpay, our automated system credits your quota (120 summaries or Unlimited access) to your verified account without any delay.
+          </div>
+        </div>
+
+        <!-- 5. Payment Methods (UPI QR & ID) -->
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span> Can I pay using UPI QR code or UPI ID (Google Pay, PhonePe, Paytm)?</span>
+            <span class="faq-toggle-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Yes. The checkout modal presents a dynamic UPI QR code that you can scan with any mobile payment app, or you can enter your UPI ID (VPA) to receive an instant payment prompt on your device.
+          </div>
+        </div>
+
+        <!-- 6. ₹49 Plan Validity -->
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>What is the validity of the ₹49 Lifetime Starter plan?</span>
+            <span class="faq-toggle-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            The ₹49 plan has no calendar expiration date. Your 120-article quota remains valid until you unpack all 120 stories, whether that takes weeks, months, or years.
+          </div>
+        </div>
+
+        <!-- 7. Email Invoices -->
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span> Will I receive a payment invoice and confirmation receipt?</span>
+            <span class="faq-toggle-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Yes. Upon successful transaction completion, our automated Google Apps Script infrastructure dispatches an official GST-compliant digital invoice directly to your registered email address.
+          </div>
+        </div>
+
+        <!-- 8. Payment Troubleshooting & Support -->
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span> What if my money is deducted but my plan is not activated?</span>
+            <span class="faq-toggle-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Transactions are monitored in real time. In the rare event of a network drop, send your transaction reference ID or screenshot to our official helpline at <strong>sriramgroups.help@gmail.com</strong>. Our technical support team will manually verify and activate your pass within 15–30 minutes.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- Celebration Popup Modal (Flower Rain Window) -->
+  <div id="celebrationModal" class="success-celebrate-overlay" style="display:none;">
+    <div class="success-celebrate-card">
+      <div style="font-size: 3.5rem; margin-bottom: 12px;">🎉🌸</div>
+      <h2 style="color: #0f172a; font-size: 1.6rem; margin-bottom: 8px;">Congratulations!</h2>
+      <p style="color: #475569; font-size: 0.95rem; line-height: 1.5; margin-bottom: 18px;" id="celebrateMsg">
+        Your subscription payment was successful. Welcome to News Unpacker VIP!
+      </p>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 20px; font-size: 0.85rem; color: #64748b;" id="celebrateInvoiceDetails">
+        Invoice details have been dispatched to your registered email.
+      </div>
+      <button class="plan-btn btn-primary-tier" onclick="closeCelebrationAndReturn()">Start Unpacking News →</button>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4 class="title-home">Home</h4>
+        <ul>
+          <li><a href="index.html">Main Dashboard</a></li>
+          <li><a href="index.html">Quick Overview</a></li>
+          <li><a href="index.html#about">Leadership & Bio</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="title-company">Company</h4>
+        <ul>
+          <li><a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a></li>
+          <li><a href="index.html#about">About Us</a></li>
+          <li><a href="websites.html">Other Websites</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="title-news">News Unpacker</h4>
+        <ul>
+          <li><a href="index.html?workspace=unpack_news">AI Decoder Engine</a></li>
+          <li><a href="index.html?workspace=factcheck">Bias Analysis</a></li>
+          <li><a href="index.html?workspace=bullet_points">Bullet Points</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="title-terms">Terms & Policies</h4>
+        <ul>
+          <li><a href="terms.html">Terms & Conditions</a></li>
+          <li><a href="subscription.html">Subscription</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="policies.html">Other Policies</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="title-connect">Connect</h4>
+        <ul>
+          <li><a href="mailto:sriramgroups.help@gmail.com">Help Line</a></li>
+          <li><a href="index.html#feedbackSection">User Feedback</a></li>
+          <li><a href="index.html#social">Social Media</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="title-blogs">Blogs</h4>
+        <ul>
+          <li><a href="blogs.html">News Unpacker Blogs</a></li>
+          <li><a href="blogs.html#impact">Impact of AI in News</a></li>
+          <li><a href="index.html#guide">How to Use Guide</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 News Unpacker. All rights reserved. Powered by <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups</a>.</p>
+    </div>
+  </footer>
+
+  <script>
+    // LIVE RAZORPAY KEY ID
+    const RAZORPAY_LIVE_KEY = "rzp_live_TjSYE62uhkmRSR";
+
+    // GOOGLE APPS SCRIPT WEB APP URL (For backend invoice & sheet sync)
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyF8PDZpIKLsJPm2tqn85tp9BhXIxOnGJskPlBKRH5kxgqhF4ktg4fNASk9p58n61d9/exec";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const activeUser = JSON.parse(localStorage.getItem("news_unpacker_active_user"));
+      if (activeUser) {
+        document.getElementById("bannerUserName").innerText = activeUser.name;
+        document.getElementById("bannerUserEmail").innerText = activeUser.email;
+        if (activeUser.subscribed) {
+          document.getElementById("bannerPassStatus").innerText = activeUser.plan + " (Active)";
+        }
+      }
+    });
+
+    // FAQ Accordion Trigger
+    function toggleFaq(element) {
+      const item = element.parentElement;
+      const isOpen = item.classList.contains("active");
+      document.querySelectorAll(".faq-item").forEach(i => i.classList.remove("active"));
+      if (!isOpen) {
+        item.classList.add("active");
+      }
+    }
+
+    // RAZORPAY PAYMENT GATEWAY TRIGGER
+    function initiateRealPayment(amountInINR, planName, quotaLimit) {
+      const activeUser = JSON.parse(localStorage.getItem("news_unpacker_active_user"));
+      
+      if (!activeUser) {
+        alert("Please sign in or create an account before choosing a subscription plan.");
+        window.location.href = "index.html?action=login";
+        return;
+      }
+
+      const options = {
+        key: RAZORPAY_LIVE_KEY,
+        amount: amountInINR * 100, // paise-te
+        currency: "INR",
+        name: "News Unpacker Subscription",
+        description: planName + " – Official Access",
+        image: "https://lh3.googleusercontent.com/d/1HQZbmwZXZUw9x_L7hv_N-kle4W2DHNTV",
+        
+        // "Using as number" hide korar jonno contact prefill faka rakha holo
+        prefill: {
+          name: activeUser.name,
+          email: activeUser.email,
+          contact: ""
+        },
+
+        // UPI collect ebong dynamic QR code config
+        config: {
+          display: {
+            blocks: {
+              upi_block: {
+                name: "Pay via UPI (ID or QR)",
+                instruments: [
+                  { method: "upi" }
+                ]
+              }
+            },
+            sequence: ["block.upi_block", "card", "netbanking", "wallet"],
+            preferences: {
+              show_default_blocks: true
+            }
+          }
+        },
+
+        theme: {
+          color: "#2563eb"
+        },
+        modal: {
+          ondismiss: function () {
+            console.log("Payment canceled by user.");
+          }
+        },
+        handler: async function (response) {
+          await handlePaymentSuccess(response.razorpay_payment_id, planName, amountInINR, quotaLimit);
+        }
+      };
+
+      const rzpInstance = new Razorpay(options);
+
+      rzpInstance.on("payment.failed", function (resp) {
+        alert("Payment Failed / Rejected: " + (resp.error.description || "Bank declined the transaction."));
+      });
+
+      rzpInstance.open();
+    }
+
+    // SUCCESS CELEBRATION & DATA SYNC
+    async function handlePaymentSuccess(paymentId, planName, amount, quotaLimit) {
+      const activeUser = JSON.parse(localStorage.getItem("news_unpacker_active_user"));
+
+      // 1. Google Sheets & Email Invoice-e data pathano
+      try {
+        fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "send_payment_invoice",
+            paymentId: paymentId,
+            name: activeUser.name,
+            email: activeUser.email,
+            phone: activeUser.phone || "N/A",
+            plan: planName,
+            amount: amount
+          })
+        });
+      } catch (err) {
+        console.warn("Backend sync notice:", err);
+      }
+
+      // 2. LocalStorage user account-e quota/plan update
+      activeUser.subscribed = true;
+      activeUser.plan = planName;
+      if (quotaLimit === 120) {
+        activeUser.articleQuotaRemaining = 120;
+        activeUser.expiryDate = null;
+      } else {
+        const exp = new Date();
+        if (amount === 99) exp.setDate(exp.getDate() + 30);
+        if (amount === 399) exp.setDate(exp.getDate() + 180);
+        if (amount === 699) exp.setDate(exp.getDate() + 365);
+        activeUser.expiryDate = exp.toISOString();
+        activeUser.articleQuotaRemaining = "unlimited";
+      }
+
+      localStorage.setItem("news_unpacker_active_user", JSON.stringify(activeUser));
+
+      let users = JSON.parse(localStorage.getItem("news_unpacker_users")) || [];
+      let idx = users.findIndex(u => u.email === activeUser.email);
+      if (idx !== -1) {
+        users[idx].subscribed = true;
+        users[idx].plan = activeUser.plan;
+        users[idx].articleQuotaRemaining = activeUser.articleQuotaRemaining;
+        users[idx].expiryDate = activeUser.expiryDate;
+        localStorage.setItem("news_unpacker_users", JSON.stringify(users));
+      }
+
+      // 3. Flower/Confetti Falling Animation trigger
+      triggerFlowerRain();
+
+      // 4. Congratulations Popup show
+      const modal = document.getElementById("celebrationModal");
+      document.getElementById("celebrateMsg").innerText = `Congratulations ${activeUser.name}!\nYour payment of ₹${amount} for ${planName} was successful. Transaction ID: ${paymentId}`;
+      document.getElementById("celebrateInvoiceDetails").innerText = `An official receipt and invoice copy has been sent to ${activeUser.email}.`;
+      modal.style.display = "flex";
+    }
+
+    // Flower Rain Shower
+    function triggerFlowerRain() {
+      const duration = 4.5 * 1000;
+      const end = Date.now() + duration;
+
+      (function frame() {
+        confetti({
+          particleCount: 5,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ['#2563eb', '#f59e0b', '#10b981', '#ec4899', '#8b5cf6']
+        });
+        confetti({
+          particleCount: 5,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ['#2563eb', '#f59e0b', '#10b981', '#ec4899', '#8b5cf6']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+    }
+
+    function closeCelebrationAndReturn() {
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
