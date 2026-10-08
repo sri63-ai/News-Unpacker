@@ -298,7 +298,7 @@
 </head>
 <body>
 
-  <!-- Top Sticky Navigation Bar -->
+ <!-- ==================== TOP NAVIGATION HEADER (SUB-PAGES) ==================== -->
   <header class="main-header">
     <nav class="top-nav">
       <div class="nav-item">
@@ -310,7 +310,7 @@
         <div class="dropdown-content">
           <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a>
           <a href="index.html#about">About Us</a>
-          <a href="index.html#other-websites">Other Websites</a>
+          <a href="websites.html">Other Websites</a>
         </div>
       </div>
 
@@ -319,6 +319,7 @@
         <div class="dropdown-content">
           <a href="mailto:sriramgroups.help@gmail.com">Help Line</a>
           <a href="index.html#social">Social Media</a>
+          <a href="index.html#feedbackSection">Feedback & Requests</a>
         </div>
       </div>
 
@@ -326,37 +327,48 @@
         <button class="nav-link drop-btn">Terms & Policies ▾</button>
         <div class="dropdown-content">
           <a href="terms.html">Terms & Conditions</a>
-          <a href="index.html#privacy">Privacy Policy</a>
-          <a href="index.html#policies">Other Policies</a>
+          <a href="subscription.html">Subscription Plans</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="policies.html">Other Policies</a>
         </div>
       </div>
 
       <div class="nav-item dropdown">
         <button class="nav-link drop-btn">Category ▾</button>
         <div class="dropdown-content">
-          <a href="index.html">Politics</a>
-          <a href="index.html">Business & Economy</a>
-          <a href="index.html">Technology</a>
-          <a href="index.html">Crime & Legal</a>
-          <a href="index.html">Education</a>
-          <a href="index.html">Health</a>
-          <a href="index.html">Sports</a>
-          <a href="index.html">Weather & Climate</a>
-          <a href="index.html">Kids & Students</a>
+          <a href="index.html?workspace=politics">Politics</a>
+          <a href="index.html?workspace=business">Business & Economy</a>
+          <a href="index.html?workspace=tech">Technology</a>
+          <a href="index.html?workspace=crime_legal">Crime & Legal</a>
+          <a href="index.html?workspace=education">Education & Careers</a>
+          <a href="index.html?workspace=health">Health & Lifestyle</a>
+          <a href="index.html?workspace=sports">Sports</a>
+          <a href="index.html?workspace=environment">Weather & Climate</a>
+          <a href="index.html?workspace=kids">Kids & Students</a>
         </div>
       </div>
 
       <div class="nav-item dropdown">
-        <button class="nav-link drop-btn active">Blogs ▾</button>
+        <button class="nav-link drop-btn">Blogs ▾</button>
         <div class="dropdown-content">
-          <a href="blogs.html">All Insights (10 Articles)</a>
-          <a href="blogs.html" onclick="openArticleDirect('art1')">Partisan Spin Detection</a>
-          <a href="blogs.html" onclick="openArticleDirect('art2')">Automated Summarization</a>
-          <a href="blogs.html" onclick="openArticleDirect('art4')">Modern Summarizer Standards</a>
+          <a href="blogs.html">News Unpacker Blogs</a>
+          <a href="blogs.html#impact">Impact of AI in News</a>
+          <a href="index.html#guide">How to Use Guide</a>
         </div>
+      </div>
+
+      <!-- Right Corner User Profile Circle (Direct Link to Home Login) -->
+      <div class="user-profile-wrapper">
+        <a href="index.html?action=login" class="profile-avatar-btn" id="subPageProfileBtn" title="User Account">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </a>
       </div>
     </nav>
   </header>
+
 
   <!-- Main Container -->
   <main class="blogs-wrapper">
@@ -1818,59 +1830,88 @@
 
   <!-- Professional 6-Column Footer -->
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <h4 class="title-home">Home</h4>
-          <ul>
-            <li><a href="index.html">Main Dashboard</a></li>
-            <li><a href="index.html#about">Leadership & Bio</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4 class="title-company">Company</h4>
-          <ul>
-            <li><a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a></li>
-            <li><a href="index.html#about">About Us</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4 class="title-news">News Unpacker</h4>
-          <ul>
-            <li><a href="index.html">AI Decoder Engine</a></li>
-            <li><a href="index.html">Bias Analysis</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4 class="title-terms">Terms & Policies</h4>
-          <ul>
-            <li><a href="terms.html">Terms & Conditions</a></li>
-            <li><a href="index.html#privacy">Privacy Policy</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4 class="title-connect">Connect</h4>
-          <ul>
-            <li><a href="mailto:sriramgroups.help@gmail.com">Help Line</a></li>
-            <li><a href="index.html#social">Social Media</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4 class="title-blogs">Blogs</h4>
-          <ul>
-            <li><a href="blogs.html">All Insights (10)</a></li>
-            <li><a href="javascript:void(0)" onclick="openArticleDirect('art4')">Platform Standards</a></li>
-          </ul>
-        </div>
-      </div>
+    <!-- 6 Equal Columns Modern Footer Grid (SUB-PAGES) -->
+        <div class="footer-grid">
+          <div class="footer-col">
+            <h4 class="title-home">Home</h4>
+            <ul>
+              <li><a href="index.html">Main Dashboard</a></li>
+              <li><a href="index.html">Quick Overview</a></li>
+              <li><a href="index.html#about">Leadership & Bio</a></li>
+            </ul>
+          </div>
 
-      <div class="footer-bottom">
-        <p>
-          <span class="copyright-symbol">©</span> 2026 News Unpacker. All rights reserved. Powered by 
-          <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups</a>.
-        </p>
-      </div>
-    </div>
+          <div class="footer-col">
+            <h4 class="title-company">Company</h4>
+            <ul>
+              <li><a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a></li>
+              <li><a href="index.html#about">About Us</a></li>
+              <li><a href="websites.html">Other Websites</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4 class="title-news">News Unpacker</h4>
+            <ul>
+              <li><a href="index.html?workspace=unpack_news">AI Decoder Engine</a></li>
+              <li><a href="index.html?workspace=factcheck">Bias Analysis</a></li>
+              <li><a href="index.html?workspace=bullet_points">Bullet Points</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4 class="title-terms">Terms & Policies</h4>
+            <ul>
+              <li><a href="terms.html">Terms & Conditions</a></li>
+              <li><a href="subscription.html">Subscription</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="policies.html">Other Policies</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4 class="title-connect">Connect</h4>
+            <ul>
+             <li><a href="mailto:sriramgroups.help@gmail.com">Help Line</a></li>
+              <li><a href="index.html#feedbackSection">User Feedback</a></li>
+              <li><a href="index.html#social">Social Media</a></li>
+              
+              <div class="footer-social-icons-strip">
+                <a href="https://www.facebook.com/share/1BxpdAEynw/" target="_blank" rel="noopener noreferrer" class="ft-icon-link fb-color" title="Facebook">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </a>
+                <a href="https://youtube.com/@sriramgroups-official?si=14l_6QH38dRmvzqt" target="_blank" rel="noopener noreferrer" class="ft-icon-link yt-color" title="YouTube">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                </a>
+                <a href="https://www.instagram.com/sriramgroupsofficial?igsh=aXV4eGs4ejhxNW0y" target="_blank" rel="noopener noreferrer" class="ft-icon-link insta-color" title="Instagram">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/sriram-groups-927152420/" target="_blank" rel="noopener noreferrer" class="ft-icon-link in-color" title="LinkedIn">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+                <a href="https://x.com/sriramgroupsown" target="_blank" rel="noopener noreferrer" class="ft-icon-link x-color" title="X (Twitter)">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+              </div>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4 class="title-blogs">Blogs</h4>
+            <ul>
+              <li><a href="blogs.html">News Unpacker Blogs</a></li>
+              <li><a href="blogs.html#impact">Impact of AI in News</a></li>
+              <li><a href="index.html#guide">How to Use Guide</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>
+            <span class="copyright-symbol">©</span> 2026 News Unpacker. All rights reserved. Powered by 
+            <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer">Sriram Groups</a>.
+          </p>
+        </div>
   </footer>
 
   <!-- Fast Instant JavaScript Logic (No Spinner, No Delay) -->
