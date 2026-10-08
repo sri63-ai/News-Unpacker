@@ -9,7 +9,7 @@ const PRE_LAUNCH_END_DATE = new Date("2027-01-01T23:59:59");
 
 function getPasswordResetUrl(email) {
   const currentBaseUrl = window.location.href.split('index.html')[0].split('?')[0];
-  return `${currentBaseUrl}reset-password.html?email=${encodeURIComponent(email || "")}`;
+  return `${currentBaseUrl}resetpassword.html?email=${encodeURIComponent(email || "")}`;
 }
 
 let isSpeaking = false;
