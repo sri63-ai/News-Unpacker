@@ -663,7 +663,22 @@ ${text}
   } catch (error) {
     if (loader) loader.classList.add("hidden");
     if (processBtn) processBtn.disabled = false;
-    showAlert("Processing error: " + error.message, "Execution Error");
+
+    // 1. అడ్మిన్ డేటాబేస్ లోని "System_Errors" కు సైలెంట్ గా లాగ్ చేయడం
+    logErrorToAdminConsole({
+      category: currentToolMode,
+      errorMsg: error.message || error.toString(),
+      source: "Gemini Processing Engine",
+      userEmail: (activeSessionUser ? activeSessionUser.email : "Guest Reader")
+    });
+
+    // 2. యూజర్ కు కనిపించే మర్యాదపూర్వక ఇంగ్లీష్ సందేశం
+    showAlert(
+      "Our AI neural verification engines are currently operating under heavy network traffic. " +
+      "Please feel free to explore our other categories or try processing your request again in a few moments.\n\n" +
+      "Thank you for your patience and for choosing News Unpacker.",
+      "Service Momentarily Busy"
+    );
   }
 }
 
@@ -701,6 +716,47 @@ function applyQuotaDeduction() {
     }
   } else {
     incrementGuestArticleUsage();
+  }
+}
+
+// అడ్మిన్ సర్వర్‌కు మరియు లోకల్ లాగ్స్‌కు ఎర్రర్ పంపే అధునాతన ఫంక్షన్
+function logErrorToAdminConsole(errDetails) {
+  try {
+    const isUserActive = !!activeSessionUser;
+    const guestDevId = localStorage.getItem("nu_guest_device_id") || ("DEV-" + Math.floor(10000 + Math.random() * 90000));
+    localStorage.setItem("nu_guest_device_id", guestDevId);
+
+    const errorPayload = {
+      logId: "ERR-" + Math.floor(1000 + Math.random() * 9000),
+      isLoggedIn: isUserActive,
+      userId: isUserActive ? (activeSessionUser.userId || "SRG-VERIFIED") : null,
+      userName: isUserActive ? activeSessionUser.name : "Guest",
+      userEmail: isUserActive ? activeSessionUser.email : "guest@device.local",
+      deviceId: guestDevId,
+      category: errDetails.category || currentToolMode,
+      errorMsg: errDetails.errorMsg || "Unknown Error",
+      timestamp: new Date().toLocaleString()
+    };
+
+    // 1. Admin dashboard లో వెంటనే కనిపించడానికి LocalStorage లో రికార్డ్ చేయడం
+    let errorLogs = JSON.parse(localStorage.getItem("sriram_system_errors")) || [];
+    errorLogs.unshift(errorPayload);
+    localStorage.setItem("sriram_system_errors", JSON.stringify(errorLogs.slice(0, 50)));
+
+    // 2. Apps Script Database లోకి సైలెంట్ బ్యాక్‌ఎండ్ సింక్
+    if (typeof AUTH_APPS_SCRIPT_URL !== "undefined") {
+      fetch(AUTH_APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          action: "log_system_error",
+          ...errorPayload
+        })
+      });
+    }
+  } catch (e) {
+    console.warn("Silent logger paused:", e);
   }
 }
 
