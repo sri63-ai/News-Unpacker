@@ -1,8 +1,8 @@
 // ==================== CONFIGURATION & BACKEND ENDPOINTS ====================
-const API_KEY = "AQ.Ab8RN6Jy4n1Ey9XKPl_W7MkT8K_geI41Ww2j667e14XRosiE_A";
+const API_KEY = "AQ.Ab8RN6KJhNU3QC_5qAWtSqBCT8xPdbJjbn1q-Papx2i0A0Sy7A";
 
 // Separate Endpoints for Authentication vs Billing
-const AUTH_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTpt_57anfxQY0cWfXg91qokYOZFCUUFSAt6mbJxrpjzPjJujaIIOSEHBquiMTp-Sl/exec";
+const AUTH_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyihFdsPIfJtXfvGeXyUlqOwvwuqLWMaKhzdUI2Ad1XPd_b2VmoSe95Y0uCJxh9Uh8X/exec";
 const BILLING_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTpt_57anfxQY0cWfXg91qokYOZFCUUFSAt6mbJxrpjzPjJujaIIOSEHBquiMTp-Sl/exec";
 
 const PRE_LAUNCH_END_DATE = new Date("2027-01-01T23:59:59");
@@ -342,7 +342,6 @@ function openWorkspace(toolKey) {
 
   let normalizedKey = toolKey ? toolKey.toLowerCase() : "unpack_news";
   if (normalizedKey === "summary") normalizedKey = "unpack_news";
-
   currentToolMode = normalizedKey;
   const config = toolConfigMap[currentToolMode] || toolConfigMap.unpack_news;
 
@@ -359,7 +358,6 @@ function openWorkspace(toolKey) {
   if (socialSection) socialSection.classList.add("hidden");
   if (infoSection) infoSection.classList.add("hidden");
   if (enterpriseSection) enterpriseSection.classList.add("hidden");
-
   if (workspace) {
     workspace.classList.remove("hidden");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -464,7 +462,6 @@ function getDynamicDailyLimit() {
   const now = new Date();
   const isPreLaunch = now <= PRE_LAUNCH_END_DATE;
   const streakDays = parseInt(localStorage.getItem("nu_active_streak") || "1", 10);
-
   if (isPreLaunch) {
     return streakDays >= 3 ? 15 : 7;
   } else {
@@ -476,7 +473,6 @@ function checkAndUpdateGuestQuota() {
   const today = new Date().toDateString();
   const storedDate = localStorage.getItem("nu_usage_date");
   let usageCount = parseInt(localStorage.getItem("nu_daily_usage") || "0", 10);
-
   if (storedDate !== today) {
     const lastDate = storedDate ? new Date(storedDate) : null;
     let streak = parseInt(localStorage.getItem("nu_active_streak") || "0", 10);
@@ -528,7 +524,7 @@ function updateQuotaBannerUI() {
   }
 }
 
-// 5. Unified Primary Processing Pipeline
+// 5. Unified Primary Processing Pipeline (Enhanced Resilient Parser)
 async function startProcessing() {
   const inputEl = document.getElementById("newsInput");
   const text = inputEl ? inputEl.value.trim() : "";
@@ -594,12 +590,10 @@ async function startProcessing() {
     stopVoice();
     if (loader) loader.classList.add("hidden");
     if (processBtn) processBtn.disabled = false;
-
     currentLanguage = cachedData.detected_lang || "en-US";
     if (newsTitle) newsTitle.innerText = cachedData.title;
 
     renderFormattedNewsBody(newsBody, cachedData.content);
-
     if (charCount) {
       charCount.innerText = `Character count: ${cachedData.content.length} | Mode: ${config.btnText} (Cached)`;
     }
@@ -637,9 +631,14 @@ ${text}
 
   try {
     const data = await callGeminiAPI(prompt);
+    
+    // Check for candidates array
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+      throw new Error(data.error ? (data.error.message || JSON.stringify(data.error)) : "Empty response from AI engine");
+    }
+
     let rawText = data.candidates[0].content.parts[0].text.trim();
     rawText = rawText.replace(/```json/gi, "").replace(/```/g, "").trim();
-
     const result = JSON.parse(rawText);
     currentLanguage = result.detected_lang || "en-US";
 
@@ -647,7 +646,6 @@ ${text}
 
     if (newsTitle) newsTitle.innerText = result.title;
     renderFormattedNewsBody(newsBody, result.content);
-
     if (charCount) {
       charCount.innerText = `Character count: ${result.content.length} | Mode: ${config.btnText}`;
     }
@@ -655,7 +653,6 @@ ${text}
     if (loader) loader.classList.add("hidden");
     if (outputCard) outputCard.classList.remove("hidden");
     if (processBtn) processBtn.disabled = false;
-
     outputCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
 
     applyQuotaDeduction();
@@ -664,7 +661,9 @@ ${text}
     if (loader) loader.classList.add("hidden");
     if (processBtn) processBtn.disabled = false;
 
-    // 1. అడ్మిన్ డేటాబేస్ లోని "System_Errors" కు సైలెంట్ గా లాగ్ చేయడం
+    console.error("Pipeline Failure:", error);
+
+    // 1. Silent Error Logging to Admin Console
     logErrorToAdminConsole({
       category: currentToolMode,
       errorMsg: error.message || error.toString(),
@@ -672,7 +671,7 @@ ${text}
       userEmail: (activeSessionUser ? activeSessionUser.email : "Guest Reader")
     });
 
-    // 2. యూజర్ కు కనిపించే మర్యాదపూర్వక ఇంగ్లీష్ సందేశం
+    // 2. User-facing polite alert
     showAlert(
       "Our AI neural verification engines are currently operating under heavy network traffic. " +
       "Please feel free to explore our other categories or try processing your request again in a few moments.\n\n" +
@@ -719,7 +718,7 @@ function applyQuotaDeduction() {
   }
 }
 
-// అడ్మిన్ సర్వర్‌కు మరియు లోకల్ లాగ్స్‌కు ఎర్రర్ పంపే అధునాతన ఫంక్షన్
+// Error Logger with Guest Device Identity
 function logErrorToAdminConsole(errDetails) {
   try {
     const isUserActive = !!activeSessionUser;
@@ -738,12 +737,12 @@ function logErrorToAdminConsole(errDetails) {
       timestamp: new Date().toLocaleString()
     };
 
-    // 1. Admin dashboard లో వెంటనే కనిపించడానికి LocalStorage లో రికార్డ్ చేయడం
+    // 1. LocalStorage log for live admin view
     let errorLogs = JSON.parse(localStorage.getItem("sriram_system_errors")) || [];
     errorLogs.unshift(errorPayload);
     localStorage.setItem("sriram_system_errors", JSON.stringify(errorLogs.slice(0, 50)));
 
-    // 2. Apps Script Database లోకి సైలెంట్ బ్యాక్‌ఎండ్ సింక్
+    // 2. Apps Script Backend sync
     if (typeof AUTH_APPS_SCRIPT_URL !== "undefined") {
       fetch(AUTH_APPS_SCRIPT_URL, {
         method: "POST",
@@ -760,18 +759,30 @@ function logErrorToAdminConsole(errDetails) {
   }
 }
 
-// 6. Gemini Flash API Caller (Updated to gemini-3.8-flash)
+// 6. Gemini Flash API Caller (Apps Script Secure Proxy with Safe Parser)
 async function callGeminiAPI(promptText) {
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${API_KEY}`, {
+  const response = await fetch(AUTH_APPS_SCRIPT_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: promptText }] }]
+      action: "gemini_proxy_call",
+      apiKey: API_KEY,
+      prompt: promptText
     })
   });
 
-  const data = await response.json();
-  if (data.error) throw new Error(data.error.message);
+  const rawRes = await response.text();
+  let data;
+  try {
+    data = JSON.parse(rawRes);
+  } catch (e) {
+    console.error("Apps Script Raw Response:", rawRes);
+    throw new Error("Invalid response format received from Backend Proxy");
+  }
+
+  if (data.error) {
+    throw new Error(data.error.message || JSON.stringify(data.error));
+  }
   return data;
 }
 
@@ -802,7 +813,6 @@ ${currentContent}
     const data = await callGeminiAPI(prompt);
     let rawText = data.candidates[0].content.parts[0].text.trim();
     rawText = rawText.replace(/```json/gi, "").replace(/```/g, "").trim();
-
     const result = JSON.parse(rawText);
     newsBody.innerHTML = `<p style="line-height:1.65; color:#334155;">${escapeHTML(result.content)}</p>`;
     if (charCount) charCount.innerText = `Character count: ${result.content.length} | Condensed Brief`;
@@ -857,7 +867,6 @@ function toggleVoice() {
   if (voiceBtn) voiceBtn.innerText = "Stop";
 }
 
-// Safe stopVoice function
 function stopVoice() {
   try {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
@@ -868,7 +877,6 @@ function stopVoice() {
   }
 
   isSpeaking = false;
-
   const voiceBtn = document.getElementById("voiceBtn");
   if (voiceBtn) {
     voiceBtn.innerText = "Listen";
@@ -915,7 +923,6 @@ ${currentContent}
     const data = await callGeminiAPI(prompt);
     let rawText = data.candidates[0].content.parts[0].text.trim();
     rawText = rawText.replace(/```json/gi, "").replace(/```/g, "").trim();
-
     const result = JSON.parse(rawText);
 
     newsTitle.innerText = result.title;
@@ -1088,7 +1095,6 @@ function handleFeedbackSubmit(event) {
   const customTool = document.getElementById("fbCustomTool").value.trim();
   const rating = document.querySelector('input[name="rating"]:checked') ? document.querySelector('input[name="rating"]:checked').value : '5';
   const message = document.getElementById("fbMessage").value.trim();
-
   const selectedTool = toolSelect === "other" ? (customTool || "Other (Not specified)") : toolSelect;
 
   const newFeedback = {
@@ -1181,7 +1187,6 @@ function switchAuthView(viewName) {
     viewName === "register" ? "authRegisterView" :
     viewName === "otp" ? "authOtpView" : "authForgotView"
   );
-
   if (target) target.classList.remove("hidden");
 
   if (viewName === "otp") {
@@ -1272,7 +1277,6 @@ async function handleUserRegister(e) {
 
   const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
   pendingRegistrationUser = { name, email, phone, password, generatedOtp: otpCode };
-
   await dispatchRealEmailOtp(email, name, otpCode);
 
   if (submitBtn) {
@@ -1292,7 +1296,7 @@ let isVerifyingOtp = false;
 
 async function handleOtpVerification(e) {
   if (e) e.preventDefault();
-  if (isVerifyingOtp) return; // Stop duplicate execution
+  if (isVerifyingOtp) return;
 
   const enteredOtp = document.getElementById("otpCodeInput").value.trim();
   if (!pendingRegistrationUser || enteredOtp !== pendingRegistrationUser.generatedOtp) {
@@ -1345,7 +1349,7 @@ async function handleOtpVerification(e) {
     console.warn("Billing sync notice:", err);
   }
 
-  // Save in local registered users database
+  // Save in local registered users database with Suspension & Inspection tracking flags
   const users = JSON.parse(localStorage.getItem("news_unpacker_users")) || [];
   users.push({
     userId: generatedUserId,
@@ -1356,7 +1360,9 @@ async function handleOtpVerification(e) {
     subscribed: true,
     plan: "Pre-Release 90-Day Free Pass",
     expiryDate: expiry.toISOString(),
-    articleQuotaRemaining: "unlimited"
+    articleQuotaRemaining: "unlimited",
+    isSuspended: false,
+    processedArticlesCount: 0
   });
   localStorage.setItem("news_unpacker_users", JSON.stringify(users));
 
@@ -1369,7 +1375,8 @@ async function handleOtpVerification(e) {
     subscribed: true,
     plan: "Pre-Release 90-Day Free Pass",
     expiryDate: expiry.toISOString(),
-    articleQuotaRemaining: "unlimited"
+    articleQuotaRemaining: "unlimited",
+    isSuspended: false
   };
   localStorage.setItem("news_unpacker_active_user", JSON.stringify(activeSessionUser));
 
@@ -1379,12 +1386,10 @@ async function handleOtpVerification(e) {
 
   // 4. Trigger Flower/Confetti Shower animation on Free Pass activation
   triggerFlowerShower();
-
   showAlert(
     `Congratulations ${pendingRegistrationUser.name}!\n\nYour 3-Month Free VIP Pass has been activated.\nUser ID: ${generatedUserId}\nValid till: ${expiry.toLocaleDateString()}`,
     "VIP Pass Activated"
   );
-
   isVerifyingOtp = false;
   pendingRegistrationUser = null;
   if (submitBtn) submitBtn.disabled = false;
@@ -1419,9 +1424,15 @@ function handleUserLogin(event) {
 
   const users = JSON.parse(localStorage.getItem("news_unpacker_users")) || [];
   const found = users.find(u => u.email === email && u.password === pass);
-
   if (!found) {
     showAlert("Invalid email or password. Please verify your details.", "Sign In Failed");
+    return;
+  }
+
+  // Account Suspension Check
+  if (found.isSuspended) {
+    const expiry = found.suspensionExpires ? new Date(found.suspensionExpires).toLocaleDateString() : "further notice";
+    showAlert(`Your account has been administratively suspended until ${expiry} due to policy restrictions.\n\nPlease contact desk support: sriramgroupsofficial@gmail.com`, "Account Suspended");
     return;
   }
 
@@ -1433,9 +1444,9 @@ function handleUserLogin(event) {
     subscribed: found.subscribed || false,
     plan: found.plan || "Standard Free Account",
     expiryDate: found.expiryDate || null,
-    articleQuotaRemaining: found.articleQuotaRemaining || null
+    articleQuotaRemaining: found.articleQuotaRemaining || null,
+    isSuspended: false
   };
-
   localStorage.setItem("news_unpacker_active_user", JSON.stringify(activeSessionUser));
   updateProfileHeader();
   renderProfileDropdown();
@@ -1452,7 +1463,7 @@ function logoutUser() {
   showAlert("Signed out successfully.", "Logged Out");
 }
 
-// 13. Password Reset Workflow (Redirects to reset-password.html)
+// 13. Password Reset Workflow
 async function handlePasswordRecovery(event) {
   event.preventDefault();
   const emailInput = document.getElementById("forgotEmailInput").value.trim().toLowerCase();
@@ -1460,7 +1471,6 @@ async function handlePasswordRecovery(event) {
 
   const users = JSON.parse(localStorage.getItem("news_unpacker_users")) || [];
   const foundUser = users.find(u => u.email === emailInput);
-
   if (!foundUser) {
     showCustomModalAlert("Account Not Found", "No account registered with this email address. Please check and re-enter.");
     return;
@@ -1470,7 +1480,6 @@ async function handlePasswordRecovery(event) {
   btn.innerText = "Sending Link...";
 
   const secureResetUrl = getPasswordResetUrl(emailInput);
-
   try {
     await fetch(AUTH_APPS_SCRIPT_URL, {
       method: "POST",
@@ -1483,7 +1492,6 @@ async function handlePasswordRecovery(event) {
         resetLink: secureResetUrl
       })
     });
-
     showCustomModalAlert(
       "Reset Link Sent!",
       `A secure password reset link has been dispatched to ${emailInput}.\nPlease click the link to set your new password.`
@@ -1518,7 +1526,6 @@ function toggleProfileDropdown() {
 function renderProfileDropdown() {
   const container = document.getElementById("profileDropdownCard");
   if (!container) return;
-
   if (!activeSessionUser) {
     updateProfileAvatarLetter();
     container.innerHTML = `
@@ -1528,7 +1535,8 @@ function renderProfileDropdown() {
         <span class="sub-status-pill sub-inactive">No Active Pass</span>
       </div>
       <div class="profile-actions-list" style="margin-top:10px;">
-        <button type="button" class="profile-action-item" onclick="toggleProfileDropdown(); openAuthModal(); switchAuthView('login');" style="width:100%; border:none; cursor:pointer;">
+        <button type="button" class="profile-action-item" onclick="toggleProfileDropdown(); openAuthModal(); switchAuthView('login');"
+        style="width:100%; border:none; cursor:pointer;">
           <span>Sign In / Create Account</span>
         </button>
       </div>
@@ -1558,7 +1566,8 @@ function renderProfileDropdown() {
 
   let passHTML = "";
   if (isPassActive) {
-    const quotaInfo = typeof fullUser.articleQuotaRemaining === "number" ? `${fullUser.articleQuotaRemaining} Articles Left` : `${daysRemaining} Days Left`;
+    const quotaInfo = typeof fullUser.articleQuotaRemaining === "number" ?
+      `${fullUser.articleQuotaRemaining} Articles Left` : `${daysRemaining} Days Left`;
     passHTML = `
       <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 12px; margin: 10px 0;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
@@ -1589,7 +1598,8 @@ function renderProfileDropdown() {
         <div id="dropdownAvatarBox" style="width:46px; height:46px; border-radius:50%; background:#2563eb; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2rem; overflow:hidden; border:2px solid #93c5fd;">
           ${savedPhoto ? `<img src="${savedPhoto}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">` : avatarLetter}
         </div>
-        <label for="profilePhotoInput" style="position:absolute; bottom:-3px; right:-3px; background:#ffffff; border:1px solid #cbd5e1; border-radius:50%; width:20px; height:20px; font-size:11px; display:flex; align-items:center; justify-content:center; cursor:pointer;" title="Upload Photo">📷</label>
+        <label for="profilePhotoInput" style="position:absolute; bottom:-3px; right:-3px; background:#ffffff; border:1px solid #cbd5e1; border-radius:50%; width:20px; height:20px; font-size:11px; display:flex; align-items:center; justify-content:center; cursor:pointer;"
+        title="Upload Photo">📷</label>
         <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;" onchange="handleProfilePhotoUpload(event)">
       </div>
       <div style="overflow:hidden;">
@@ -1605,7 +1615,8 @@ function renderProfileDropdown() {
         <span>My Profile & Account</span>
       </div>
 
-      <div class="profile-action-item" onclick="openSubscriptionPage()" style="cursor:pointer; background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; font-weight:700;">
+      <div class="profile-action-item" onclick="openSubscriptionPage()" 
+      style="cursor:pointer; background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; font-weight:700;">
         <span>Manage / Upgrade Subscription</span>
       </div>
 
@@ -1655,7 +1666,6 @@ function showUserProfileModal() {
     `Phone: ${fullUser.phone || 'N/A'}\n` +
     `Tier: ${fullUser.plan || 'Standard Account'}\n` +
     `Powered by: Sriram Groups Official`;
-
   showCustomModalAlert("Account Profile Details", profileDetails);
 }
 
@@ -1663,11 +1673,57 @@ function openSubscriptionPage() {
   window.location.href = "subscription.html";
 }
 
+// Integrated Admin Custom Coupon Engine
 function redeemAccessCode() {
   const input = document.getElementById("promoCodeInput");
   if (!input) return;
   const val = input.value.trim().toUpperCase();
 
+  if (!val) {
+    showCustomModalAlert("Code Required", "Please enter a valid promotion or VIP access code.");
+    return;
+  }
+
+  // 1. Verify against Admin Custom Issued Coupons
+  const adminCoupons = JSON.parse(localStorage.getItem("sriram_active_coupons")) || [];
+  const matchedCoupon = adminCoupons.find(c => c.code.toUpperCase() === val);
+
+  if (matchedCoupon) {
+    // Check user exclusivity
+    if (matchedCoupon.targetEmail !== "ALL" && activeSessionUser && activeSessionUser.email.toLowerCase() !== matchedCoupon.targetEmail.toLowerCase()) {
+      showCustomModalAlert("Restricted Code", `This coupon code is exclusively reserved for ${matchedCoupon.targetEmail}.`);
+      return;
+    }
+
+    if (activeSessionUser) {
+      activeSessionUser.subscribed = true;
+      activeSessionUser.plan = matchedCoupon.benefit || "Admin VIP Pass";
+      const exp = new Date();
+      exp.setDate(exp.getDate() + 365);
+      activeSessionUser.expiryDate = exp.toISOString();
+      activeSessionUser.articleQuotaRemaining = "unlimited";
+
+      localStorage.setItem("news_unpacker_active_user", JSON.stringify(activeSessionUser));
+
+      let users = JSON.parse(localStorage.getItem("news_unpacker_users")) || [];
+      let idx = users.findIndex(u => u.email === activeSessionUser.email);
+      if (idx !== -1) {
+        users[idx].subscribed = true;
+        users[idx].plan = matchedCoupon.benefit;
+        users[idx].expiryDate = exp.toISOString();
+        users[idx].articleQuotaRemaining = "unlimited";
+        localStorage.setItem("news_unpacker_users", JSON.stringify(users));
+      }
+
+      renderProfileDropdown();
+      updateProfileHeader();
+      triggerFlowerShower();
+      showCustomModalAlert("Special Code Applied!", `Privilege Activated: ${matchedCoupon.benefit}`);
+      return;
+    }
+  }
+
+  // 2. Fallback Default Hardcoded Codes
   if (val === "SRIRAM2027" || val === "NEWSVIP") {
     showCustomModalAlert("Access Pass Activated", "1 Year Unlimited VIP Subscription Pass has been activated!");
     if (activeSessionUser) {
@@ -1680,9 +1736,10 @@ function redeemAccessCode() {
       localStorage.setItem("news_unpacker_active_user", JSON.stringify(activeSessionUser));
       renderProfileDropdown();
       updateProfileHeader();
+      triggerFlowerShower();
     }
   } else {
-    showCustomModalAlert("Invalid Code", "The entered access code is invalid or expired.");
+    showCustomModalAlert("Invalid Code", "The entered access code is invalid or has expired.");
   }
 }
 
@@ -1734,7 +1791,6 @@ function triggerEventPassClaim() {
       localStorage.setItem("news_unpacker_users", JSON.stringify(users));
     }
 
-    // Call Billing sheet
     try {
       fetch(BILLING_APPS_SCRIPT_URL, {
         method: "POST",
@@ -1756,7 +1812,6 @@ function triggerEventPassClaim() {
     renderProfileDropdown();
     updateProfileHeader();
     triggerFlowerShower();
-
     showCustomModalAlert(
       "3-Month Free Pass Activated!",
       `Congratulations ${activeSessionUser.name}!\nYour Special 90-Day Event Pass is active until: ${expiry.toLocaleDateString()}`
@@ -1790,7 +1845,6 @@ function animateGoldRing(ringId, textId, targetValue, circumference) {
   let currentVal = 0;
   const duration = 2000;
   const stepTime = Math.abs(Math.floor(duration / targetValue));
-
   const timer = setInterval(() => {
     currentVal += 1;
     text.innerText = currentVal;
@@ -1813,12 +1867,19 @@ document.addEventListener("DOMContentLoaded", () => {
     authModal.style.setProperty("display", "none", "important");
   }
 
-  // Restore Active User Session
+  // Restore Active User Session & Suspension Validation
   const rawSession = localStorage.getItem("news_unpacker_active_user");
   if (rawSession) {
     try {
       activeSessionUser = JSON.parse(rawSession);
-      updateProfileHeader();
+      const allUsers = JSON.parse(localStorage.getItem("news_unpacker_users")) || [];
+      const current = allUsers.find(u => u.email === activeSessionUser.email);
+      if (current && current.isSuspended) {
+        localStorage.removeItem("news_unpacker_active_user");
+        activeSessionUser = null;
+      } else {
+        updateProfileHeader();
+      }
     } catch (e) {
       localStorage.removeItem("news_unpacker_active_user");
     }
@@ -1859,7 +1920,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (otpContainer) {
     const boxes = otpContainer.querySelectorAll(".otp-digit-box");
     const hiddenOtpInput = document.getElementById("otpCodeInput");
-
     boxes.forEach((box, index) => {
       box.addEventListener("input", (e) => {
         const val = e.target.value.replace(/[^0-9]/g, "");
@@ -1915,7 +1975,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => openWorkspace(targetWorkspace), 150);
   }
 
-  // Only open login modal if explicitly requested in URL query
   if (targetAction === "login") {
     setTimeout(() => {
       openAuthModal();
