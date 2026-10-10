@@ -1399,10 +1399,49 @@
     </div>
   </button>
 
-  <!-- ==================== KEYBOARD SHORTCUTS SCRIPT ==================== -->
+  <!-- 1. MAIN SCRIPT LOAD -->
+  <script src="script.js"></script>
+
+  <!-- 2. FAIL-SAFE FALLBACK & SHORTCUTS -->
   <script>
+    // Failsafe definitions: script.js ఆలస్యమైనా లేదా లోపాలున్నా బటన్లు ఫెయిల్ కాకుండా ఉండటానికి
+    if (typeof window.minimizeEventPoster !== "function") {
+      window.minimizeEventPoster = function() {
+        const overlay = document.getElementById("eventPosterOverlay");
+        const badge = document.getElementById("floatingEventBadge");
+        if (overlay) {
+          overlay.style.display = "none";
+          overlay.classList.add("hidden", "minimized");
+        }
+        if (badge) badge.classList.remove("hidden");
+      };
+    }
+
+    if (typeof window.maximizeEventPoster !== "function") {
+      window.maximizeEventPoster = function() {
+        const overlay = document.getElementById("eventPosterOverlay");
+        const badge = document.getElementById("floatingEventBadge");
+        if (overlay) {
+          overlay.style.display = "flex";
+          overlay.classList.remove("hidden", "minimized");
+        }
+        if (badge) badge.classList.add("hidden");
+      };
+    }
+
+    if (typeof window.claimEventPassFromPoster !== "function") {
+      window.claimEventPassFromPoster = function() {
+        window.minimizeEventPoster();
+        if (typeof window.triggerEventPassClaim === "function") {
+          window.triggerEventPassClaim();
+        } else if (typeof window.openAuthModal === "function") {
+          window.openAuthModal();
+        }
+      };
+    }
+
+    // Keyboard Shortcuts
     document.addEventListener("DOMContentLoaded", () => {
-      // 1. Textarea lo Enter / Ctrl+Enter kottinappudu processing jaragadam
       const newsInput = document.getElementById("newsInput");
       if (newsInput) {
         newsInput.addEventListener("keydown", (e) => {
@@ -1416,19 +1455,19 @@
         });
       }
 
-      // 2. Esc key press chesinappudu Popups close avvadam
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
-          closeAuthModal();
-          closeCustomAlert();
-          minimizeEventPoster();
+          if (typeof closeAuthModal === "function") closeAuthModal();
+          window.minimizeEventPoster();
           const dropdown = document.getElementById("profileDropdownCard");
           if (dropdown) dropdown.classList.add("hidden");
         }
       });
     });
+window.closeCustomAlert = function() {
+    const modal = document.getElementById("customAlert");
+    if (modal) modal.classList.add("hidden");
+  };
   </script>
-
-  <script src="script.js"></script>
 </body>
 </html>
