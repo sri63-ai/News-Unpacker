@@ -1,5 +1,6 @@
 // ==================== CONFIGURATION & BACKEND ENDPOINTS ====================
-const API_KEY = "AQ.Ab8RN6KJhNU3QC_5qAWtSqBCT8xPdbJjbn1q-Papx2i0A0Sy7A";
+const API_KEY = "AQ.Ab8RN6LDzT_b1l3kRNcGJai5v23Hp9SPIvD7gEkqv5yBYsMbvQ";
+const PYTHON_BACKEND_URL = "http://127.0.0.1:5000/api/unpack";
 
 // Separate Endpoints for Authentication vs Billing
 const AUTH_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyihFdsPIfJtXfvGeXyUlqOwvwuqLWMaKhzdUI2Ad1XPd_b2VmoSe95Y0uCJxh9Uh8X/exec";
@@ -524,24 +525,54 @@ function updateQuotaBannerUI() {
   }
 }
 
-// 5. Unified Primary Processing Pipeline (Enhanced Resilient Parser)
+function escapeHTML(str) {
+  if (!str) return "";
+  return str.replace(/[&<>'"]/g, 
+    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+  );
+}
+
+// 5. Python API Calling Bridge
+async function callGeminiAPI(promptText) {
+  const response = await fetch(PYTHON_BACKEND_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ prompt: promptText })
+  });
+
+  const data = await response.json();
+
+  if (response.status === 429 || data.limit_reached) {
+    throw new Error(data.message || "Daily free quota reached. Please try again tomorrow.");
+  }
+
+  if (!response.ok || data.success === false) {
+    throw new Error(data.message || "Our AI neural verification engines are currently operating under heavy network traffic. Please try again shortly.");
+  }
+
+  return data.result;
+}
+
+// 6. Primary Processing Pipeline
 async function startProcessing() {
   const inputEl = document.getElementById("newsInput");
   const text = inputEl ? inputEl.value.trim() : "";
 
   if (!text) {
-    showAlert("Please paste the news article or report before processing.", "Input Required");
+    alert("దయచేసి వార్తా కథనాన్ని పేస్ట్ చేయండి.");
     return;
   }
 
-  // A. Logged-in Subscription & Lifetime Quota Checks
+  // A. Logged-in Subscription Check
   if (activeSessionUser) {
     if (typeof activeSessionUser.articleQuotaRemaining === "number") {
       if (activeSessionUser.articleQuotaRemaining <= 0) {
         activeSessionUser.subscribed = false;
         activeSessionUser.plan = "Lifetime Quota Exhausted";
         localStorage.setItem("news_unpacker_active_user", JSON.stringify(activeSessionUser));
-        showCustomModalAlert("Quota Exhausted", "Your 120-article quota has been completed. Please renew your plan to continue.");
+        alert("Your 120-article quota has been completed. Please renew your plan to continue.");
         window.location.href = "subscription.html";
         return;
       }
@@ -549,7 +580,7 @@ async function startProcessing() {
       if (new Date() > new Date(activeSessionUser.expiryDate)) {
         activeSessionUser.subscribed = false;
         localStorage.setItem("news_unpacker_active_user", JSON.stringify(activeSessionUser));
-        showCustomModalAlert("Pass Expired", "Your access pass has expired. Please upgrade or renew your plan.");
+        alert("Your access pass has expired. Please upgrade or renew your plan.");
         window.location.href = "subscription.html";
         return;
       }
@@ -561,14 +592,7 @@ async function startProcessing() {
     // B. Guest User Quota Check
     const quota = checkAndUpdateGuestQuota();
     if (quota.isExhausted) {
-      showCustomModalAlert(
-        "Daily Free Quota Exhausted", 
-        `Your daily free limit of ${quota.limit} summaries has been reached. Please log in or create an account for uninterrupted access.`
-      );
-      setTimeout(() => {
-        openAuthModal();
-        switchAuthView("register");
-      }, 1200);
+      alert(`ఈ రోజుకు కేటాయించిన ${quota.limit} ఉచిత సమ్మరీల పరిమితి పూర్తయింది. రేపు మళ్లీ ఉచితంగా పొందవచ్చు!`);
       return;
     }
   }
@@ -605,7 +629,7 @@ async function startProcessing() {
     return;
   }
 
-  // D. Live Gemini API Execution
+  // D. Live API Execution
   stopVoice();
   if (loader) loader.classList.remove("hidden");
   if (outputCard) outputCard.classList.add("hidden");
@@ -615,7 +639,7 @@ async function startProcessing() {
     loaderText.innerText = `Executing: ${config.btnText}... analyzing content, please wait...`;
   }
 
-  const prompt = `
+  const fullPrompt = `
 Analyze the provided source text according to the following instructions:
 ${config.aiPrompt}
 
@@ -630,24 +654,32 @@ ${text}
 `;
 
   try {
-    const data = await callGeminiAPI(prompt);
-    
-    // Check for candidates array
-    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-      throw new Error(data.error ? (data.error.message || JSON.stringify(data.error)) : "Empty response from AI engine");
+    const aiOutput = await callGeminiAPI(fullPrompt);
+
+    if (!aiOutput || typeof aiOutput !== "string" || aiOutput.trim() === "") {
+      throw new Error("Empty response from AI engine");
     }
 
-    let rawText = data.candidates[0].content.parts[0].text.trim();
-    rawText = rawText.replace(/```json/gi, "").replace(/```/g, "").trim();
-    const result = JSON.parse(rawText);
-    currentLanguage = result.detected_lang || "en-US";
+    let parsedResult;
+    try {
+      let rawText = aiOutput.replace(/```json/gi, "").replace(/```/g, "").trim();
+      parsedResult = JSON.parse(rawText);
+    } catch (e) {
+      // JSON ఫార్మాట్ కాకుండా డైరెక్ట్ టెక్స్ట్ వస్తే కూడా సపోర్ట్ చేసే ఫాల్‌బ్యాక్
+      parsedResult = {
+        detected_lang: "te-IN",
+        title: config.title,
+        content: aiOutput
+      };
+    }
 
-    setCachedSummary(cacheKey, result);
+    currentLanguage = parsedResult.detected_lang || "en-US";
+    setCachedSummary(cacheKey, parsedResult);
 
-    if (newsTitle) newsTitle.innerText = result.title;
-    renderFormattedNewsBody(newsBody, result.content);
+    if (newsTitle) newsTitle.innerText = parsedResult.title;
+    renderFormattedNewsBody(newsBody, parsedResult.content);
     if (charCount) {
-      charCount.innerText = `Character count: ${result.content.length} | Mode: ${config.btnText}`;
+      charCount.innerText = `Character count: ${parsedResult.content.length} | Mode: ${config.btnText}`;
     }
 
     if (loader) loader.classList.add("hidden");
@@ -661,23 +693,24 @@ ${text}
     if (loader) loader.classList.add("hidden");
     if (processBtn) processBtn.disabled = false;
 
-    console.error("Pipeline Failure:", error);
+    console.warn("Pipeline Safe Handled:", error.message);
 
-    // 1. Silent Error Logging to Admin Console
     logErrorToAdminConsole({
       category: currentToolMode,
       errorMsg: error.message || error.toString(),
-      source: "Gemini Processing Engine",
+      source: "Python AI Engine",
       userEmail: (activeSessionUser ? activeSessionUser.email : "Guest Reader")
     });
 
-    // 2. User-facing polite alert
-    showAlert(
-      "Our AI neural verification engines are currently operating under heavy network traffic. " +
-      "Please feel free to explore our other categories or try processing your request again in a few moments.\n\n" +
-      "Thank you for your patience and for choosing News Unpacker.",
-      "Service Momentarily Busy"
-    );
+    if (newsTitle) newsTitle.innerText = "Notice";
+    if (newsBody) {
+      newsBody.innerHTML = `
+        <div style="padding: 16px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 6px; color: #856404; font-size: 14px; line-height: 1.6;">
+          ${escapeHTML(error.message).replace(/\n/g, "<br>")}
+        </div>
+      `;
+    }
+    if (outputCard) outputCard.classList.remove("hidden");
   }
 }
 
@@ -737,12 +770,10 @@ function logErrorToAdminConsole(errDetails) {
       timestamp: new Date().toLocaleString()
     };
 
-    // 1. LocalStorage log for live admin view
     let errorLogs = JSON.parse(localStorage.getItem("sriram_system_errors")) || [];
     errorLogs.unshift(errorPayload);
     localStorage.setItem("sriram_system_errors", JSON.stringify(errorLogs.slice(0, 50)));
 
-    // 2. Apps Script Backend sync
     if (typeof AUTH_APPS_SCRIPT_URL !== "undefined") {
       fetch(AUTH_APPS_SCRIPT_URL, {
         method: "POST",
@@ -757,33 +788,6 @@ function logErrorToAdminConsole(errDetails) {
   } catch (e) {
     console.warn("Silent logger paused:", e);
   }
-}
-
-// 6. Gemini Flash API Caller (Apps Script Secure Proxy with Safe Parser)
-async function callGeminiAPI(promptText) {
-  const response = await fetch(AUTH_APPS_SCRIPT_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify({
-      action: "gemini_proxy_call",
-      apiKey: API_KEY,
-      prompt: promptText
-    })
-  });
-
-  const rawRes = await response.text();
-  let data;
-  try {
-    data = JSON.parse(rawRes);
-  } catch (e) {
-    console.error("Apps Script Raw Response:", rawRes);
-    throw new Error("Invalid response format received from Backend Proxy");
-  }
-
-  if (data.error) {
-    throw new Error(data.error.message || JSON.stringify(data.error));
-  }
-  return data;
 }
 
 // 7. Text Condenser
@@ -810,16 +814,20 @@ ${currentContent}
 `;
 
   try {
-    const data = await callGeminiAPI(prompt);
-    let rawText = data.candidates[0].content.parts[0].text.trim();
-    rawText = rawText.replace(/```json/gi, "").replace(/```/g, "").trim();
-    const result = JSON.parse(rawText);
+    const rawAiOutput = await callGeminiAPI(prompt);
+    let rawText = rawAiOutput.replace(/```json/gi, "").replace(/```/g, "").trim();
+    let result;
+    try {
+      result = JSON.parse(rawText);
+    } catch(e) {
+      result = { content: rawAiOutput };
+    }
     newsBody.innerHTML = `<p style="line-height:1.65; color:#334155;">${escapeHTML(result.content)}</p>`;
     if (charCount) charCount.innerText = `Character count: ${result.content.length} | Condensed Brief`;
     if (loader) loader.classList.add("hidden");
   } catch (error) {
     if (loader) loader.classList.add("hidden");
-    showAlert("Error shortening content: " + error.message, "Shorten Error");
+    alert("Error shortening content: " + error.message);
   }
 }
 
@@ -834,7 +842,7 @@ function toggleVoice() {
   const fullText = (titleText + ". " + bodyText).trim();
 
   if (!("speechSynthesis" in window)) {
-    showAlert("Speech Synthesis is not supported in this browser.", "Audio Error");
+    alert("Speech Synthesis is not supported in this browser.");
     return;
   }
 
@@ -920,10 +928,14 @@ ${currentContent}
 `;
 
   try {
-    const data = await callGeminiAPI(prompt);
-    let rawText = data.candidates[0].content.parts[0].text.trim();
-    rawText = rawText.replace(/```json/gi, "").replace(/```/g, "").trim();
-    const result = JSON.parse(rawText);
+    const rawAiOutput = await callGeminiAPI(prompt);
+    let rawText = rawAiOutput.replace(/```json/gi, "").replace(/```/g, "").trim();
+    let result;
+    try {
+      result = JSON.parse(rawText);
+    } catch(e) {
+      result = { title: currentTitle, content: rawAiOutput };
+    }
 
     newsTitle.innerText = result.title;
     newsBody.innerHTML = `<p style="line-height:1.65; color:#334155;">${escapeHTML(result.content)}</p>`;
@@ -937,7 +949,7 @@ ${currentContent}
     if (loader) loader.classList.add("hidden");
   } catch (error) {
     if (loader) loader.classList.add("hidden");
-    showAlert("Translation failed: " + error.message, "Translation Error");
+    alert("Translation failed: " + error.message);
   }
 }
 
@@ -947,7 +959,7 @@ function openGoogleTranslate() {
   const fullText = `${title}\n\n${body}`.trim();
 
   if (!fullText) {
-    showAlert("No content available to translate.", "Notice");
+    alert("No content available to translate.");
     return;
   }
 
@@ -1291,7 +1303,6 @@ async function handleUserRegister(e) {
   showAlert(`Verification code dispatched to ${email}. Please check your Inbox and Spam folder.`, "Code Dispatched");
 }
 
-// Variable to prevent double click and duplicate entries
 let isVerifyingOtp = false;
 
 async function handleOtpVerification(e) {
@@ -1308,7 +1319,6 @@ async function handleOtpVerification(e) {
   const submitBtn = document.getElementById("otpVerifyBtn");
   if (submitBtn) submitBtn.disabled = true;
 
-  // 1. Call Users_Auth Apps Script (Creates user account once)
   let generatedUserId = "SRG-" + Math.floor(10000 + Math.random() * 90000);
   try {
     const authRes = await fetch(AUTH_APPS_SCRIPT_URL, {
@@ -1327,7 +1337,6 @@ async function handleOtpVerification(e) {
     console.warn("Auth sync notice:", err);
   }
 
-  // 2. Call Subscribers_Billing Apps Script (Adds 90-Day Free Pass to billing sheet)
   const expiry = new Date();
   expiry.setDate(expiry.getDate() + 90);
 
@@ -1349,7 +1358,6 @@ async function handleOtpVerification(e) {
     console.warn("Billing sync notice:", err);
   }
 
-  // Save in local registered users database with Suspension & Inspection tracking flags
   const users = JSON.parse(localStorage.getItem("news_unpacker_users")) || [];
   users.push({
     userId: generatedUserId,
@@ -1366,7 +1374,6 @@ async function handleOtpVerification(e) {
   });
   localStorage.setItem("news_unpacker_users", JSON.stringify(users));
 
-  // 3. LocalStorage Session Update
   activeSessionUser = {
     userId: generatedUserId,
     name: pendingRegistrationUser.name,
@@ -1384,7 +1391,6 @@ async function handleOtpVerification(e) {
   updateProfileHeader();
   renderProfileDropdown();
 
-  // 4. Trigger Flower/Confetti Shower animation on Free Pass activation
   triggerFlowerShower();
   showAlert(
     `Congratulations ${pendingRegistrationUser.name}!\n\nYour 3-Month Free VIP Pass has been activated.\nUser ID: ${generatedUserId}\nValid till: ${expiry.toLocaleDateString()}`,
@@ -1395,7 +1401,6 @@ async function handleOtpVerification(e) {
   if (submitBtn) submitBtn.disabled = false;
 }
 
-// Confetti Flower Shower Function
 function triggerFlowerShower() {
   if (typeof confetti === "function") {
     const end = Date.now() + 3.5 * 1000;
@@ -1429,7 +1434,6 @@ function handleUserLogin(event) {
     return;
   }
 
-  // Account Suspension Check
   if (found.isSuspended) {
     const expiry = found.suspensionExpires ? new Date(found.suspensionExpires).toLocaleDateString() : "further notice";
     showAlert(`Your account has been administratively suspended until ${expiry} due to policy restrictions.\n\nPlease contact desk support: sriramgroupsofficial@gmail.com`, "Account Suspended");
@@ -1684,12 +1688,10 @@ function redeemAccessCode() {
     return;
   }
 
-  // 1. Verify against Admin Custom Issued Coupons
   const adminCoupons = JSON.parse(localStorage.getItem("sriram_active_coupons")) || [];
   const matchedCoupon = adminCoupons.find(c => c.code.toUpperCase() === val);
 
   if (matchedCoupon) {
-    // Check user exclusivity
     if (matchedCoupon.targetEmail !== "ALL" && activeSessionUser && activeSessionUser.email.toLowerCase() !== matchedCoupon.targetEmail.toLowerCase()) {
       showCustomModalAlert("Restricted Code", `This coupon code is exclusively reserved for ${matchedCoupon.targetEmail}.`);
       return;
@@ -1723,7 +1725,6 @@ function redeemAccessCode() {
     }
   }
 
-  // 2. Fallback Default Hardcoded Codes
   if (val === "SRIRAM2027" || val === "NEWSVIP") {
     showCustomModalAlert("Access Pass Activated", "1 Year Unlimited VIP Subscription Pass has been activated!");
     if (activeSessionUser) {
@@ -1762,6 +1763,11 @@ function minimizeEventPoster() {
     overlay.classList.add("hidden", "minimized");
   }
   if (badge) badge.classList.remove("hidden");
+}
+
+function claimEventPassFromPoster() {
+  minimizeEventPoster();
+  triggerEventPassClaim();
 }
 
 function maximizeEventPoster() {
@@ -1828,11 +1834,6 @@ function triggerEventPassClaim() {
   switchAuthView("register");
 }
 
-function claimEventPassFromPoster() {
-  minimizeEventPoster();
-  triggerEventPassClaim();
-}
-
 // 16. Circular Progress Metrics Animation
 function animateGoldRing(ringId, textId, targetValue, circumference) {
   const ring = document.getElementById(ringId);
@@ -1860,14 +1861,12 @@ function animateGoldRing(ringId, textId, targetValue, circumference) {
 document.addEventListener("DOMContentLoaded", () => {
   initUserAuthDB();
 
-  // Force close login modal on initial page load
   const authModal = document.getElementById("userAuthOverlay");
   if (authModal) {
     authModal.classList.add("hidden");
     authModal.style.setProperty("display", "none", "important");
   }
 
-  // Restore Active User Session & Suspension Validation
   const rawSession = localStorage.getItem("news_unpacker_active_user");
   if (rawSession) {
     try {
@@ -1885,10 +1884,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Update Guest Quota Banner
   updateQuotaBannerUI();
 
-  // Infinite Contact Carousel Setup
   const track = document.getElementById("contactTickerTrack");
   const viewport = document.getElementById("contactTickerViewport");
   if (track && viewport) {
@@ -1898,7 +1895,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Enterprise Progress Rings Observer
   const section = document.getElementById("enterpriseSection");
   if (section) {
     let animated = false;
@@ -1915,7 +1911,6 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(section);
   }
 
-  // OTP 6-Digit Auto-Flow
   const otpContainer = document.getElementById("otpBoxesWrap");
   if (otpContainer) {
     const boxes = otpContainer.querySelectorAll(".otp-digit-box");
@@ -1966,7 +1961,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // URL Routing Parameters
   const urlParams = new URLSearchParams(window.location.search);
   const targetWorkspace = urlParams.get("workspace");
   const targetAction = urlParams.get("action");
@@ -1982,14 +1976,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 150);
   }
 
-  // Show Launch Poster for Non-Subscribers After 1 Second
   if (!activeSessionUser || !activeSessionUser.subscribed) {
     setTimeout(() => {
       showEventPoster();
     }, 1000);
   }
 
-  // Close dropdown on outside click
   document.addEventListener("click", (e) => {
     const wrapper = document.querySelector(".user-profile-wrapper");
     const dropdown = document.getElementById("profileDropdownCard");
